@@ -24,5 +24,5 @@ interface PlatformConfig
      *
      * @return string
      */
-    function getWebhookUrl(): string;
+    public function getWebhookUrl(): string;
 }

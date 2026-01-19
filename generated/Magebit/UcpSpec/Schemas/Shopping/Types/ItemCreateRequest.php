@@ -22,5 +22,5 @@ interface ItemCreateRequest
      *
      * @return string
      */
-    function getId(): string;
+    public function getId(): string;
 }

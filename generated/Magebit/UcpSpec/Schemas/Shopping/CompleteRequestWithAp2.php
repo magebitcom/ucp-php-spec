@@ -24,5 +24,5 @@ interface CompleteRequestWithAp2
      *
      * @return Ap2CompleteRequest|null
      */
-    function getAp2(): Ap2CompleteRequest|null;
+    public function getAp2(): Ap2CompleteRequest|null;
 }

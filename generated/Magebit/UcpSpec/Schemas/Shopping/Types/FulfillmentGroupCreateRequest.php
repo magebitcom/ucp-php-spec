@@ -24,5 +24,5 @@ interface FulfillmentGroupCreateRequest
      *
      * @return string|null
      */
-    function getSelectedOptionId(): string|null;
+    public function getSelectedOptionId(): string|null;
 }

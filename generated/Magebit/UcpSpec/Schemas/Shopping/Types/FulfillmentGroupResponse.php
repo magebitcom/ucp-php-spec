@@ -24,26 +24,26 @@ interface FulfillmentGroupResponse
      *
      * @return string
      */
-    function getId(): string;
+    public function getId(): string;
 
     /**
      * Line item IDs included in this group/package.
      *
      * @return string[]
      */
-    function getLineItemIds(): array;
+    public function getLineItemIds(): array;
 
     /**
      * Available fulfillment options for this group.
      *
      * @return FulfillmentOptionResponse[]|null
      */
-    function getOptions(): array|null;
+    public function getOptions(): array|null;
 
     /**
      * ID of the selected fulfillment option for this group.
      *
      * @return string|null
      */
-    function getSelectedOptionId(): string|null;
+    public function getSelectedOptionId(): string|null;
 }

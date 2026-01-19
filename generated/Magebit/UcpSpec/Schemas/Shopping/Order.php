@@ -25,54 +25,54 @@ interface Order
     /**
      * @return ResponseOrder
      */
-    function getUcp(): ResponseOrder;
+    public function getUcp(): ResponseOrder;
 
     /**
      * Unique order identifier.
      *
      * @return string
      */
-    function getId(): string;
+    public function getId(): string;
 
     /**
      * Associated checkout ID for reconciliation.
      *
      * @return string
      */
-    function getCheckoutId(): string;
+    public function getCheckoutId(): string;
 
     /**
      * Permalink to access the order on merchant site.
      *
      * @return string
      */
-    function getPermalinkUrl(): string;
+    public function getPermalinkUrl(): string;
 
     /**
      * Immutable line items — source of truth for what was ordered.
      *
      * @return OrderLineItem[]
      */
-    function getLineItems(): array;
+    public function getLineItems(): array;
 
     /**
      * Fulfillment data: buyer expectations and what actually happened.
      *
      * @return object
      */
-    function getFulfillment(): object;
+    public function getFulfillment(): object;
 
     /**
      * Append-only event log of money movements (refunds, returns, credits, disputes, cancellations, etc.) that exist independently of fulfillment.
      *
      * @return Adjustment[]|null
      */
-    function getAdjustments(): array|null;
+    public function getAdjustments(): array|null;
 
     /**
      * Different totals for the order.
      *
      * @return TotalResponse[]
      */
-    function getTotals(): array;
+    public function getTotals(): array;
 }

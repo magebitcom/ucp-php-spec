@@ -24,12 +24,12 @@ interface FulfillmentResponse
      *
      * @return FulfillmentMethodResponse[]|null
      */
-    function getMethods(): array|null;
+    public function getMethods(): array|null;
 
     /**
      * Inventory availability hints.
      *
      * @return FulfillmentAvailableMethodResponse[]|null
      */
-    function getAvailableMethods(): array|null;
+    public function getAvailableMethods(): array|null;
 }

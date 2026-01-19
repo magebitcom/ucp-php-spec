@@ -24,19 +24,19 @@ interface UCPDiscoveryProfile
     /**
      * @return DiscoveryProfile
      */
-    function getUcp(): DiscoveryProfile;
+    public function getUcp(): DiscoveryProfile;
 
     /**
      * Payment configuration containing handlers
      *
      * @return object|null
      */
-    function getPayment(): object|null;
+    public function getPayment(): object|null;
 
     /**
      * Public keys for signature verification (JWK format). Used to verify signed responses, webhooks, and other authenticated messages from this party.
      *
      * @return object[]|null
      */
-    function getSigningKeys(): array|null;
+    public function getSigningKeys(): array|null;
 }

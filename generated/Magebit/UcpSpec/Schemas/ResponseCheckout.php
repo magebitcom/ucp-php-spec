@@ -22,12 +22,12 @@ interface ResponseCheckout
     /**
      * @return Version
      */
-    function getVersion(): Version;
+    public function getVersion(): Version;
 
     /**
      * Active capabilities for this response.
      *
      * @return Response[]
      */
-    function getCapabilities(): array;
+    public function getCapabilities(): array;
 }

@@ -26,12 +26,12 @@ interface PaymentCreateRequest
      *
      * @return string|null
      */
-    function getSelectedInstrumentId(): string|null;
+    public function getSelectedInstrumentId(): string|null;
 
     /**
      * The payment instruments available for this payment. Each instrument is associated with a specific handler via the handler_id field. Handlers can extend the base payment_instrument schema to add handler-specific fields.
      *
      * @return PaymentInstrument[]|null
      */
-    function getInstruments(): array|null;
+    public function getInstruments(): array|null;
 }

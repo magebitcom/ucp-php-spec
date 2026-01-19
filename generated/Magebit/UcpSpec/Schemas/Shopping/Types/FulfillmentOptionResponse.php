@@ -24,47 +24,47 @@ interface FulfillmentOptionResponse
      *
      * @return string
      */
-    function getId(): string;
+    public function getId(): string;
 
     /**
      * Short label (e.g., 'Express Shipping', 'Curbside Pickup').
      *
      * @return string
      */
-    function getTitle(): string;
+    public function getTitle(): string;
 
     /**
      * Complete context for buyer decision (e.g., 'Arrives Dec 12-15 via FedEx').
      *
      * @return string|null
      */
-    function getDescription(): string|null;
+    public function getDescription(): string|null;
 
     /**
      * Carrier name (for shipping).
      *
      * @return string|null
      */
-    function getCarrier(): string|null;
+    public function getCarrier(): string|null;
 
     /**
      * Earliest fulfillment date.
      *
      * @return string|null
      */
-    function getEarliestFulfillmentTime(): string|null;
+    public function getEarliestFulfillmentTime(): string|null;
 
     /**
      * Latest fulfillment date.
      *
      * @return string|null
      */
-    function getLatestFulfillmentTime(): string|null;
+    public function getLatestFulfillmentTime(): string|null;
 
     /**
      * Fulfillment option totals breakdown.
      *
      * @return TotalResponse[]
      */
-    function getTotals(): array;
+    public function getTotals(): array;
 }

@@ -22,12 +22,12 @@ interface UCPServiceRest
      *
      * @return string
      */
-    function getSchema(): string;
+    public function getSchema(): string;
 
     /**
      * Merchant's REST API endpoint
      *
      * @return string
      */
-    function getEndpoint(): string;
+    public function getEndpoint(): string;
 }

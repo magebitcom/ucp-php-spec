@@ -22,12 +22,12 @@ interface LineItemCreateRequest
     /**
      * @return ItemCreateRequest
      */
-    function getItem(): ItemCreateRequest;
+    public function getItem(): ItemCreateRequest;
 
     /**
      * Quantity of the item being purchased.
      *
      * @return int
      */
-    function getQuantity(): int;
+    public function getQuantity(): int;
 }

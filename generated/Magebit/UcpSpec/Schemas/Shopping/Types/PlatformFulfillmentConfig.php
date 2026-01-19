@@ -24,5 +24,5 @@ interface PlatformFulfillmentConfig
      *
      * @return bool|null
      */
-    function getSupportsMultiGroup(): bool|null;
+    public function getSupportsMultiGroup(): bool|null;
 }

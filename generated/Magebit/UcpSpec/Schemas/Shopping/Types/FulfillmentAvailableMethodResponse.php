@@ -24,26 +24,26 @@ interface FulfillmentAvailableMethodResponse
      *
      * @return string
      */
-    function getType(): string;
+    public function getType(): string;
 
     /**
      * Line items available for this fulfillment method.
      *
      * @return string[]
      */
-    function getLineItemIds(): array;
+    public function getLineItemIds(): array;
 
     /**
      * 'now' for immediate availability, or ISO 8601 date for future (preorders, transfers).
      *
      * @return string|null
      */
-    function getFulfillableOn(): string|null;
+    public function getFulfillableOn(): string|null;
 
     /**
      * Human-readable availability info (e.g., 'Available for pickup at Downtown Store today').
      *
      * @return string|null
      */
-    function getDescription(): string|null;
+    public function getDescription(): string|null;
 }

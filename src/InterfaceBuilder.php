@@ -127,6 +127,7 @@ class InterfaceBuilder
         $methodName = 'get' . $this->toPascalCase($propertyName);
 
         $method = $interface->addMethod($methodName);
+        $method->setPublic();
 
         // Add description
         if (isset($property['description'])) {

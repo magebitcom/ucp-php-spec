@@ -24,5 +24,5 @@ interface Ap2CheckoutResponse
      *
      * @return MerchantAuthorization
      */
-    function getMerchantAuthorization(): MerchantAuthorization;
+    public function getMerchantAuthorization(): MerchantAuthorization;
 }

@@ -19,33 +19,33 @@ interface Buyer
      *
      * @return string|null
      */
-    function getFirstName(): string|null;
+    public function getFirstName(): string|null;
 
     /**
      * Last name of the buyer.
      *
      * @return string|null
      */
-    function getLastName(): string|null;
+    public function getLastName(): string|null;
 
     /**
      * Optional, buyer's full name (if first_name or last_name fields are present they take precedence).
      *
      * @return string|null
      */
-    function getFullName(): string|null;
+    public function getFullName(): string|null;
 
     /**
      * Email of the buyer.
      *
      * @return string|null
      */
-    function getEmail(): string|null;
+    public function getEmail(): string|null;
 
     /**
      * E.164 standard.
      *
      * @return string|null
      */
-    function getPhoneNumber(): string|null;
+    public function getPhoneNumber(): string|null;
 }

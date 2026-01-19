@@ -22,5 +22,5 @@ interface UCPServiceEmbedded
      *
      * @return string
      */
-    function getSchema(): string;
+    public function getSchema(): string;
 }

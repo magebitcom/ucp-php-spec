@@ -24,61 +24,61 @@ interface CardCredential
      *
      * @return mixed
      */
-    function getType();
+    public function getType();
 
     /**
      * The type of card number. Network tokens are preferred with fallback to FPAN. See PCI Scope for more details.
      *
      * @return string
      */
-    function getCardNumberType(): string;
+    public function getCardNumberType(): string;
 
     /**
      * Card number.
      *
      * @return string|null
      */
-    function getNumber(): string|null;
+    public function getNumber(): string|null;
 
     /**
      * The month of the card's expiration date (1-12).
      *
      * @return int|null
      */
-    function getExpiryMonth(): int|null;
+    public function getExpiryMonth(): int|null;
 
     /**
      * The year of the card's expiration date.
      *
      * @return int|null
      */
-    function getExpiryYear(): int|null;
+    public function getExpiryYear(): int|null;
 
     /**
      * Cardholder name.
      *
      * @return string|null
      */
-    function getName(): string|null;
+    public function getName(): string|null;
 
     /**
      * Card CVC number.
      *
      * @return string|null
      */
-    function getCvc(): string|null;
+    public function getCvc(): string|null;
 
     /**
      * Cryptogram provided with network tokens.
      *
      * @return string|null
      */
-    function getCryptogram(): string|null;
+    public function getCryptogram(): string|null;
 
     /**
      * Electronic Commerce Indicator / Security Level Indicator provided with network tokens.
      *
      * @return string|null
      */
-    function getEciValue(): string|null;
+    public function getEciValue(): string|null;
 }

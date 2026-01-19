@@ -24,5 +24,5 @@ interface Ap2CompleteRequest
      *
      * @return CheckoutMandate
      */
-    function getCheckoutMandate(): CheckoutMandate;
+    public function getCheckoutMandate(): CheckoutMandate;
 }

@@ -19,12 +19,12 @@ interface AdjustmentLineItemsItem
      *
      * @return string
      */
-    function getId(): string;
+    public function getId(): string;
 
     /**
      * Quantity affected by this adjustment.
      *
      * @return int
      */
-    function getQuantity(): int;
+    public function getQuantity(): int;
 }

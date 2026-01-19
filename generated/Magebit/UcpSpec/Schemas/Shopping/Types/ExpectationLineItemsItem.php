@@ -19,12 +19,12 @@ interface ExpectationLineItemsItem
      *
      * @return string
      */
-    function getId(): string;
+    public function getId(): string;
 
     /**
      * Quantity of this item in this expectation.
      *
      * @return int
      */
-    function getQuantity(): int;
+    public function getQuantity(): int;
 }

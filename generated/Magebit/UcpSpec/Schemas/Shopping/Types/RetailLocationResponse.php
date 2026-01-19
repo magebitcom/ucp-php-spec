@@ -24,19 +24,19 @@ interface RetailLocationResponse
      *
      * @return string
      */
-    function getId(): string;
+    public function getId(): string;
 
     /**
      * Location name (e.g., store name).
      *
      * @return string
      */
-    function getName(): string;
+    public function getName(): string;
 
     /**
      * Physical address of the location.
      *
      * @return PostalAddress|null
      */
-    function getAddress(): PostalAddress|null;
+    public function getAddress(): PostalAddress|null;
 }

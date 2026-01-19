@@ -27,24 +27,24 @@ interface CheckoutCreateRequest
      *
      * @return LineItemCreateRequest[]
      */
-    function getLineItems(): array;
+    public function getLineItems(): array;
 
     /**
      * Representation of the buyer.
      *
      * @return Buyer|null
      */
-    function getBuyer(): Buyer|null;
+    public function getBuyer(): Buyer|null;
 
     /**
      * ISO 4217 currency code.
      *
      * @return string
      */
-    function getCurrency(): string;
+    public function getCurrency(): string;
 
     /**
      * @return PaymentCreateRequest
      */
-    function getPayment(): PaymentCreateRequest;
+    public function getPayment(): PaymentCreateRequest;
 }

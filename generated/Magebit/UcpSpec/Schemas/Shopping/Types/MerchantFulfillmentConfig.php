@@ -24,12 +24,12 @@ interface MerchantFulfillmentConfig
      *
      * @return object|null
      */
-    function getAllowsMultiDestination(): object|null;
+    public function getAllowsMultiDestination(): object|null;
 
     /**
      * Allowed method type combinations.
      *
      * @return array[]|null
      */
-    function getAllowsMethodCombinations(): array|null;
+    public function getAllowsMethodCombinations(): array|null;
 }

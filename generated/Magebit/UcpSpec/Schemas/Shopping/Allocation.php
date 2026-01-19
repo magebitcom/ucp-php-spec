@@ -22,12 +22,12 @@ interface Allocation
      *
      * @return string
      */
-    function getPath(): string;
+    public function getPath(): string;
 
     /**
      * Amount allocated to this target in minor (cents) currency units.
      *
      * @return int
      */
-    function getAmount(): int;
+    public function getAmount(): int;
 }

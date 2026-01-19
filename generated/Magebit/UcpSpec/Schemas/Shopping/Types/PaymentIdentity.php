@@ -24,5 +24,5 @@ interface PaymentIdentity
      *
      * @return string
      */
-    function getAccessToken(): string;
+    public function getAccessToken(): string;
 }

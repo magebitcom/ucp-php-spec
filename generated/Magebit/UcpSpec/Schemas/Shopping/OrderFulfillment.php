@@ -25,12 +25,12 @@ interface OrderFulfillment
      *
      * @return Expectation[]|null
      */
-    function getExpectations(): array|null;
+    public function getExpectations(): array|null;
 
     /**
      * Append-only event log of actual shipments. Each event references line items by ID.
      *
      * @return FulfillmentEvent[]|null
      */
-    function getEvents(): array|null;
+    public function getEvents(): array|null;
 }

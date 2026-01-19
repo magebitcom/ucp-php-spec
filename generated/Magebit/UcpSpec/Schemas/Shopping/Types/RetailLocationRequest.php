@@ -24,12 +24,12 @@ interface RetailLocationRequest
      *
      * @return string
      */
-    function getName(): string;
+    public function getName(): string;
 
     /**
      * Physical address of the location.
      *
      * @return PostalAddress|null
      */
-    function getAddress(): PostalAddress|null;
+    public function getAddress(): PostalAddress|null;
 }

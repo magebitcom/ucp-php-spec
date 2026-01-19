@@ -24,12 +24,12 @@ interface TokenCredentialCreateRequest
      *
      * @return string
      */
-    function getType(): string;
+    public function getType(): string;
 
     /**
      * The token value.
      *
      * @return string
      */
-    function getToken(): string;
+    public function getToken(): string;
 }

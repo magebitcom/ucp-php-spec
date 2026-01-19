@@ -22,40 +22,40 @@ interface OrderLineItem
      *
      * @return string
      */
-    function getId(): string;
+    public function getId(): string;
 
     /**
      * Product data (id, title, price, image_url).
      *
      * @return ItemResponse
      */
-    function getItem(): ItemResponse;
+    public function getItem(): ItemResponse;
 
     /**
      * Quantity tracking. Both total and fulfilled are derived from events.
      *
      * @return object
      */
-    function getQuantity(): object;
+    public function getQuantity(): object;
 
     /**
      * Line item totals breakdown.
      *
      * @return TotalResponse[]
      */
-    function getTotals(): array;
+    public function getTotals(): array;
 
     /**
      * Derived status: fulfilled if quantity.fulfilled == quantity.total, partial if quantity.fulfilled > 0, otherwise processing.
      *
      * @return string
      */
-    function getStatus(): string;
+    public function getStatus(): string;
 
     /**
      * Parent line item identifier for any nested structures.
      *
      * @return string|null
      */
-    function getParentId(): string|null;
+    public function getParentId(): string|null;
 }

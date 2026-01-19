@@ -24,12 +24,12 @@ interface OrderConfirmation
      *
      * @return string
      */
-    function getId(): string;
+    public function getId(): string;
 
     /**
      * Permalink to access the order on merchant site.
      *
      * @return string
      */
-    function getPermalinkUrl(): string;
+    public function getPermalinkUrl(): string;
 }

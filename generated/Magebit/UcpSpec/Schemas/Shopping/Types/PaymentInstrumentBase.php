@@ -24,31 +24,31 @@ interface PaymentInstrumentBase
      *
      * @return string
      */
-    function getId(): string;
+    public function getId(): string;
 
     /**
      * The unique identifier for the handler instance that produced this instrument. This corresponds to the 'id' field in the Payment Handler definition.
      *
      * @return string
      */
-    function getHandlerId(): string;
+    public function getHandlerId(): string;
 
     /**
      * The broad category of the instrument (e.g., 'card', 'tokenized_card'). Specific schemas will constrain this to a constant value.
      *
      * @return string
      */
-    function getType(): string;
+    public function getType(): string;
 
     /**
      * The billing address associated with this payment method.
      *
      * @return PostalAddress|null
      */
-    function getBillingAddress(): PostalAddress|null;
+    public function getBillingAddress(): PostalAddress|null;
 
     /**
      * @return PaymentCredential|null
      */
-    function getCredential(): PaymentCredential|null;
+    public function getCredential(): PaymentCredential|null;
 }

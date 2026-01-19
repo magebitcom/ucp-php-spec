@@ -22,5 +22,5 @@ interface UCPServiceA2a
      *
      * @return string
      */
-    function getEndpoint(): string;
+    public function getEndpoint(): string;
 }

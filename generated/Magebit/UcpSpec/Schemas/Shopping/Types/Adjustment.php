@@ -22,47 +22,47 @@ interface Adjustment
      *
      * @return string
      */
-    function getId(): string;
+    public function getId(): string;
 
     /**
      * Type of adjustment (open string). Typically money-related like: refund, return, credit, price_adjustment, dispute, cancellation. Can be any value that makes sense for the merchant's business.
      *
      * @return string
      */
-    function getType(): string;
+    public function getType(): string;
 
     /**
      * RFC 3339 timestamp when this adjustment occurred.
      *
      * @return string
      */
-    function getOccurredAt(): string;
+    public function getOccurredAt(): string;
 
     /**
      * Adjustment status.
      *
      * @return string
      */
-    function getStatus(): string;
+    public function getStatus(): string;
 
     /**
      * Which line items and quantities are affected (optional).
      *
      * @return object[]|null
      */
-    function getLineItems(): array|null;
+    public function getLineItems(): array|null;
 
     /**
      * Amount in minor units (cents) for refunds, credits, price adjustments (optional).
      *
      * @return int|null
      */
-    function getAmount(): int|null;
+    public function getAmount(): int|null;
 
     /**
      * Human-readable reason or description (e.g., 'Defective item', 'Customer requested').
      *
      * @return string|null
      */
-    function getDescription(): string|null;
+    public function getDescription(): string|null;
 }

@@ -22,26 +22,26 @@ interface ItemResponse
      *
      * @return string
      */
-    function getId(): string;
+    public function getId(): string;
 
     /**
      * Product title.
      *
      * @return string
      */
-    function getTitle(): string;
+    public function getTitle(): string;
 
     /**
      * Unit price in minor (cents) currency units.
      *
      * @return int
      */
-    function getPrice(): int;
+    public function getPrice(): int;
 
     /**
      * Product image URI.
      *
      * @return string|null
      */
-    function getImageUrl(): string|null;
+    public function getImageUrl(): string|null;
 }

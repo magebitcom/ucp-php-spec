@@ -22,12 +22,12 @@ interface OrderLineItemQuantity
      *
      * @return int
      */
-    function getTotal(): int;
+    public function getTotal(): int;
 
     /**
      * Quantity fulfilled (sum from fulfillment events).
      *
      * @return int
      */
-    function getFulfilled(): int;
+    public function getFulfilled(): int;
 }

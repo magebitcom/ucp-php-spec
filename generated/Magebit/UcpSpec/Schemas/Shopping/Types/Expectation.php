@@ -22,40 +22,40 @@ interface Expectation
      *
      * @return string
      */
-    function getId(): string;
+    public function getId(): string;
 
     /**
      * Which line items and quantities are in this expectation.
      *
      * @return object[]
      */
-    function getLineItems(): array;
+    public function getLineItems(): array;
 
     /**
      * Delivery method type (shipping, pickup, digital).
      *
      * @return string
      */
-    function getMethodType(): string;
+    public function getMethodType(): string;
 
     /**
      * Delivery destination address.
      *
      * @return PostalAddress
      */
-    function getDestination(): PostalAddress;
+    public function getDestination(): PostalAddress;
 
     /**
      * Human-readable delivery description (e.g., 'Arrives in 5-8 business days').
      *
      * @return string|null
      */
-    function getDescription(): string|null;
+    public function getDescription(): string|null;
 
     /**
      * When this expectation can be fulfilled: 'now' or ISO 8601 timestamp for future date (backorder, pre-order).
      *
      * @return string|null
      */
-    function getFulfillableOn(): string|null;
+    public function getFulfillableOn(): string|null;
 }

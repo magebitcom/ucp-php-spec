@@ -24,5 +24,5 @@ interface FulfillmentRequest
      *
      * @return FulfillmentMethodCreateRequest[]|null
      */
-    function getMethods(): array|null;
+    public function getMethods(): array|null;
 }

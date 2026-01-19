@@ -22,31 +22,31 @@ interface LineItemResponse
     /**
      * @return string
      */
-    function getId(): string;
+    public function getId(): string;
 
     /**
      * @return ItemResponse
      */
-    function getItem(): ItemResponse;
+    public function getItem(): ItemResponse;
 
     /**
      * Quantity of the item being purchased.
      *
      * @return int
      */
-    function getQuantity(): int;
+    public function getQuantity(): int;
 
     /**
      * Line item totals breakdown.
      *
      * @return TotalResponse[]
      */
-    function getTotals(): array;
+    public function getTotals(): array;
 
     /**
      * Parent line item identifier for any nested structures.
      *
      * @return string|null
      */
-    function getParentId(): string|null;
+    public function getParentId(): string|null;
 }

@@ -22,17 +22,17 @@ interface DiscoveryProfile
     /**
      * @return Version
      */
-    function getVersion(): Version;
+    public function getVersion(): Version;
 
     /**
      * @return Services
      */
-    function getServices(): Services;
+    public function getServices(): Services;
 
     /**
      * Supported capabilities and extensions.
      *
      * @return Discovery[]
      */
-    function getCapabilities(): array;
+    public function getCapabilities(): array;
 }

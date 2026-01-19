@@ -27,31 +27,31 @@ interface CheckoutUpdateRequest
      *
      * @return string
      */
-    function getId(): string;
+    public function getId(): string;
 
     /**
      * List of line items being checked out.
      *
      * @return LineItemUpdateRequest[]
      */
-    function getLineItems(): array;
+    public function getLineItems(): array;
 
     /**
      * Representation of the buyer.
      *
      * @return Buyer|null
      */
-    function getBuyer(): Buyer|null;
+    public function getBuyer(): Buyer|null;
 
     /**
      * ISO 4217 currency code.
      *
      * @return string
      */
-    function getCurrency(): string;
+    public function getCurrency(): string;
 
     /**
      * @return PaymentUpdateRequest
      */
-    function getPayment(): PaymentUpdateRequest;
+    public function getPayment(): PaymentUpdateRequest;
 }

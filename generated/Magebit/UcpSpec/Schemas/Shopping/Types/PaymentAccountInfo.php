@@ -24,5 +24,5 @@ interface PaymentAccountInfo
      *
      * @return string|null
      */
-    function getPaymentAccountReference(): string|null;
+    public function getPaymentAccountReference(): string|null;
 }

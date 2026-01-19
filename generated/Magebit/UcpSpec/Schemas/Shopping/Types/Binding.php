@@ -22,12 +22,12 @@ interface Binding
      *
      * @return string
      */
-    function getCheckoutId(): string;
+    public function getCheckoutId(): string;
 
     /**
      * The participant this token is bound to. Required when acting on behalf of another participant (e.g., agent tokenizing for merchant). Omit when the authenticated caller is the binding target.
      *
      * @return PaymentIdentity|null
      */
-    function getIdentity(): PaymentIdentity|null;
+    public function getIdentity(): PaymentIdentity|null;
 }

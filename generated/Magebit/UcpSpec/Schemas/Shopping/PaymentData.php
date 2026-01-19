@@ -24,5 +24,5 @@ interface PaymentData
     /**
      * @return PaymentInstrument
      */
-    function getPaymentData(): PaymentInstrument;
+    public function getPaymentData(): PaymentInstrument;
 }

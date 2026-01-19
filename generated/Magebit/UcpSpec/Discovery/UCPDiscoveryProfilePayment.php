@@ -24,5 +24,5 @@ interface UCPDiscoveryProfilePayment
      *
      * @return PaymentHandlerResponse[]|null
      */
-    function getHandlers(): array|null;
+    public function getHandlers(): array|null;
 }

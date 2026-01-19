@@ -22,12 +22,12 @@ interface DiscountsObject
      *
      * @return string[]|null
      */
-    function getCodes(): array|null;
+    public function getCodes(): array|null;
 
     /**
      * Discounts successfully applied (code-based and automatic).
      *
      * @return AppliedDiscount[]|null
      */
-    function getApplied(): array|null;
+    public function getApplied(): array|null;
 }

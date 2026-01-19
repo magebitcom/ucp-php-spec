@@ -19,19 +19,19 @@ interface Link
      *
      * @return string
      */
-    function getType(): string;
+    public function getType(): string;
 
     /**
      * The actual URL pointing to the content to be displayed.
      *
      * @return string
      */
-    function getUrl(): string;
+    public function getUrl(): string;
 
     /**
      * Optional display text for the link. When provided, use this instead of generating from type.
      *
      * @return string|null
      */
-    function getTitle(): string|null;
+    public function getTitle(): string|null;
 }

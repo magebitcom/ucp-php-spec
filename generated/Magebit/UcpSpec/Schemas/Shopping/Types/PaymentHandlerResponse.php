@@ -24,45 +24,45 @@ interface PaymentHandlerResponse
      *
      * @return string
      */
-    function getId(): string;
+    public function getId(): string;
 
     /**
      * The specification name using reverse-DNS format. For example, dev.ucp.delegate_payment.
      *
      * @return string
      */
-    function getName(): string;
+    public function getName(): string;
 
     /**
      * Handler version in YYYY-MM-DD format.
      *
      * @return Version
      */
-    function getVersion(): Version;
+    public function getVersion(): Version;
 
     /**
      * A URI pointing to the technical specification or schema that defines how this handler operates.
      *
      * @return string
      */
-    function getSpec(): string;
+    public function getSpec(): string;
 
     /**
      * A URI pointing to a JSON Schema used to validate the structure of the config object.
      *
      * @return string
      */
-    function getConfigSchema(): string;
+    public function getConfigSchema(): string;
 
     /**
      * @return string[]
      */
-    function getInstrumentSchemas(): array;
+    public function getInstrumentSchemas(): array;
 
     /**
      * A dictionary containing provider-specific configuration details, such as merchant IDs, supported networks, or gateway credentials.
      *
      * @return object
      */
-    function getConfig(): object;
+    public function getConfig(): object;
 }

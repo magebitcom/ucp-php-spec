@@ -22,12 +22,12 @@ interface MerchantFulfillmentConfigAllowsMultiDestination
      *
      * @return bool|null
      */
-    function getShipping(): bool|null;
+    public function getShipping(): bool|null;
 
     /**
      * Multiple pickup locations allowed.
      *
      * @return bool|null
      */
-    function getPickup(): bool|null;
+    public function getPickup(): bool|null;
 }

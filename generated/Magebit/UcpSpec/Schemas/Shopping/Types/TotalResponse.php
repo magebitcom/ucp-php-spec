@@ -22,19 +22,19 @@ interface TotalResponse
      *
      * @return string
      */
-    function getType(): string;
+    public function getType(): string;
 
     /**
      * Text to display against the amount. Should reflect appropriate method (e.g., 'Shipping', 'Delivery').
      *
      * @return string|null
      */
-    function getDisplayText(): string|null;
+    public function getDisplayText(): string|null;
 
     /**
      * If type == total, sums subtotal - discount + fulfillment + tax + fee. Should be >= 0. Amount in minor (cents) currency units.
      *
      * @return int
      */
-    function getAmount(): int;
+    public function getAmount(): int;
 }

@@ -24,40 +24,40 @@ interface FulfillmentMethodResponse
      *
      * @return string
      */
-    function getId(): string;
+    public function getId(): string;
 
     /**
      * Fulfillment method type.
      *
      * @return string
      */
-    function getType(): string;
+    public function getType(): string;
 
     /**
      * Line item IDs fulfilled via this method.
      *
      * @return string[]
      */
-    function getLineItemIds(): array;
+    public function getLineItemIds(): array;
 
     /**
      * Available destinations. For shipping: addresses. For pickup: retail locations.
      *
      * @return FulfillmentDestinationResponse[]|null
      */
-    function getDestinations(): array|null;
+    public function getDestinations(): array|null;
 
     /**
      * ID of the selected destination.
      *
      * @return string|null
      */
-    function getSelectedDestinationId(): string|null;
+    public function getSelectedDestinationId(): string|null;
 
     /**
      * Fulfillment groups for selecting options. Agent sets selected_option_id on groups to choose shipping method.
      *
      * @return FulfillmentGroupResponse[]|null
      */
-    function getGroups(): array|null;
+    public function getGroups(): array|null;
 }

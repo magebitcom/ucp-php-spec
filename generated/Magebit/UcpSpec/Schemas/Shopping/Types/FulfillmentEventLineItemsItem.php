@@ -19,12 +19,12 @@ interface FulfillmentEventLineItemsItem
      *
      * @return string
      */
-    function getId(): string;
+    public function getId(): string;
 
     /**
      * Quantity fulfilled in this event.
      *
      * @return int
      */
-    function getQuantity(): int;
+    public function getQuantity(): int;
 }

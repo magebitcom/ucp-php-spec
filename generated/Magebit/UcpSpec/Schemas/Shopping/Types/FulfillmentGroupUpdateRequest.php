@@ -24,12 +24,12 @@ interface FulfillmentGroupUpdateRequest
      *
      * @return string
      */
-    function getId(): string;
+    public function getId(): string;
 
     /**
      * ID of the selected fulfillment option for this group.
      *
      * @return string|null
      */
-    function getSelectedOptionId(): string|null;
+    public function getSelectedOptionId(): string|null;
 }

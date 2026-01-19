@@ -22,24 +22,24 @@ interface LineItemUpdateRequest
     /**
      * @return string|null
      */
-    function getId(): string|null;
+    public function getId(): string|null;
 
     /**
      * @return ItemUpdateRequest
      */
-    function getItem(): ItemUpdateRequest;
+    public function getItem(): ItemUpdateRequest;
 
     /**
      * Quantity of the item being purchased.
      *
      * @return int
      */
-    function getQuantity(): int;
+    public function getQuantity(): int;
 
     /**
      * Parent line item identifier for any nested structures.
      *
      * @return string|null
      */
-    function getParentId(): string|null;
+    public function getParentId(): string|null;
 }

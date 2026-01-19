@@ -22,33 +22,33 @@ interface MessageInfo
      *
      * @return string
      */
-    function getType(): string;
+    public function getType(): string;
 
     /**
      * RFC 9535 JSONPath to the component the message refers to.
      *
      * @return string|null
      */
-    function getPath(): string|null;
+    public function getPath(): string|null;
 
     /**
      * Info code for programmatic handling.
      *
      * @return string|null
      */
-    function getCode(): string|null;
+    public function getCode(): string|null;
 
     /**
      * Content format, default = plain.
      *
      * @return string|null
      */
-    function getContentType(): string|null;
+    public function getContentType(): string|null;
 
     /**
      * Human-readable message.
      *
      * @return string
      */
-    function getContent(): string;
+    public function getContent(): string;
 }
