@@ -17,7 +17,7 @@ namespace Magebit\UcpSpec\Schemas\Shopping;
  *
  * Schema: AP2 Checkout Response Object
  */
-interface Ap2CheckoutResponse
+interface Ap2MandateAp2CheckoutResponse
 {
     /**
      * Merchant's signature proving checkout terms are authentic.

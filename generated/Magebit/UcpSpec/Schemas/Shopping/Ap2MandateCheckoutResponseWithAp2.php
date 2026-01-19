@@ -21,11 +21,11 @@ use Magebit\UcpSpec\Schemas\Shopping\Types\TotalResponse;
 use Magebit\UcpSpec\Schemas\UcpResponseCheckout;
 
 /**
- * Base checkout schema. Extensions compose onto this using allOf.
+ * Checkout extended with AP2 embedded signature support.
  *
- * Schema: Checkout Response
+ * Schema: Checkout with AP2 Mandate
  */
-interface CheckoutResponse
+interface Ap2MandateCheckoutResponseWithAp2
 {
     /**
      * @return UcpResponseCheckout
@@ -113,4 +113,11 @@ interface CheckoutResponse
      * @return OrderConfirmation|null
      */
     public function getOrder(): OrderConfirmation|null;
+
+    /**
+     * AP2 extension data including merchant authorization.
+     *
+     * @return Ap2MandateAp2CheckoutResponse|null
+     */
+    public function getAp2(): Ap2MandateAp2CheckoutResponse|null;
 }

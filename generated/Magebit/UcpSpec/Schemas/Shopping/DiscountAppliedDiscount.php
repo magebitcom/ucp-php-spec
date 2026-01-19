@@ -15,7 +15,7 @@ namespace Magebit\UcpSpec\Schemas\Shopping;
 /**
  * A discount that was successfully applied.
  */
-interface AppliedDiscount
+interface DiscountAppliedDiscount
 {
     /**
      * The discount code. Omitted for automatic discounts.
@@ -62,7 +62,7 @@ interface AppliedDiscount
     /**
      * Breakdown of where this discount was allocated. Sum of allocation amounts equals total amount.
      *
-     * @return Allocation[]|null
+     * @return DiscountAllocation[]|null
      */
     public function getAllocations(): array|null;
 }

@@ -13,11 +13,11 @@ declare(strict_types=1);
 namespace Magebit\UcpSpec\Schemas;
 
 /**
- * Full UCP metadata for /.well-known/ucp discovery.
+ * UCP metadata for order responses. No payment handlers needed post-purchase.
  *
- * Schema: UCP Discovery Profile
+ * Schema: UCP Order Response
  */
-interface DiscoveryProfile
+interface UcpResponseOrder
 {
     /**
      * @return string
@@ -25,14 +25,9 @@ interface DiscoveryProfile
     public function getVersion(): string;
 
     /**
-     * @return Services
-     */
-    public function getServices(): Services;
-
-    /**
-     * Supported capabilities and extensions.
+     * Active capabilities for this response.
      *
-     * @return Discovery[]
+     * @return CapabilityResponse[]
      */
     public function getCapabilities(): array;
 }

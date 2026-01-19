@@ -21,11 +21,11 @@ use Magebit\UcpSpec\Schemas\Shopping\Types\TotalResponse;
 use Magebit\UcpSpec\Schemas\UcpResponseCheckout;
 
 /**
- * Base checkout schema. Extensions compose onto this using allOf.
+ * Checkout extended with discount capability.
  *
- * Schema: Checkout Response
+ * Schema: Checkout with Discount Response
  */
-interface CheckoutResponse
+interface DiscountCheckout
 {
     /**
      * @return UcpResponseCheckout
@@ -113,4 +113,9 @@ interface CheckoutResponse
      * @return OrderConfirmation|null
      */
     public function getOrder(): OrderConfirmation|null;
+
+    /**
+     * @return DiscountDiscountsObject|null
+     */
+    public function getDiscounts(): DiscountDiscountsObject|null;
 }

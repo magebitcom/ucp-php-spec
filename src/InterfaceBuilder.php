@@ -73,12 +73,77 @@ class InterfaceBuilder
             $interface->addComment('Schema: ' . $schema['title']);
         }
 
+        // Resolve allOf/oneOf/anyOf to get merged properties
+        $mergedSchema = $this->resolveCompositeSchema($schema, $currentFile);
+
         // Add properties as getter methods
-        if (isset($schema['properties'])) {
-            $this->addProperties($interface, $schema, $currentFile, $ns);
+        if (isset($mergedSchema['properties'])) {
+            $this->addProperties($interface, $mergedSchema, $currentFile, $ns);
         }
 
         return $file;
+    }
+
+    /**
+     * Resolve composite schemas (allOf/oneOf/anyOf) to get merged properties
+     *
+     * @param array $schema Schema definition
+     * @param string $currentFile Current file path for resolving references
+     * @return array Merged schema with properties
+     */
+    private function resolveCompositeSchema(array $schema, string $currentFile): array
+    {
+        $merged = $schema;
+
+        // Handle allOf - merge all schemas
+        if (isset($schema['allOf'])) {
+            foreach ($schema['allOf'] as $subSchema) {
+                // Resolve $ref if present
+                if (isset($subSchema['$ref'])) {
+                    $resolved = $this->parser->resolveRef($subSchema['$ref'], $currentFile);
+                    $subSchema = $this->resolveCompositeSchema($resolved, $currentFile);
+                }
+
+                // Merge properties
+                if (isset($subSchema['properties'])) {
+                    if (!isset($merged['properties'])) {
+                        $merged['properties'] = [];
+                    }
+                    $merged['properties'] = array_merge($merged['properties'], $subSchema['properties']);
+                }
+
+                // Merge required
+                if (isset($subSchema['required'])) {
+                    if (!isset($merged['required'])) {
+                        $merged['required'] = [];
+                    }
+                    $merged['required'] = array_merge($merged['required'], $subSchema['required']);
+                }
+            }
+        }
+
+        // Handle oneOf/anyOf - just use the first one for now (could be improved)
+        if (isset($schema['oneOf']) && !isset($merged['properties'])) {
+            $first = $schema['oneOf'][0];
+            if (isset($first['$ref'])) {
+                $resolved = $this->parser->resolveRef($first['$ref'], $currentFile);
+                $merged = array_merge($merged, $this->resolveCompositeSchema($resolved, $currentFile));
+            } elseif (isset($first['properties'])) {
+                $merged['properties'] = $first['properties'];
+            }
+        }
+
+        if (isset($schema['anyOf']) && !isset($merged['properties'])) {
+            $first = $schema['anyOf'][0];
+            if (isset($first['$ref'])) {
+                $resolved = $this->parser->resolveRef($first['$ref'], $currentFile);
+                $merged = array_merge($merged, $this->resolveCompositeSchema($resolved, $currentFile));
+            } elseif (isset($first['properties'])) {
+                $merged['properties'] = $first['properties'];
+            }
+        }
+
+        return $merged;
     }
 
     /**
@@ -178,6 +243,15 @@ class InterfaceBuilder
         string $currentFile,
         \Nette\PhpGenerator\PhpNamespace $namespace
     ): string {
+        // Resolve $ref if present
+        if (isset($property['$ref'])) {
+            try {
+                $property = $this->parser->resolveRef($property['$ref'], $currentFile);
+            } catch (\Exception $e) {
+                // If resolution fails, continue with original property
+            }
+        }
+        
         // Check if property is an array type
         $propertyType = $property['type'] ?? null;
         
@@ -198,6 +272,28 @@ class InterfaceBuilder
                 }
                 
                 return $simplifiedItemType . '[]';
+            }
+        }
+        
+        // Check if we're dealing with an object with additionalProperties (map/dictionary)
+        if ($propertyType === 'object' && isset($property['additionalProperties'])) {
+            $valueType = null;
+            
+            // If additionalProperties has a $ref, resolve it
+            if (isset($property['additionalProperties']['$ref'])) {
+                $valueType = $this->typeMapper->mapType($property['additionalProperties'], $currentFile);
+                $this->addUseStatementsForType($valueType, $namespace);
+                $valueType = $this->simplifyTypeForComment($valueType, $namespace);
+            } elseif (isset($property['additionalProperties']['type'])) {
+                $valueType = $property['additionalProperties']['type'];
+            }
+            
+            if ($valueType !== null && $valueType !== 'mixed') {
+                // Handle nullable objects
+                if (strpos($phpType, '|null') !== false || strpos($phpType, 'null|') !== false) {
+                    return 'array<string, ' . $valueType . '>|null';
+                }
+                return 'array<string, ' . $valueType . '>';
             }
         }
 
@@ -312,19 +408,18 @@ class InterfaceBuilder
     /**
      * Build interface for a $defs definition
      *
-     * @param string $defName Name of the definition
+     * @param string $interfaceName Full interface name (may include file prefix)
      * @param array $definition Definition schema
      * @param string $namespace Namespace for the interface
      * @param string $currentFile Current file path for resolving references
      * @return PhpFile Generated PHP file
      */
     public function buildDefinitionInterface(
-        string $defName,
+        string $interfaceName,
         array $definition,
         string $namespace,
         string $currentFile
     ): PhpFile {
-        $interfaceName = $this->sanitizeInterfaceName($defName);
         return $this->buildInterface($interfaceName, $definition, $namespace, $currentFile);
     }
 

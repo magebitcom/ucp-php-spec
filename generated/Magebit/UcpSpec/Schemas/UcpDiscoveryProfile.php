@@ -12,12 +12,14 @@ declare(strict_types=1);
 
 namespace Magebit\UcpSpec\Schemas;
 
+use Magebit\UcpSpec\Services\UCPService;
+
 /**
- * UCP metadata for checkout responses.
+ * Full UCP metadata for /.well-known/ucp discovery.
  *
- * Schema: UCP Checkout Response
+ * Schema: UCP Discovery Profile
  */
-interface ResponseCheckout
+interface UcpDiscoveryProfile
 {
     /**
      * @return string
@@ -25,9 +27,14 @@ interface ResponseCheckout
     public function getVersion(): string;
 
     /**
-     * Active capabilities for this response.
+     * @return array<string, UCPService>
+     */
+    public function getServices(): object;
+
+    /**
+     * Supported capabilities and extensions.
      *
-     * @return Response[]
+     * @return CapabilityDiscovery[]
      */
     public function getCapabilities(): array;
 }

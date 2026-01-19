@@ -135,8 +135,25 @@ class TypeMapper
         try {
             $resolvedSchema = $this->parser->resolveRef($ref, $currentFile);
             
-            // If it's a simple type (not an object), return the mapped type
-            if (isset($resolvedSchema['type']) && $resolvedSchema['type'] !== 'object') {
+            // Check if it's a map/dictionary type (object with only additionalProperties)
+            if (isset($resolvedSchema['type']) && 
+                $resolvedSchema['type'] === 'object' && 
+                isset($resolvedSchema['additionalProperties']) && 
+                !isset($resolvedSchema['properties']) &&
+                !isset($resolvedSchema['allOf']) &&
+                !isset($resolvedSchema['oneOf']) &&
+                !isset($resolvedSchema['anyOf'])) {
+                return 'object';
+            }
+            
+            // Check if it's a simple type (not an object)
+            // Skip if it has allOf, oneOf, anyOf (these are complex types)
+            $hasComplexType = isset($resolvedSchema['allOf']) || 
+                             isset($resolvedSchema['oneOf']) || 
+                             isset($resolvedSchema['anyOf']) ||
+                             isset($resolvedSchema['properties']);
+            
+            if (!$hasComplexType && isset($resolvedSchema['type']) && $resolvedSchema['type'] !== 'object') {
                 return $this->mapType($resolvedSchema, $currentFile);
             }
         } catch (\Exception $e) {
@@ -151,7 +168,21 @@ class TypeMapper
             
             // Get the definition name (last part)
             $defName = end($parts);
-            $interfaceName = $this->sanitizeInterfaceName($defName);
+            
+            // Determine if we should prefix with filename
+            // Only prefix if the file has no root schema (is a "definition library")
+            $hasRootSchema = $this->parser->hasRootObject($currentFile);
+            
+            if ($hasRootSchema) {
+                // File has a root schema, so $defs are supplementary - don't prefix
+                $interfaceName = $this->sanitizeInterfaceName($defName);
+            } else {
+                // File is a definition library - prefix to avoid conflicts
+                $fileBaseName = basename($currentFile, '.json');
+                $fileBaseName = $this->sanitizeInterfaceName($fileBaseName);
+                $defInterfaceName = $this->sanitizeInterfaceName($defName);
+                $interfaceName = $fileBaseName . $defInterfaceName;
+            }
             
             // Get namespace for current file
             $namespace = $this->parser->getNamespaceFromPath($currentFile);
@@ -187,7 +218,22 @@ class TypeMapper
         $pointer = ltrim($pointer, '/');
         $parts = explode('/', $pointer);
         $defName = end($parts);
-        $interfaceName = $this->sanitizeInterfaceName($defName);
+        
+        // Determine if we should prefix with filename
+        // Only prefix if the target file has no root schema (is a "definition library")
+        $hasRootSchema = $this->parser->hasRootObject($targetFile);
+        
+        if ($hasRootSchema) {
+            // File has a root schema, so $defs are supplementary - don't prefix
+            $interfaceName = $this->sanitizeInterfaceName($defName);
+        } else {
+            // File is a definition library - prefix to avoid conflicts
+            // e.g., capability.json#/$defs/response -> CapabilityResponse
+            $fileBaseName = basename($targetFile, '.json');
+            $fileBaseName = $this->sanitizeInterfaceName($fileBaseName);
+            $defInterfaceName = $this->sanitizeInterfaceName($defName);
+            $interfaceName = $fileBaseName . $defInterfaceName;
+        }
 
         return '\\' . $targetNamespace . '\\' . $interfaceName;
     }

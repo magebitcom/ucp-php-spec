@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Magebit\UcpSpec\Schemas;
 
-interface Base
+interface CapabilityBase
 {
     /**
      * Stable capability identifier in reverse-domain notation (e.g., dev.ucp.shopping.checkout). Used in capability negotiation.

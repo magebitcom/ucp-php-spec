@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Magebit\UcpSpec\Schemas\Shopping;
 
-use Magebit\UcpSpec\Schemas\ResponseOrder;
 use Magebit\UcpSpec\Schemas\Shopping\Types\Adjustment;
 use Magebit\UcpSpec\Schemas\Shopping\Types\OrderLineItem;
 use Magebit\UcpSpec\Schemas\Shopping\Types\TotalResponse;
+use Magebit\UcpSpec\Schemas\UcpResponseOrder;
 
 /**
  * Order schema with immutable line items, buyer-facing fulfillment expectations, and append-only event logs.
@@ -23,9 +23,9 @@ use Magebit\UcpSpec\Schemas\Shopping\Types\TotalResponse;
 interface Order
 {
     /**
-     * @return ResponseOrder
+     * @return UcpResponseOrder
      */
-    public function getUcp(): ResponseOrder;
+    public function getUcp(): UcpResponseOrder;
 
     /**
      * Unique order identifier.

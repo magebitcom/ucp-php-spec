@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Magebit\UcpSpec\Discovery;
 
-use Magebit\UcpSpec\Schemas\DiscoveryProfile;
+use Magebit\UcpSpec\Schemas\UcpDiscoveryProfile as UcpDiscoveryProfile1;
 
 /**
  * Schema for UCP discovery profile returned from /.well-known/ucp.
@@ -22,9 +22,9 @@ use Magebit\UcpSpec\Schemas\DiscoveryProfile;
 interface UCPDiscoveryProfile
 {
     /**
-     * @return DiscoveryProfile
+     * @return UcpDiscoveryProfile
      */
-    public function getUcp(): DiscoveryProfile;
+    public function getUcp(): UcpDiscoveryProfile1;
 
     /**
      * Payment configuration containing handlers

@@ -15,7 +15,7 @@ namespace Magebit\UcpSpec\Schemas\Shopping;
 /**
  * User consent states for data processing
  */
-interface Consent
+interface BuyerConsentConsent
 {
     /**
      * Consent for analytics and performance tracking.

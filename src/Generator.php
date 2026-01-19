@@ -151,12 +151,42 @@ class Generator
         string $namespace,
         string $currentFile
     ): void {
-        // Skip if not an object
-        if (!isset($definition['type']) || $definition['type'] !== 'object') {
+        // Skip if not an object and doesn't have complex type indicators
+        $hasComplexType = isset($definition['allOf']) || 
+                         isset($definition['oneOf']) || 
+                         isset($definition['anyOf']) ||
+                         isset($definition['properties']);
+        
+        if (!$hasComplexType && (!isset($definition['type']) || $definition['type'] !== 'object')) {
+            return;
+        }
+        
+        // Skip if it's just an object with additionalProperties (map/dictionary type)
+        if (isset($definition['type']) && 
+            $definition['type'] === 'object' && 
+            isset($definition['additionalProperties']) && 
+            !isset($definition['properties']) &&
+            !isset($definition['allOf']) &&
+            !isset($definition['oneOf']) &&
+            !isset($definition['anyOf'])) {
             return;
         }
 
-        $interfaceName = $this->sanitizeInterfaceName($defName);
+        // Determine if we should prefix with filename
+        // Only prefix if the file has no root schema (is a "definition library")
+        $schema = $this->parser->loadSchema($currentFile);
+        $hasRootSchema = $this->parser->hasRootObject($currentFile);
+        
+        if ($hasRootSchema) {
+            // File has a root schema, so $defs are supplementary - don't prefix
+            $interfaceName = $this->sanitizeInterfaceName($defName);
+        } else {
+            // File is a definition library - prefix to avoid conflicts
+            $fileBaseName = basename($currentFile, '.json');
+            $fileBaseName = $this->sanitizeInterfaceName($fileBaseName);
+            $defInterfaceName = $this->sanitizeInterfaceName($defName);
+            $interfaceName = $fileBaseName . $defInterfaceName;
+        }
 
         // Check if already generated
         if ($this->builder->isGenerated($namespace, $interfaceName)) {
@@ -165,7 +195,7 @@ class Generator
 
         echo "  Generating definition interface: {$interfaceName}\n";
 
-        $file = $this->builder->buildDefinitionInterface($defName, $definition, $namespace, $currentFile);
+        $file = $this->builder->buildDefinitionInterface($interfaceName, $definition, $namespace, $currentFile);
         $outputPath = $this->builder->saveInterface($file, $this->outputDir, $namespace, $interfaceName);
         
         $this->builder->markGenerated($namespace, $interfaceName);

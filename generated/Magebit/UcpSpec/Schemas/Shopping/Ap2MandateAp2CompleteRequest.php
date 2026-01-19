@@ -13,16 +13,16 @@ declare(strict_types=1);
 namespace Magebit\UcpSpec\Schemas\Shopping;
 
 /**
- * Extension fields for complete_checkout when AP2 is negotiated.
+ * The ap2 object included in complete_checkout requests when AP2 is negotiated.
  *
- * Schema: Complete Checkout Request with AP2
+ * Schema: AP2 Complete Request Object
  */
-interface CompleteRequestWithAp2
+interface Ap2MandateAp2CompleteRequest
 {
     /**
-     * AP2 extension data including checkout mandate.
+     * SD-JWT+kb proving user authorized this checkout.
      *
-     * @return Ap2CompleteRequest|null
+     * @return string
      */
-    public function getAp2(): Ap2CompleteRequest|null;
+    public function getCheckoutMandate(): string;
 }

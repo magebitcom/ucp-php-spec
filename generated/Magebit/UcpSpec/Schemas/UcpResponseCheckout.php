@@ -13,11 +13,11 @@ declare(strict_types=1);
 namespace Magebit\UcpSpec\Schemas;
 
 /**
- * UCP metadata for order responses. No payment handlers needed post-purchase.
+ * UCP metadata for checkout responses.
  *
- * Schema: UCP Order Response
+ * Schema: UCP Checkout Response
  */
-interface ResponseOrder
+interface UcpResponseCheckout
 {
     /**
      * @return string
@@ -27,7 +27,7 @@ interface ResponseOrder
     /**
      * Active capabilities for this response.
      *
-     * @return Response[]
+     * @return CapabilityResponse[]
      */
     public function getCapabilities(): array;
 }

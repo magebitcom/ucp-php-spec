@@ -15,7 +15,7 @@ namespace Magebit\UcpSpec\Schemas\Shopping;
 /**
  * Breakdown of how a discount amount was allocated to a specific target.
  */
-interface Allocation
+interface DiscountAllocation
 {
     /**
      * JSONPath to the allocation target (e.g., '$.line_items[0]', '$.totals.shipping').

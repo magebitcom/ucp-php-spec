@@ -15,7 +15,7 @@ namespace Magebit\UcpSpec\Schemas\Shopping;
 /**
  * Discount codes input and applied discounts output.
  */
-interface DiscountsObject
+interface DiscountDiscountsObject
 {
     /**
      * Discount codes to apply. Case-insensitive. Replaces previously submitted codes. Send empty array to clear.
@@ -27,7 +27,7 @@ interface DiscountsObject
     /**
      * Discounts successfully applied (code-based and automatic).
      *
-     * @return AppliedDiscount[]|null
+     * @return DiscountAppliedDiscount[]|null
      */
     public function getApplied(): array|null;
 }
