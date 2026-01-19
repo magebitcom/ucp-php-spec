@@ -17,6 +17,10 @@ namespace Magebit\UcpSpec\Schemas\Shopping\Types;
  */
 interface OrderLineItem
 {
+    public const STATUS_PROCESSING = 'processing';
+    public const STATUS_PARTIAL = 'partial';
+    public const STATUS_FULFILLED = 'fulfilled';
+
     /**
      * Line item identifier.
      *

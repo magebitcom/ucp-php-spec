@@ -19,6 +19,9 @@ namespace Magebit\UcpSpec\Schemas\Shopping\Types;
  */
 interface FulfillmentMethodResponse
 {
+    public const TYPE_SHIPPING = 'shipping';
+    public const TYPE_PICKUP = 'pickup';
+
     /**
      * Unique fulfillment method identifier.
      *

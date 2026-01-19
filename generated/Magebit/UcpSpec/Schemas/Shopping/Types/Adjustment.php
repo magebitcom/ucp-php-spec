@@ -17,6 +17,10 @@ namespace Magebit\UcpSpec\Schemas\Shopping\Types;
  */
 interface Adjustment
 {
+    public const STATUS_PENDING = 'pending';
+    public const STATUS_COMPLETED = 'completed';
+    public const STATUS_FAILED = 'failed';
+
     /**
      * Adjustment event identifier.
      *

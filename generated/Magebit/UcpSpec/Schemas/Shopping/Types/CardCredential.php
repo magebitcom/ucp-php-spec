@@ -19,6 +19,10 @@ namespace Magebit\UcpSpec\Schemas\Shopping\Types;
  */
 interface CardCredential
 {
+    public const CARD_NUMBER_TYPE_FPAN = 'fpan';
+    public const CARD_NUMBER_TYPE_NETWORK_TOKEN = 'network_token';
+    public const CARD_NUMBER_TYPE_DPAN = 'dpan';
+
     /**
      * The credential type identifier for card credentials.
      *

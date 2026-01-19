@@ -27,6 +27,13 @@ use Magebit\UcpSpec\Schemas\UcpResponseCheckout;
  */
 interface DiscountCheckout
 {
+    public const STATUS_INCOMPLETE = 'incomplete';
+    public const STATUS_REQUIRES_ESCALATION = 'requires_escalation';
+    public const STATUS_READY_FOR_COMPLETE = 'ready_for_complete';
+    public const STATUS_COMPLETE_IN_PROGRESS = 'complete_in_progress';
+    public const STATUS_COMPLETED = 'completed';
+    public const STATUS_CANCELED = 'canceled';
+
     /**
      * @return UcpResponseCheckout
      */

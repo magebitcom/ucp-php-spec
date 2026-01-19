@@ -17,6 +17,9 @@ namespace Magebit\UcpSpec\Schemas\Shopping\Types;
  */
 interface MessageWarning
 {
+    public const CONTENT_TYPE_PLAIN = 'plain';
+    public const CONTENT_TYPE_MARKDOWN = 'markdown';
+
     /**
      * Message type discriminator.
      *

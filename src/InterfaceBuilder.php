@@ -164,8 +164,61 @@ class InterfaceBuilder
         $properties = $schema['properties'] ?? [];
         $required = $schema['required'] ?? [];
 
+        // First, add enum constants for all properties with enum values
+        foreach ($properties as $propertyName => $property) {
+            $this->addEnumConstants($interface, $propertyName, $property, $currentFile);
+        }
+
+        // Then add getter methods
         foreach ($properties as $propertyName => $property) {
             $this->addPropertyMethod($interface, $propertyName, $property, $required, $currentFile, $namespace);
+        }
+    }
+
+    /**
+     * Add enum constants for a property if it has enum values
+     *
+     * @param InterfaceType $interface Interface to add constants to
+     * @param string $propertyName Name of the property
+     * @param array $property Property schema definition
+     * @param string $currentFile Current file path for resolving references
+     * @return void
+     */
+    private function addEnumConstants(
+        InterfaceType $interface,
+        string $propertyName,
+        array $property,
+        string $currentFile
+    ): void {
+        // Resolve $ref if present
+        $resolvedProperty = $property;
+        if (isset($property['$ref'])) {
+            try {
+                $resolvedProperty = $this->parser->resolveRef($property['$ref'], $currentFile);
+            } catch (\Exception $e) {
+                // If resolution fails, use original property
+                return;
+            }
+        }
+
+        // Check if property has enum values
+        if (!isset($resolvedProperty['enum']) || !is_array($resolvedProperty['enum'])) {
+            return;
+        }
+
+        // Generate constant name prefix from property name
+        $prefix = strtoupper(preg_replace('/([a-z])([A-Z])/', '$1_$2', $propertyName));
+        $prefix = strtoupper(str_replace(['-', '.'], '_', $prefix));
+
+        // Add a constant for each enum value
+        foreach ($resolvedProperty['enum'] as $enumValue) {
+            // Generate constant name from enum value
+            $constantSuffix = strtoupper(str_replace(['-', '.', ' '], '_', $enumValue));
+            $constantName = $prefix . '_' . $constantSuffix;
+
+            // Add the constant
+            $interface->addConstant($constantName, $enumValue)
+                ->setPublic();
         }
     }
 

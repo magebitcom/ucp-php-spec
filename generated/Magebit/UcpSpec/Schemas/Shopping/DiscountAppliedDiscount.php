@@ -17,6 +17,9 @@ namespace Magebit\UcpSpec\Schemas\Shopping;
  */
 interface DiscountAppliedDiscount
 {
+    public const METHOD_EACH = 'each';
+    public const METHOD_ACROSS = 'across';
+
     /**
      * The discount code. Omitted for automatic discounts.
      *

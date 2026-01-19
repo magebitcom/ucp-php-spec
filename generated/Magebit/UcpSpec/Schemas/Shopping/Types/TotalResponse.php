@@ -17,6 +17,14 @@ namespace Magebit\UcpSpec\Schemas\Shopping\Types;
  */
 interface TotalResponse
 {
+    public const TYPE_ITEMS_DISCOUNT = 'items_discount';
+    public const TYPE_SUBTOTAL = 'subtotal';
+    public const TYPE_DISCOUNT = 'discount';
+    public const TYPE_FULFILLMENT = 'fulfillment';
+    public const TYPE_TAX = 'tax';
+    public const TYPE_FEE = 'fee';
+    public const TYPE_TOTAL = 'total';
+
     /**
      * Type of total categorization.
      *

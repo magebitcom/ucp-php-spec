@@ -14,6 +14,9 @@ namespace Magebit\UcpSpec\Discovery;
 
 interface UCPDiscoveryProfileSigningKeysItem
 {
+    public const USE_SIG = 'sig';
+    public const USE_ENC = 'enc';
+
     /**
      * Key ID. Referenced in signature headers to identify which key to use for verification.
      *

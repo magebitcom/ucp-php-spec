@@ -17,6 +17,12 @@ namespace Magebit\UcpSpec\Schemas\Shopping\Types;
  */
 interface Message
 {
+    public const CONTENT_TYPE_PLAIN = 'plain';
+    public const CONTENT_TYPE_MARKDOWN = 'markdown';
+    public const SEVERITY_RECOVERABLE = 'recoverable';
+    public const SEVERITY_REQUIRES_BUYER_INPUT = 'requires_buyer_input';
+    public const SEVERITY_REQUIRES_BUYER_REVIEW = 'requires_buyer_review';
+
     /**
      * Message type discriminator.
      *

@@ -17,6 +17,10 @@ namespace Magebit\UcpSpec\Schemas\Shopping\Types;
  */
 interface Expectation
 {
+    public const METHOD_TYPE_SHIPPING = 'shipping';
+    public const METHOD_TYPE_PICKUP = 'pickup';
+    public const METHOD_TYPE_DIGITAL = 'digital';
+
     /**
      * Expectation identifier.
      *
