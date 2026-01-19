@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * This file is auto-generated. Do not edit manually.
+ *
+ * @author    Magebit <info@magebit.com>
+ * @copyright Copyright (c) Magebit, Ltd. (https://magebit.com)
+ * @license   MIT
+ */
+
+declare(strict_types=1);
+
+namespace Magebit\UcpSpec\Schemas\Shopping\Types;
+
+/**
+ * Permits multiple destinations per method type.
+ */
+interface MerchantFulfillmentConfigAllowsMultiDestination
+{
+    /**
+     * Multiple shipping destinations allowed.
+     *
+     * @return bool|null
+     */
+    function getShipping(): bool|null;
+
+    /**
+     * Multiple pickup locations allowed.
+     *
+     * @return bool|null
+     */
+    function getPickup(): bool|null;
+}

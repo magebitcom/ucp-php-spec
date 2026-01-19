@@ -1,0 +1,28 @@
+{
+    "name": "magebitcom/ucp-php-spec",
+    "description": "Universal Commerce Protocol specification for PHP",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Magebit\\UcpSpec\\": "generated/Magebit/UcpSpec/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Magebit\\UcpSpecGenerator\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Magebit",
+            "email": "info@magebit.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.1"
+    },
+    "require-dev": {
+        "nette/php-generator": "^4.2"
+    }
+}

@@ -1,0 +1,54 @@
+<?php
+
+/**
+ * This file is auto-generated. Do not edit manually.
+ *
+ * @author    Magebit <info@magebit.com>
+ * @copyright Copyright (c) Magebit, Ltd. (https://magebit.com)
+ * @license   MIT
+ */
+
+declare(strict_types=1);
+
+namespace Magebit\UcpSpec\Schemas\Shopping\Types;
+
+/**
+ * Schema: Message Warning
+ */
+interface MessageWarning
+{
+    /**
+     * Message type discriminator.
+     *
+     * @return string
+     */
+    function getType(): string;
+
+    /**
+     * JSONPath (RFC 9535) to related field (e.g., $.line_items[0]).
+     *
+     * @return string|null
+     */
+    function getPath(): string|null;
+
+    /**
+     * Warning code. Machine-readable identifier for the warning type (e.g., final_sale, prop65, fulfillment_changed, age_restricted, etc.).
+     *
+     * @return string
+     */
+    function getCode(): string;
+
+    /**
+     * Human-readable warning message that MUST be displayed.
+     *
+     * @return string
+     */
+    function getContent(): string;
+
+    /**
+     * Content format, default = plain.
+     *
+     * @return string|null
+     */
+    function getContentType(): string|null;
+}

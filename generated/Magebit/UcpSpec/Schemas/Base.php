@@ -1,0 +1,58 @@
+<?php
+
+/**
+ * This file is auto-generated. Do not edit manually.
+ *
+ * @author    Magebit <info@magebit.com>
+ * @copyright Copyright (c) Magebit, Ltd. (https://magebit.com)
+ * @license   MIT
+ */
+
+declare(strict_types=1);
+
+namespace Magebit\UcpSpec\Schemas;
+
+interface Base
+{
+    /**
+     * Stable capability identifier in reverse-domain notation (e.g., dev.ucp.shopping.checkout). Used in capability negotiation.
+     *
+     * @return string|null
+     */
+    function getName(): string|null;
+
+    /**
+     * Capability version in YYYY-MM-DD format.
+     *
+     * @return Version|null
+     */
+    function getVersion(): Version|null;
+
+    /**
+     * URL to human-readable specification document.
+     *
+     * @return string|null
+     */
+    function getSpec(): string|null;
+
+    /**
+     * URL to JSON Schema for this capability's payload.
+     *
+     * @return string|null
+     */
+    function getSchema(): string|null;
+
+    /**
+     * Parent capability this extends. Present for extensions, absent for root capabilities.
+     *
+     * @return string|null
+     */
+    function getExtends(): string|null;
+
+    /**
+     * Capability-specific configuration (structure defined by each capability).
+     *
+     * @return object|null
+     */
+    function getConfig(): object|null;
+}
