@@ -22,7 +22,7 @@ interface Ap2CheckoutResponse
     /**
      * Merchant's signature proving checkout terms are authentic.
      *
-     * @return MerchantAuthorization
+     * @return string
      */
-    public function getMerchantAuthorization(): MerchantAuthorization;
+    public function getMerchantAuthorization(): string;
 }

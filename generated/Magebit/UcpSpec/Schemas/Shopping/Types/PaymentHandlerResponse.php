@@ -12,8 +12,6 @@ declare(strict_types=1);
 
 namespace Magebit\UcpSpec\Schemas\Shopping\Types;
 
-use Magebit\UcpSpec\Schemas\Version;
-
 /**
  * Schema: Payment Handler Response
  */
@@ -36,9 +34,9 @@ interface PaymentHandlerResponse
     /**
      * Handler version in YYYY-MM-DD format.
      *
-     * @return Version
+     * @return string
      */
-    public function getVersion(): Version;
+    public function getVersion(): string;
 
     /**
      * A URI pointing to the technical specification or schema that defines how this handler operates.

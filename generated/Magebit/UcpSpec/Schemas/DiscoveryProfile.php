@@ -20,9 +20,9 @@ namespace Magebit\UcpSpec\Schemas;
 interface DiscoveryProfile
 {
     /**
-     * @return Version
+     * @return string
      */
-    public function getVersion(): Version;
+    public function getVersion(): string;
 
     /**
      * @return Services

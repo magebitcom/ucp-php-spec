@@ -20,9 +20,9 @@ namespace Magebit\UcpSpec\Schemas;
 interface ResponseCheckout
 {
     /**
-     * @return Version
+     * @return string
      */
-    public function getVersion(): Version;
+    public function getVersion(): string;
 
     /**
      * Active capabilities for this response.

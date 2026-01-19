@@ -12,8 +12,6 @@ declare(strict_types=1);
 
 namespace Magebit\UcpSpec\Services;
 
-use Magebit\UcpSpec\Schemas\Version;
-
 /**
  * Schema for UCP service definitions. A service defines the API surface for a vertical (shopping, common, etc.) with transport bindings.
  *
@@ -24,9 +22,9 @@ interface UCPService
     /**
      * Service version in YYYY-MM-DD format.
      *
-     * @return Version
+     * @return string
      */
-    public function getVersion(): Version;
+    public function getVersion(): string;
 
     /**
      * URL to service documentation. Origin MUST match namespace authority.

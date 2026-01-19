@@ -123,14 +123,26 @@ class TypeMapper
     }
 
     /**
-     * Resolve $ref to fully qualified interface name
+     * Resolve $ref to fully qualified interface name or primitive type
      *
      * @param string $ref Reference string (e.g., "#/$defs/version" or "../file.json#/$defs/version")
      * @param string $currentFile Current file path for resolving relative references
-     * @return string Fully qualified interface name with leading backslash
+     * @return string Fully qualified interface name with leading backslash or primitive type
      */
     private function resolveRefType(string $ref, string $currentFile): string
     {
+        // Resolve the actual schema to check its type
+        try {
+            $resolvedSchema = $this->parser->resolveRef($ref, $currentFile);
+            
+            // If it's a simple type (not an object), return the mapped type
+            if (isset($resolvedSchema['type']) && $resolvedSchema['type'] !== 'object') {
+                return $this->mapType($resolvedSchema, $currentFile);
+            }
+        } catch (\Exception $e) {
+            // If resolution fails, fall back to interface name generation
+        }
+        
         // Parse the reference
         if (strpos($ref, '#') === 0) {
             // Internal reference - same namespace as current file

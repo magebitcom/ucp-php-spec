@@ -22,7 +22,7 @@ interface Ap2CompleteRequest
     /**
      * SD-JWT+kb proving user authorized this checkout.
      *
-     * @return CheckoutMandate
+     * @return string
      */
-    public function getCheckoutMandate(): CheckoutMandate;
+    public function getCheckoutMandate(): string;
 }

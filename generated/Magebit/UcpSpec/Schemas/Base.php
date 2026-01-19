@@ -24,9 +24,9 @@ interface Base
     /**
      * Capability version in YYYY-MM-DD format.
      *
-     * @return Version|null
+     * @return string|null
      */
-    public function getVersion(): Version|null;
+    public function getVersion(): string|null;
 
     /**
      * URL to human-readable specification document.
