@@ -33,7 +33,7 @@ interface UcpDiscoveryProfileInterface
     /**
      * @return array<string, UCPServiceInterface>
      */
-    public function getServices(): object;
+    public function getServices(): array;
 
     /**
      * Supported capabilities and extensions.

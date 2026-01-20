@@ -460,6 +460,14 @@ class InterfaceBuilder
         // Check if property is an array type
         $propertyType = $property['type'] ?? null;
         
+        // If phpType is already an interface type (starts with \) and property has properties,
+        // it's an inline object interface - use the interface type directly
+        if (strpos($phpType, '\\') === 0 && isset($property['properties'])) {
+            // It's an inline object that was mapped to an interface FQN
+            $this->addUseStatementsForType($phpType, $namespace);
+            return $this->simplifyTypeForComment($phpType, $namespace);
+        }
+        
         // Check if we're dealing with an array with items
         if ($propertyType === 'array' && isset($property['items'])) {
             $itemType = $this->typeMapper->getArrayItemType($property, $currentFile, $parentName, $propertyName);
@@ -481,16 +489,26 @@ class InterfaceBuilder
         }
         
         // Check if we're dealing with an object with additionalProperties (map/dictionary)
-        if ($propertyType === 'object' && isset($property['additionalProperties'])) {
+        // Only treat as dictionary if it has additionalProperties AND no properties defined
+        // Objects with properties are inline objects that should have interfaces, not dictionaries
+        if ($propertyType === 'object' && 
+            isset($property['additionalProperties']) && 
+            !isset($property['properties'])) {
             $valueType = null;
             
-            // If additionalProperties has a $ref, resolve it
-            if (isset($property['additionalProperties']['$ref'])) {
-                $valueType = $this->typeMapper->mapType($property['additionalProperties'], $currentFile);
-                $this->addUseStatementsForType($valueType, $namespace);
-                $valueType = $this->simplifyTypeForComment($valueType, $namespace);
-            } elseif (isset($property['additionalProperties']['type'])) {
-                $valueType = $property['additionalProperties']['type'];
+            // Check if additionalProperties is a boolean (true = any type allowed = mixed)
+            if (is_bool($property['additionalProperties'])) {
+                // additionalProperties: true means any value type (mixed)
+                $valueType = 'mixed';
+            } elseif (is_array($property['additionalProperties'])) {
+                // If additionalProperties has a $ref, resolve it
+                if (isset($property['additionalProperties']['$ref'])) {
+                    $valueType = $this->typeMapper->mapType($property['additionalProperties'], $currentFile);
+                    $this->addUseStatementsForType($valueType, $namespace);
+                    $valueType = $this->simplifyTypeForComment($valueType, $namespace);
+                } elseif (isset($property['additionalProperties']['type'])) {
+                    $valueType = $property['additionalProperties']['type'];
+                }
             }
             
             if ($valueType !== null && $valueType !== 'mixed') {
@@ -500,6 +518,26 @@ class InterfaceBuilder
                 }
                 return 'array<string, ' . $valueType . '>';
             }
+            
+            // Value type is unknown or mixed - use array<mixed>
+            if (strpos($phpType, '|null') !== false || strpos($phpType, 'null|') !== false) {
+                return 'array<mixed>|null';
+            }
+            return 'array<mixed>';
+        }
+        
+        // Check if phpType is array but we don't have array items info
+        // This could be a dictionary/map that was converted to array
+        // Only apply if property doesn't have properties (which would be an inline object interface)
+        if ($phpType === 'array' && 
+            $propertyType !== 'array' && 
+            !isset($property['items']) && 
+            !isset($property['properties'])) {
+            // This is likely a dictionary/map that was converted to array
+            if (strpos($phpType, '|null') !== false || strpos($phpType, 'null|') !== false) {
+                return 'array<mixed>|null';
+            }
+            return 'array<mixed>';
         }
 
         // For non-array types or arrays without items, simplify normally

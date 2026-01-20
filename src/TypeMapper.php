@@ -152,6 +152,11 @@ class TypeMapper
             return '\\' . $namespace . '\\' . $interfaceName;
         }
 
+        // If object has additionalProperties but no properties, it's a dictionary/map - use array
+        if (isset($property['additionalProperties']) && !isset($property['properties'])) {
+            return 'array';
+        }
+
         return 'object';
     }
 
@@ -176,7 +181,7 @@ class TypeMapper
                 !isset($resolvedSchema['allOf']) &&
                 !isset($resolvedSchema['oneOf']) &&
                 !isset($resolvedSchema['anyOf'])) {
-                return 'object';
+                return 'array';
             }
             
             // Check if it's a simple type (not an object)

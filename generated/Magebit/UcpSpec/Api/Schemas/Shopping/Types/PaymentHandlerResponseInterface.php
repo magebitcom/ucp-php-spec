@@ -68,7 +68,7 @@ interface PaymentHandlerResponseInterface
     /**
      * A dictionary containing provider-specific configuration details, such as merchant IDs, supported networks, or gateway credentials.
      *
-     * @return object
+     * @return array<mixed>
      */
-    public function getConfig(): object;
+    public function getConfig(): array;
 }

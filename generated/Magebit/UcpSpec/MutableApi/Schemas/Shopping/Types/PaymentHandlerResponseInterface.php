@@ -68,9 +68,9 @@ interface PaymentHandlerResponseInterface
     /**
      * A dictionary containing provider-specific configuration details, such as merchant IDs, supported networks, or gateway credentials.
      *
-     * @return object
+     * @return array<mixed>
      */
-    public function getConfig(): object;
+    public function getConfig(): array;
 
     /**
      * The unique identifier for this handler instance within the payment.handlers. Used by payment instruments to reference which handler produced them.
@@ -121,8 +121,8 @@ interface PaymentHandlerResponseInterface
     /**
      * A dictionary containing provider-specific configuration details, such as merchant IDs, supported networks, or gateway credentials.
      *
-     * @param object $config
+     * @param array<mixed> $config
      * @return self
      */
-    public function setConfig(object $config): self;
+    public function setConfig(array $config): self;
 }

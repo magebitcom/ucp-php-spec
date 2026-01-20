@@ -33,7 +33,7 @@ interface UcpDiscoveryProfileInterface
     /**
      * @return array<string, UCPServiceInterface>
      */
-    public function getServices(): object;
+    public function getServices(): array;
 
     /**
      * Supported capabilities and extensions.
@@ -52,7 +52,7 @@ interface UcpDiscoveryProfileInterface
      * @param array<string, UCPServiceInterface> $services
      * @return self
      */
-    public function setServices(object $services): self;
+    public function setServices(array $services): self;
 
     /**
      * Supported capabilities and extensions.
