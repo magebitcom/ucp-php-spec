@@ -24,6 +24,15 @@ use Magebit\UcpSpec\MutableApi\Schemas\UcpResponseOrderInterface;
  */
 interface OrderInterface
 {
+    public const KEY_UCP = 'ucp';
+    public const KEY_ID = 'id';
+    public const KEY_CHECKOUT_ID = 'checkout_id';
+    public const KEY_PERMALINK_URL = 'permalink_url';
+    public const KEY_LINE_ITEMS = 'line_items';
+    public const KEY_FULFILLMENT = 'fulfillment';
+    public const KEY_ADJUSTMENTS = 'adjustments';
+    public const KEY_TOTALS = 'totals';
+
     /**
      * @return UcpResponseOrderInterface
      */

@@ -17,6 +17,11 @@ namespace Magebit\UcpSpec\Api\Schemas\Shopping\Types;
  */
 interface ItemResponseInterface
 {
+    public const KEY_ID = 'id';
+    public const KEY_TITLE = 'title';
+    public const KEY_PRICE = 'price';
+    public const KEY_IMAGE_URL = 'image_url';
+
     /**
      * Should be recognized by both the Platform, and the Business. For Google it should match the id provided in the "id" field in the product feed.
      *

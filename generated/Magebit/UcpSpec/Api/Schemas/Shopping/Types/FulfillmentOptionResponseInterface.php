@@ -19,6 +19,14 @@ namespace Magebit\UcpSpec\Api\Schemas\Shopping\Types;
  */
 interface FulfillmentOptionResponseInterface
 {
+    public const KEY_ID = 'id';
+    public const KEY_TITLE = 'title';
+    public const KEY_DESCRIPTION = 'description';
+    public const KEY_CARRIER = 'carrier';
+    public const KEY_EARLIEST_FULFILLMENT_TIME = 'earliest_fulfillment_time';
+    public const KEY_LATEST_FULFILLMENT_TIME = 'latest_fulfillment_time';
+    public const KEY_TOTALS = 'totals';
+
     /**
      * Unique fulfillment option identifier.
      *

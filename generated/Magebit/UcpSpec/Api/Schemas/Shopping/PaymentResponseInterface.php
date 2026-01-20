@@ -22,6 +22,10 @@ use Magebit\UcpSpec\Api\Schemas\Shopping\Types\PaymentInstrumentInterface;
  */
 interface PaymentResponseInterface
 {
+    public const KEY_HANDLERS = 'handlers';
+    public const KEY_SELECTED_INSTRUMENT_ID = 'selected_instrument_id';
+    public const KEY_INSTRUMENTS = 'instruments';
+
     /**
      * Processing configurations that define how payment instruments can be collected. Each handler specifies a tokenization or payment collection strategy.
      *

@@ -19,6 +19,8 @@ namespace Magebit\UcpSpec\MutableApi\Schemas\Shopping;
  */
 interface Ap2MandateAp2CompleteRequestInterface
 {
+    public const KEY_CHECKOUT_MANDATE = 'checkout_mandate';
+
     /**
      * SD-JWT+kb proving user authorized this checkout.
      *

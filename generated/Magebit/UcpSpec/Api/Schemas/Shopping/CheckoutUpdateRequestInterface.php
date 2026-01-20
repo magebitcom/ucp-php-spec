@@ -22,6 +22,12 @@ use Magebit\UcpSpec\Api\Schemas\Shopping\Types\LineItemUpdateRequestInterface;
  */
 interface CheckoutUpdateRequestInterface
 {
+    public const KEY_ID = 'id';
+    public const KEY_LINE_ITEMS = 'line_items';
+    public const KEY_BUYER = 'buyer';
+    public const KEY_CURRENCY = 'currency';
+    public const KEY_PAYMENT = 'payment';
+
     /**
      * Unique identifier of the checkout session.
      *

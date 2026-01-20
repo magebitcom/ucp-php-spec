@@ -19,6 +19,11 @@ namespace Magebit\UcpSpec\Api\Schemas\Shopping\Types;
  */
 interface LineItemUpdateRequestInterface
 {
+    public const KEY_ID = 'id';
+    public const KEY_ITEM = 'item';
+    public const KEY_QUANTITY = 'quantity';
+    public const KEY_PARENT_ID = 'parent_id';
+
     /**
      * @return string|null
      */

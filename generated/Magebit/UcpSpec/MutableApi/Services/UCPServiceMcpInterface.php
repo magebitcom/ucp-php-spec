@@ -17,6 +17,9 @@ namespace Magebit\UcpSpec\MutableApi\Services;
  */
 interface UCPServiceMcpInterface
 {
+    public const KEY_SCHEMA = 'schema';
+    public const KEY_ENDPOINT = 'endpoint';
+
     /**
      * URL to OpenRPC specification (JSON format)
      *

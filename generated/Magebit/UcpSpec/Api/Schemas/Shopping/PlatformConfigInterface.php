@@ -19,6 +19,8 @@ namespace Magebit\UcpSpec\Api\Schemas\Shopping;
  */
 interface PlatformConfigInterface
 {
+    public const KEY_WEBHOOK_URL = 'webhook_url';
+
     /**
      * URL where merchant sends order lifecycle events (webhooks).
      *

@@ -21,6 +21,10 @@ use Magebit\UcpSpec\Api\Schemas\UcpDiscoveryProfileInterface as UcpDiscoveryProf
  */
 interface UCPDiscoveryProfileInterface
 {
+    public const KEY_UCP = 'ucp';
+    public const KEY_PAYMENT = 'payment';
+    public const KEY_SIGNING_KEYS = 'signing_keys';
+
     /**
      * @return UcpDiscoveryProfileInterface
      */

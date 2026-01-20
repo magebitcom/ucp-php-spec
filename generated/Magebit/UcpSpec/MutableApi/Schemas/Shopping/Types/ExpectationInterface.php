@@ -19,6 +19,12 @@ namespace Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types;
  */
 interface ExpectationInterface
 {
+    public const KEY_ID = 'id';
+    public const KEY_LINE_ITEMS = 'line_items';
+    public const KEY_METHOD_TYPE = 'method_type';
+    public const KEY_DESTINATION = 'destination';
+    public const KEY_DESCRIPTION = 'description';
+    public const KEY_FULFILLABLE_ON = 'fulfillable_on';
     public const METHOD_TYPE_SHIPPING = 'shipping';
     public const METHOD_TYPE_PICKUP = 'pickup';
     public const METHOD_TYPE_DIGITAL = 'digital';

@@ -17,6 +17,8 @@ namespace Magebit\UcpSpec\MutableApi\Services;
  */
 interface UCPServiceEmbeddedInterface
 {
+    public const KEY_SCHEMA = 'schema';
+
     /**
      * URL to OpenRPC specification (JSON format) defining the embedded protocol
      *

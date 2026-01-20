@@ -17,6 +17,11 @@ namespace Magebit\UcpSpec\Api\Schemas\Shopping;
  */
 interface BuyerConsentConsentInterface
 {
+    public const KEY_ANALYTICS = 'analytics';
+    public const KEY_PREFERENCES = 'preferences';
+    public const KEY_MARKETING = 'marketing';
+    public const KEY_SALE_OF_DATA = 'sale_of_data';
+
     /**
      * Consent for analytics and performance tracking.
      *

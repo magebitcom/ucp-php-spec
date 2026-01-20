@@ -22,6 +22,11 @@ use Magebit\UcpSpec\Api\Schemas\Shopping\Types\LineItemCreateRequestInterface;
  */
 interface CheckoutCreateRequestInterface
 {
+    public const KEY_LINE_ITEMS = 'line_items';
+    public const KEY_BUYER = 'buyer';
+    public const KEY_CURRENCY = 'currency';
+    public const KEY_PAYMENT = 'payment';
+
     /**
      * List of line items being checked out.
      *

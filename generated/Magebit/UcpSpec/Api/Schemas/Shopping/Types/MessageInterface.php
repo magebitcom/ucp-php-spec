@@ -19,6 +19,12 @@ namespace Magebit\UcpSpec\Api\Schemas\Shopping\Types;
  */
 interface MessageInterface
 {
+    public const KEY_TYPE = 'type';
+    public const KEY_CODE = 'code';
+    public const KEY_PATH = 'path';
+    public const KEY_CONTENT_TYPE = 'content_type';
+    public const KEY_CONTENT = 'content';
+    public const KEY_SEVERITY = 'severity';
     public const CONTENT_TYPE_PLAIN = 'plain';
     public const CONTENT_TYPE_MARKDOWN = 'markdown';
     public const SEVERITY_RECOVERABLE = 'recoverable';

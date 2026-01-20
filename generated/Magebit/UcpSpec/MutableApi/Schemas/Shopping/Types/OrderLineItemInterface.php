@@ -17,6 +17,12 @@ namespace Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types;
  */
 interface OrderLineItemInterface
 {
+    public const KEY_ID = 'id';
+    public const KEY_ITEM = 'item';
+    public const KEY_QUANTITY = 'quantity';
+    public const KEY_TOTALS = 'totals';
+    public const KEY_STATUS = 'status';
+    public const KEY_PARENT_ID = 'parent_id';
     public const STATUS_PROCESSING = 'processing';
     public const STATUS_PARTIAL = 'partial';
     public const STATUS_FULFILLED = 'fulfilled';

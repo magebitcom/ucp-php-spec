@@ -19,6 +19,8 @@ namespace Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types;
  */
 interface PaymentIdentityInterface
 {
+    public const KEY_ACCESS_TOKEN = 'access_token';
+
     /**
      * Unique identifier for this participant, obtained during onboarding with the tokenizer.
      *

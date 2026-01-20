@@ -17,6 +17,9 @@ namespace Magebit\UcpSpec\Api\Schemas\Shopping;
  */
 interface DiscountAllocationInterface
 {
+    public const KEY_PATH = 'path';
+    public const KEY_AMOUNT = 'amount';
+
     /**
      * JSONPath to the allocation target (e.g., '$.line_items[0]', '$.totals.shipping').
      *

@@ -19,6 +19,15 @@ namespace Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types;
  */
 interface FulfillmentEventInterface
 {
+    public const KEY_ID = 'id';
+    public const KEY_OCCURRED_AT = 'occurred_at';
+    public const KEY_TYPE = 'type';
+    public const KEY_LINE_ITEMS = 'line_items';
+    public const KEY_TRACKING_NUMBER = 'tracking_number';
+    public const KEY_TRACKING_URL = 'tracking_url';
+    public const KEY_CARRIER = 'carrier';
+    public const KEY_DESCRIPTION = 'description';
+
     /**
      * Fulfillment event identifier.
      *

@@ -193,7 +193,12 @@ class InterfaceBuilder
         $properties = $schema['properties'] ?? [];
         $required = $schema['required'] ?? [];
 
-        // First, add enum constants for all properties with enum values
+        // First, add key constants for all properties
+        foreach ($properties as $propertyName => $property) {
+            $this->addKeyConstant($interface, $propertyName);
+        }
+
+        // Then add enum constants for all properties with enum values
         foreach ($properties as $propertyName => $property) {
             $this->addEnumConstants($interface, $propertyName, $property, $currentFile);
         }
@@ -209,6 +214,28 @@ class InterfaceBuilder
                 $this->addSetterMethod($interface, $propertyName, $property, $required, $currentFile, $namespace);
             }
         }
+    }
+
+    /**
+     * Add key constant for a property
+     *
+     * @param InterfaceType $interface Interface to add constant to
+     * @param string $propertyName Name of the property
+     * @return void
+     */
+    private function addKeyConstant(
+        InterfaceType $interface,
+        string $propertyName
+    ): void {
+        // Convert property name to KEY_* format (UPPER_SNAKE_CASE)
+        $constantName = 'KEY_' . $this->toUpperSnakeCase($propertyName);
+        
+        // Value is the property name in snake_case
+        $constantValue = $this->toSnakeCase($propertyName);
+        
+        // Add the constant
+        $interface->addConstant($constantName, $constantValue)
+            ->setPublic();
     }
 
     /**
@@ -662,6 +689,36 @@ class InterfaceBuilder
         $name = str_replace(['-', '_', '.'], ' ', $name);
         $name = ucwords($name);
         return str_replace(' ', '', $name);
+    }
+
+    /**
+     * Convert any case to snake_case
+     *
+     * @param string $name Name in any case
+     * @return string Name in snake_case
+     */
+    private function toSnakeCase(string $name): string
+    {
+        // If already in snake_case or contains underscores, normalize it
+        if (strpos($name, '_') !== false || strpos($name, '-') !== false) {
+            $name = str_replace(['-', '.'], '_', $name);
+            return strtolower($name);
+        }
+        
+        // Convert camelCase/PascalCase to snake_case
+        $name = preg_replace('/([a-z])([A-Z])/', '$1_$2', $name);
+        return strtolower($name);
+    }
+
+    /**
+     * Convert any case to UPPER_SNAKE_CASE
+     *
+     * @param string $name Name in any case
+     * @return string Name in UPPER_SNAKE_CASE
+     */
+    private function toUpperSnakeCase(string $name): string
+    {
+        return strtoupper($this->toSnakeCase($name));
     }
 
     /**

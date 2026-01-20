@@ -19,6 +19,8 @@ namespace Magebit\UcpSpec\Api\Schemas\Shopping;
  */
 interface Ap2MandateCompleteRequestWithAp2Interface
 {
+    public const KEY_AP2 = 'ap2';
+
     /**
      * AP2 extension data including checkout mandate.
      *

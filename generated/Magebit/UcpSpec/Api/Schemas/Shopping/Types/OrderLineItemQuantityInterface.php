@@ -17,6 +17,9 @@ namespace Magebit\UcpSpec\Api\Schemas\Shopping\Types;
  */
 interface OrderLineItemQuantityInterface
 {
+    public const KEY_TOTAL = 'total';
+    public const KEY_FULFILLED = 'fulfilled';
+
     /**
      * Current total quantity.
      *

@@ -17,6 +17,9 @@ namespace Magebit\UcpSpec\Api\Schemas\Shopping\Types;
  */
 interface TotalResponseInterface
 {
+    public const KEY_TYPE = 'type';
+    public const KEY_DISPLAY_TEXT = 'display_text';
+    public const KEY_AMOUNT = 'amount';
     public const TYPE_ITEMS_DISCOUNT = 'items_discount';
     public const TYPE_SUBTOTAL = 'subtotal';
     public const TYPE_DISCOUNT = 'discount';

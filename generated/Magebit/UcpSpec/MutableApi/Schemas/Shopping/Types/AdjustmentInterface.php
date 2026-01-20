@@ -19,6 +19,13 @@ namespace Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types;
  */
 interface AdjustmentInterface
 {
+    public const KEY_ID = 'id';
+    public const KEY_TYPE = 'type';
+    public const KEY_OCCURRED_AT = 'occurred_at';
+    public const KEY_STATUS = 'status';
+    public const KEY_LINE_ITEMS = 'line_items';
+    public const KEY_AMOUNT = 'amount';
+    public const KEY_DESCRIPTION = 'description';
     public const STATUS_PENDING = 'pending';
     public const STATUS_COMPLETED = 'completed';
     public const STATUS_FAILED = 'failed';

@@ -19,6 +19,18 @@ namespace Magebit\UcpSpec\Api\Schemas\Shopping\Types;
  */
 interface FulfillmentDestinationRequestInterface
 {
+    public const KEY_EXTENDED_ADDRESS = 'extended_address';
+    public const KEY_STREET_ADDRESS = 'street_address';
+    public const KEY_ADDRESS_LOCALITY = 'address_locality';
+    public const KEY_ADDRESS_REGION = 'address_region';
+    public const KEY_ADDRESS_COUNTRY = 'address_country';
+    public const KEY_POSTAL_CODE = 'postal_code';
+    public const KEY_FIRST_NAME = 'first_name';
+    public const KEY_LAST_NAME = 'last_name';
+    public const KEY_FULL_NAME = 'full_name';
+    public const KEY_PHONE_NUMBER = 'phone_number';
+    public const KEY_ID = 'id';
+
     /**
      * An address extension such as an apartment number, C/O or alternative name.
      *

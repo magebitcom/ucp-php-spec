@@ -19,6 +19,9 @@ namespace Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types;
  */
 interface RetailLocationRequestInterface
 {
+    public const KEY_NAME = 'name';
+    public const KEY_ADDRESS = 'address';
+
     /**
      * Location name (e.g., store name).
      *

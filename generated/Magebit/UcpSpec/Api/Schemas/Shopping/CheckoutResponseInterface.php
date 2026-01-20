@@ -27,6 +27,19 @@ use Magebit\UcpSpec\Api\Schemas\UcpResponseCheckoutInterface;
  */
 interface CheckoutResponseInterface
 {
+    public const KEY_UCP = 'ucp';
+    public const KEY_ID = 'id';
+    public const KEY_LINE_ITEMS = 'line_items';
+    public const KEY_BUYER = 'buyer';
+    public const KEY_STATUS = 'status';
+    public const KEY_CURRENCY = 'currency';
+    public const KEY_TOTALS = 'totals';
+    public const KEY_MESSAGES = 'messages';
+    public const KEY_LINKS = 'links';
+    public const KEY_EXPIRES_AT = 'expires_at';
+    public const KEY_CONTINUE_URL = 'continue_url';
+    public const KEY_PAYMENT = 'payment';
+    public const KEY_ORDER = 'order';
     public const STATUS_INCOMPLETE = 'incomplete';
     public const STATUS_REQUIRES_ESCALATION = 'requires_escalation';
     public const STATUS_READY_FOR_COMPLETE = 'ready_for_complete';

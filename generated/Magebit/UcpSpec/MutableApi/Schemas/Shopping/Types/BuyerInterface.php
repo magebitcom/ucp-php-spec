@@ -17,6 +17,12 @@ namespace Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types;
  */
 interface BuyerInterface
 {
+    public const KEY_FIRST_NAME = 'first_name';
+    public const KEY_LAST_NAME = 'last_name';
+    public const KEY_FULL_NAME = 'full_name';
+    public const KEY_EMAIL = 'email';
+    public const KEY_PHONE_NUMBER = 'phone_number';
+
     /**
      * First name of the buyer.
      *

@@ -17,6 +17,14 @@ namespace Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types;
  */
 interface PaymentHandlerResponseInterface
 {
+    public const KEY_ID = 'id';
+    public const KEY_NAME = 'name';
+    public const KEY_VERSION = 'version';
+    public const KEY_SPEC = 'spec';
+    public const KEY_CONFIG_SCHEMA = 'config_schema';
+    public const KEY_INSTRUMENT_SCHEMAS = 'instrument_schemas';
+    public const KEY_CONFIG = 'config';
+
     /**
      * The unique identifier for this handler instance within the payment.handlers. Used by payment instruments to reference which handler produced them.
      *

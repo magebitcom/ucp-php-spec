@@ -17,6 +17,9 @@ namespace Magebit\UcpSpec\Api\Schemas\Shopping\Types;
  */
 interface MerchantFulfillmentConfigAllowsMultiDestinationInterface
 {
+    public const KEY_SHIPPING = 'shipping';
+    public const KEY_PICKUP = 'pickup';
+
     /**
      * Multiple shipping destinations allowed.
      *

@@ -19,6 +19,8 @@ namespace Magebit\UcpSpec\MutableApi\Schemas\Shopping;
  */
 interface Ap2MandateAp2CheckoutResponseInterface
 {
+    public const KEY_MERCHANT_AUTHORIZATION = 'merchant_authorization';
+
     /**
      * Merchant's signature proving checkout terms are authentic.
      *

@@ -21,6 +21,10 @@ use Magebit\UcpSpec\MutableApi\Services\UCPServiceInterface;
  */
 interface UcpDiscoveryProfileInterface
 {
+    public const KEY_VERSION = 'version';
+    public const KEY_SERVICES = 'services';
+    public const KEY_CAPABILITIES = 'capabilities';
+
     /**
      * @return string
      */

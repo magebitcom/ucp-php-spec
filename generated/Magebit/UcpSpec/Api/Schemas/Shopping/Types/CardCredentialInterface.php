@@ -19,6 +19,15 @@ namespace Magebit\UcpSpec\Api\Schemas\Shopping\Types;
  */
 interface CardCredentialInterface
 {
+    public const KEY_TYPE = 'type';
+    public const KEY_CARD_NUMBER_TYPE = 'card_number_type';
+    public const KEY_NUMBER = 'number';
+    public const KEY_EXPIRY_MONTH = 'expiry_month';
+    public const KEY_EXPIRY_YEAR = 'expiry_year';
+    public const KEY_NAME = 'name';
+    public const KEY_CVC = 'cvc';
+    public const KEY_CRYPTOGRAM = 'cryptogram';
+    public const KEY_ECI_VALUE = 'eci_value';
     public const CARD_NUMBER_TYPE_FPAN = 'fpan';
     public const CARD_NUMBER_TYPE_NETWORK_TOKEN = 'network_token';
     public const CARD_NUMBER_TYPE_DPAN = 'dpan';

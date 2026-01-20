@@ -17,6 +17,9 @@ namespace Magebit\UcpSpec\MutableApi\Schemas\Shopping;
  */
 interface DiscountDiscountsObjectInterface
 {
+    public const KEY_CODES = 'codes';
+    public const KEY_APPLIED = 'applied';
+
     /**
      * Discount codes to apply. Case-insensitive. Replaces previously submitted codes. Send empty array to clear.
      *

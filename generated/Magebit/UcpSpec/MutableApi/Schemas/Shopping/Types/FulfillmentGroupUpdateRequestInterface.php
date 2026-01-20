@@ -19,6 +19,9 @@ namespace Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types;
  */
 interface FulfillmentGroupUpdateRequestInterface
 {
+    public const KEY_ID = 'id';
+    public const KEY_SELECTED_OPTION_ID = 'selected_option_id';
+
     /**
      * Group identifier for referencing merchant-generated groups in updates.
      *

@@ -21,6 +21,9 @@ use Magebit\UcpSpec\Api\Schemas\Shopping\Types\PaymentInstrumentInterface;
  */
 interface PaymentCreateRequestInterface
 {
+    public const KEY_SELECTED_INSTRUMENT_ID = 'selected_instrument_id';
+    public const KEY_INSTRUMENTS = 'instruments';
+
     /**
      * The id of the currently selected payment instrument from the instruments array. Set by the agent when submitting payment, and echoed back by the merchant in finalized state.
      *

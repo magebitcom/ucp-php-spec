@@ -19,6 +19,8 @@ namespace Magebit\UcpSpec\Api\Schemas\Shopping\Types;
  */
 interface FulfillmentRequestInterface
 {
+    public const KEY_METHODS = 'methods';
+
     /**
      * Fulfillment methods for cart items.
      *

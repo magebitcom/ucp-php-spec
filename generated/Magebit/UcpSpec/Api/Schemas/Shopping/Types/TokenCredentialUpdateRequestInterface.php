@@ -19,6 +19,9 @@ namespace Magebit\UcpSpec\Api\Schemas\Shopping\Types;
  */
 interface TokenCredentialUpdateRequestInterface
 {
+    public const KEY_TYPE = 'type';
+    public const KEY_TOKEN = 'token';
+
     /**
      * The specific type of token produced by the handler (e.g., 'stripe_token').
      *

@@ -17,6 +17,8 @@ namespace Magebit\UcpSpec\MutableApi\Services;
  */
 interface UCPServiceA2aInterface
 {
+    public const KEY_ENDPOINT = 'endpoint';
+
     /**
      * Merchant's Agent Card endpoint
      *

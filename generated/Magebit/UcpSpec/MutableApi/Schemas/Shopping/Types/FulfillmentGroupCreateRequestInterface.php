@@ -19,6 +19,8 @@ namespace Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types;
  */
 interface FulfillmentGroupCreateRequestInterface
 {
+    public const KEY_SELECTED_OPTION_ID = 'selected_option_id';
+
     /**
      * ID of the selected fulfillment option for this group.
      *

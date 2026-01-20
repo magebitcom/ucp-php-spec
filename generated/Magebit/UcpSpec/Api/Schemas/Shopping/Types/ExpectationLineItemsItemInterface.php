@@ -14,6 +14,9 @@ namespace Magebit\UcpSpec\Api\Schemas\Shopping\Types;
 
 interface ExpectationLineItemsItemInterface
 {
+    public const KEY_ID = 'id';
+    public const KEY_QUANTITY = 'quantity';
+
     /**
      * Line item ID reference.
      *

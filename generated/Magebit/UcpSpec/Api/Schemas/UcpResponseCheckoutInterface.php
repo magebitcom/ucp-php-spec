@@ -19,6 +19,9 @@ namespace Magebit\UcpSpec\Api\Schemas;
  */
 interface UcpResponseCheckoutInterface
 {
+    public const KEY_VERSION = 'version';
+    public const KEY_CAPABILITIES = 'capabilities';
+
     /**
      * @return string
      */

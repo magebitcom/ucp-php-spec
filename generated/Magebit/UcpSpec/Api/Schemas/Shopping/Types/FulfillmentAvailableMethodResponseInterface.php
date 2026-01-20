@@ -19,6 +19,10 @@ namespace Magebit\UcpSpec\Api\Schemas\Shopping\Types;
  */
 interface FulfillmentAvailableMethodResponseInterface
 {
+    public const KEY_TYPE = 'type';
+    public const KEY_LINE_ITEM_IDS = 'line_item_ids';
+    public const KEY_FULFILLABLE_ON = 'fulfillable_on';
+    public const KEY_DESCRIPTION = 'description';
     public const TYPE_SHIPPING = 'shipping';
     public const TYPE_PICKUP = 'pickup';
 

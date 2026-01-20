@@ -21,6 +21,8 @@ use Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\PaymentInstrumentInterface
  */
 interface PaymentDataInterface
 {
+    public const KEY_PAYMENT_DATA = 'payment_data';
+
     /**
      * @return PaymentInstrumentInterface
      */

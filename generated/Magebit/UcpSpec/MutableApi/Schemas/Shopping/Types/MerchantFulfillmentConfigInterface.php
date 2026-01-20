@@ -19,6 +19,9 @@ namespace Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types;
  */
 interface MerchantFulfillmentConfigInterface
 {
+    public const KEY_ALLOWS_MULTI_DESTINATION = 'allows_multi_destination';
+    public const KEY_ALLOWS_METHOD_COMBINATIONS = 'allows_method_combinations';
+
     /**
      * Permits multiple destinations per method type.
      *

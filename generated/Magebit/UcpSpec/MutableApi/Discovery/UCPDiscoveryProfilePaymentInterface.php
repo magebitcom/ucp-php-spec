@@ -19,6 +19,8 @@ use Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\PaymentHandlerResponseInte
  */
 interface UCPDiscoveryProfilePaymentInterface
 {
+    public const KEY_HANDLERS = 'handlers';
+
     /**
      * Payment handler definitions that describe how instruments can be collected
      *

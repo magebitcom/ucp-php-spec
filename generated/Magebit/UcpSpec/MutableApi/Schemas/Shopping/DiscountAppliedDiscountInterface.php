@@ -17,6 +17,13 @@ namespace Magebit\UcpSpec\MutableApi\Schemas\Shopping;
  */
 interface DiscountAppliedDiscountInterface
 {
+    public const KEY_CODE = 'code';
+    public const KEY_TITLE = 'title';
+    public const KEY_AMOUNT = 'amount';
+    public const KEY_AUTOMATIC = 'automatic';
+    public const KEY_METHOD = 'method';
+    public const KEY_PRIORITY = 'priority';
+    public const KEY_ALLOCATIONS = 'allocations';
     public const METHOD_EACH = 'each';
     public const METHOD_ACROSS = 'across';
 

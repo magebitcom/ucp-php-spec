@@ -19,6 +19,8 @@ namespace Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types;
  */
 interface PaymentAccountInfoInterface
 {
+    public const KEY_PAYMENT_ACCOUNT_REFERENCE = 'payment_account_reference';
+
     /**
      * EMVCo PAR. A unique identifier linking a payment card to a specific account, enabling tracking across tokens (Apple Pay, physical card, etc).
      *

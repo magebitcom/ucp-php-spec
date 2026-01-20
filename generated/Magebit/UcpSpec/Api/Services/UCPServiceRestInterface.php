@@ -17,6 +17,9 @@ namespace Magebit\UcpSpec\Api\Services;
  */
 interface UCPServiceRestInterface
 {
+    public const KEY_SCHEMA = 'schema';
+    public const KEY_ENDPOINT = 'endpoint';
+
     /**
      * URL to OpenAPI 3.x specification (JSON format)
      *

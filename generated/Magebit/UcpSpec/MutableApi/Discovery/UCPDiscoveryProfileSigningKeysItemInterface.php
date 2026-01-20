@@ -14,6 +14,15 @@ namespace Magebit\UcpSpec\MutableApi\Discovery;
 
 interface UCPDiscoveryProfileSigningKeysItemInterface
 {
+    public const KEY_KID = 'kid';
+    public const KEY_KTY = 'kty';
+    public const KEY_CRV = 'crv';
+    public const KEY_X = 'x';
+    public const KEY_Y = 'y';
+    public const KEY_N = 'n';
+    public const KEY_E = 'e';
+    public const KEY_USE = 'use';
+    public const KEY_ALG = 'alg';
     public const USE_SIG = 'sig';
     public const USE_ENC = 'enc';
 

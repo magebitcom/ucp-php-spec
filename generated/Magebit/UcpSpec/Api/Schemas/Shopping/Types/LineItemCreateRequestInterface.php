@@ -19,6 +19,9 @@ namespace Magebit\UcpSpec\Api\Schemas\Shopping\Types;
  */
 interface LineItemCreateRequestInterface
 {
+    public const KEY_ITEM = 'item';
+    public const KEY_QUANTITY = 'quantity';
+
     /**
      * @return ItemCreateRequestInterface
      */

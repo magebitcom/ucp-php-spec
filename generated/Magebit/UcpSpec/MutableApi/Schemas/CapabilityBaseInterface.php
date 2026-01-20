@@ -14,6 +14,13 @@ namespace Magebit\UcpSpec\MutableApi\Schemas;
 
 interface CapabilityBaseInterface
 {
+    public const KEY_NAME = 'name';
+    public const KEY_VERSION = 'version';
+    public const KEY_SPEC = 'spec';
+    public const KEY_SCHEMA = 'schema';
+    public const KEY_EXTENDS = 'extends';
+    public const KEY_CONFIG = 'config';
+
     /**
      * Stable capability identifier in reverse-domain notation (e.g., dev.ucp.shopping.checkout). Used in capability negotiation.
      *

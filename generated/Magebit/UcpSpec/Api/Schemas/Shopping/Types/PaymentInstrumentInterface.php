@@ -19,6 +19,18 @@ namespace Magebit\UcpSpec\Api\Schemas\Shopping\Types;
  */
 interface PaymentInstrumentInterface
 {
+    public const KEY_ID = 'id';
+    public const KEY_HANDLER_ID = 'handler_id';
+    public const KEY_TYPE = 'type';
+    public const KEY_BILLING_ADDRESS = 'billing_address';
+    public const KEY_CREDENTIAL = 'credential';
+    public const KEY_BRAND = 'brand';
+    public const KEY_LAST_DIGITS = 'last_digits';
+    public const KEY_EXPIRY_MONTH = 'expiry_month';
+    public const KEY_EXPIRY_YEAR = 'expiry_year';
+    public const KEY_RICH_TEXT_DESCRIPTION = 'rich_text_description';
+    public const KEY_RICH_CARD_ART = 'rich_card_art';
+
     /**
      * A unique identifier for this instrument instance, assigned by the Agent. Used to reference this specific instrument in the 'payment.selected_instrument_id' field.
      *

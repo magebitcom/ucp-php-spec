@@ -19,6 +19,8 @@ namespace Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types;
  */
 interface PlatformFulfillmentConfigInterface
 {
+    public const KEY_SUPPORTS_MULTI_GROUP = 'supports_multi_group';
+
     /**
      * Enables multiple groups per method.
      *

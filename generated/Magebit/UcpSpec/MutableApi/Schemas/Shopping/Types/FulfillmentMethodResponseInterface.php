@@ -19,6 +19,12 @@ namespace Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types;
  */
 interface FulfillmentMethodResponseInterface
 {
+    public const KEY_ID = 'id';
+    public const KEY_TYPE = 'type';
+    public const KEY_LINE_ITEM_IDS = 'line_item_ids';
+    public const KEY_DESTINATIONS = 'destinations';
+    public const KEY_SELECTED_DESTINATION_ID = 'selected_destination_id';
+    public const KEY_GROUPS = 'groups';
     public const TYPE_SHIPPING = 'shipping';
     public const TYPE_PICKUP = 'pickup';
 

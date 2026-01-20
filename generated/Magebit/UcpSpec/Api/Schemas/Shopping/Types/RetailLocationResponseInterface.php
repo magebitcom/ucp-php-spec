@@ -19,6 +19,10 @@ namespace Magebit\UcpSpec\Api\Schemas\Shopping\Types;
  */
 interface RetailLocationResponseInterface
 {
+    public const KEY_ID = 'id';
+    public const KEY_NAME = 'name';
+    public const KEY_ADDRESS = 'address';
+
     /**
      * Unique location identifier.
      *

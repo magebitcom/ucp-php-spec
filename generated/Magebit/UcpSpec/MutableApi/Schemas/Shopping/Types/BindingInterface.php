@@ -19,6 +19,9 @@ namespace Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types;
  */
 interface BindingInterface
 {
+    public const KEY_CHECKOUT_ID = 'checkout_id';
+    public const KEY_IDENTITY = 'identity';
+
     /**
      * The checkout session identifier this token is bound to.
      *

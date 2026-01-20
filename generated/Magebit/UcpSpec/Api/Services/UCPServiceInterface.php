@@ -19,6 +19,13 @@ namespace Magebit\UcpSpec\Api\Services;
  */
 interface UCPServiceInterface
 {
+    public const KEY_VERSION = 'version';
+    public const KEY_SPEC = 'spec';
+    public const KEY_REST = 'rest';
+    public const KEY_MCP = 'mcp';
+    public const KEY_A2A = 'a2a';
+    public const KEY_EMBEDDED = 'embedded';
+
     /**
      * Service version in YYYY-MM-DD format.
      *

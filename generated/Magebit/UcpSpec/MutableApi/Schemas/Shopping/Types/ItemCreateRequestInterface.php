@@ -17,6 +17,8 @@ namespace Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types;
  */
 interface ItemCreateRequestInterface
 {
+    public const KEY_ID = 'id';
+
     /**
      * Should be recognized by both the Platform, and the Business. For Google it should match the id provided in the "id" field in the product feed.
      *

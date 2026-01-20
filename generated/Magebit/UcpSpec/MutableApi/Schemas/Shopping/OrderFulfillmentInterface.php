@@ -20,6 +20,9 @@ use Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\FulfillmentEventInterface;
  */
 interface OrderFulfillmentInterface
 {
+    public const KEY_EXPECTATIONS = 'expectations';
+    public const KEY_EVENTS = 'events';
+
     /**
      * Buyer-facing groups representing when/how items will be delivered. Can be split, merged, or adjusted post-order.
      *

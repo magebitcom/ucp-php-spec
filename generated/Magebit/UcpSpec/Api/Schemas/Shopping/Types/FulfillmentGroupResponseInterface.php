@@ -19,6 +19,11 @@ namespace Magebit\UcpSpec\Api\Schemas\Shopping\Types;
  */
 interface FulfillmentGroupResponseInterface
 {
+    public const KEY_ID = 'id';
+    public const KEY_LINE_ITEM_IDS = 'line_item_ids';
+    public const KEY_OPTIONS = 'options';
+    public const KEY_SELECTED_OPTION_ID = 'selected_option_id';
+
     /**
      * Group identifier for referencing merchant-generated groups in updates.
      *
