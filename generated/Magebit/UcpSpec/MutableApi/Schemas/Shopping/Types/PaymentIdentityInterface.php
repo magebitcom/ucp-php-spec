@@ -29,8 +29,8 @@ interface PaymentIdentityInterface
     /**
      * Unique identifier for this participant, obtained during onboarding with the tokenizer.
      *
-     * @param string $access_token
+     * @param string $accessToken
      * @return self
      */
-    public function setAccessToken(string $access_token): self;
+    public function setAccessToken(string $accessToken): self;
 }

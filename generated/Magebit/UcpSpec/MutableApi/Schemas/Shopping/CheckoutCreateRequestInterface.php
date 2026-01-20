@@ -51,10 +51,10 @@ interface CheckoutCreateRequestInterface
     /**
      * List of line items being checked out.
      *
-     * @param LineItemCreateRequestInterface[] $line_items
+     * @param LineItemCreateRequestInterface[] $lineItems
      * @return self
      */
-    public function setLineItems(array $line_items): self;
+    public function setLineItems(array $lineItems): self;
 
     /**
      * Representation of the buyer.
@@ -62,7 +62,7 @@ interface CheckoutCreateRequestInterface
      * @param BuyerInterface|null $buyer
      * @return self
      */
-    public function setBuyer(BuyerInterface|null $buyer): self;
+    public function setBuyer(?BuyerInterface $buyer): self;
 
     /**
      * ISO 4217 currency code.

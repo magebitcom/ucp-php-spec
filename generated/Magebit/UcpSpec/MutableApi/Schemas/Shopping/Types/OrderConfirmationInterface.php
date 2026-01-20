@@ -44,8 +44,8 @@ interface OrderConfirmationInterface
     /**
      * Permalink to access the order on merchant site.
      *
-     * @param string $permalink_url
+     * @param string $permalinkUrl
      * @return self
      */
-    public function setPermalinkUrl(string $permalink_url): self;
+    public function setPermalinkUrl(string $permalinkUrl): self;
 }

@@ -36,10 +36,10 @@ interface BindingInterface
     /**
      * The checkout session identifier this token is bound to.
      *
-     * @param string $checkout_id
+     * @param string $checkoutId
      * @return self
      */
-    public function setCheckoutId(string $checkout_id): self;
+    public function setCheckoutId(string $checkoutId): self;
 
     /**
      * The participant this token is bound to. Required when acting on behalf of another participant (e.g., agent tokenizing for merchant). Omit when the authenticated caller is the binding target.
@@ -47,5 +47,5 @@ interface BindingInterface
      * @param PaymentIdentityInterface|null $identity
      * @return self
      */
-    public function setIdentity(PaymentIdentityInterface|null $identity): self;
+    public function setIdentity(?PaymentIdentityInterface $identity): self;
 }

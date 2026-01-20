@@ -102,7 +102,7 @@ interface UCPDiscoveryProfileSigningKeysItemInterface
      * @param string|null $crv
      * @return self
      */
-    public function setCrv(string|null $crv): self;
+    public function setCrv(?string $crv): self;
 
     /**
      * X coordinate for EC public keys (base64url encoded).
@@ -110,7 +110,7 @@ interface UCPDiscoveryProfileSigningKeysItemInterface
      * @param string|null $x
      * @return self
      */
-    public function setX(string|null $x): self;
+    public function setX(?string $x): self;
 
     /**
      * Y coordinate for EC public keys (base64url encoded).
@@ -118,7 +118,7 @@ interface UCPDiscoveryProfileSigningKeysItemInterface
      * @param string|null $y
      * @return self
      */
-    public function setY(string|null $y): self;
+    public function setY(?string $y): self;
 
     /**
      * Modulus for RSA public keys (base64url encoded).
@@ -126,7 +126,7 @@ interface UCPDiscoveryProfileSigningKeysItemInterface
      * @param string|null $n
      * @return self
      */
-    public function setN(string|null $n): self;
+    public function setN(?string $n): self;
 
     /**
      * Exponent for RSA public keys (base64url encoded).
@@ -134,7 +134,7 @@ interface UCPDiscoveryProfileSigningKeysItemInterface
      * @param string|null $e
      * @return self
      */
-    public function setE(string|null $e): self;
+    public function setE(?string $e): self;
 
     /**
      * Key usage. Should be 'sig' for signing keys.
@@ -142,7 +142,7 @@ interface UCPDiscoveryProfileSigningKeysItemInterface
      * @param string|null $use
      * @return self
      */
-    public function setUse(string|null $use): self;
+    public function setUse(?string $use): self;
 
     /**
      * Algorithm (e.g., 'ES256', 'RS256').
@@ -150,5 +150,5 @@ interface UCPDiscoveryProfileSigningKeysItemInterface
      * @param string|null $alg
      * @return self
      */
-    public function setAlg(string|null $alg): self;
+    public function setAlg(?string $alg): self;
 }

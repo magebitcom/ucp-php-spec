@@ -90,7 +90,7 @@ interface FulfillmentOptionResponseInterface
      * @param string|null $description
      * @return self
      */
-    public function setDescription(string|null $description): self;
+    public function setDescription(?string $description): self;
 
     /**
      * Carrier name (for shipping).
@@ -98,23 +98,23 @@ interface FulfillmentOptionResponseInterface
      * @param string|null $carrier
      * @return self
      */
-    public function setCarrier(string|null $carrier): self;
+    public function setCarrier(?string $carrier): self;
 
     /**
      * Earliest fulfillment date.
      *
-     * @param string|null $earliest_fulfillment_time
+     * @param string|null $earliestFulfillmentTime
      * @return self
      */
-    public function setEarliestFulfillmentTime(string|null $earliest_fulfillment_time): self;
+    public function setEarliestFulfillmentTime(?string $earliestFulfillmentTime): self;
 
     /**
      * Latest fulfillment date.
      *
-     * @param string|null $latest_fulfillment_time
+     * @param string|null $latestFulfillmentTime
      * @return self
      */
-    public function setLatestFulfillmentTime(string|null $latest_fulfillment_time): self;
+    public function setLatestFulfillmentTime(?string $latestFulfillmentTime): self;
 
     /**
      * Fulfillment option totals breakdown.

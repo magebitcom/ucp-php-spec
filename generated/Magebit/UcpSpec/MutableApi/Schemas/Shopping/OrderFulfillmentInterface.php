@@ -40,7 +40,7 @@ interface OrderFulfillmentInterface
      * @param ExpectationInterface[]|null $expectations
      * @return self
      */
-    public function setExpectations(array|null $expectations): self;
+    public function setExpectations(?array $expectations): self;
 
     /**
      * Append-only event log of actual shipments. Each event references line items by ID.
@@ -48,5 +48,5 @@ interface OrderFulfillmentInterface
      * @param FulfillmentEventInterface[]|null $events
      * @return self
      */
-    public function setEvents(array|null $events): self;
+    public function setEvents(?array $events): self;
 }

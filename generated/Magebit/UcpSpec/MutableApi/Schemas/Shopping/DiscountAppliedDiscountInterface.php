@@ -75,7 +75,7 @@ interface DiscountAppliedDiscountInterface
      * @param string|null $code
      * @return self
      */
-    public function setCode(string|null $code): self;
+    public function setCode(?string $code): self;
 
     /**
      * Human-readable discount name (e.g., 'Summer Sale 20% Off').
@@ -99,7 +99,7 @@ interface DiscountAppliedDiscountInterface
      * @param bool|null $automatic
      * @return self
      */
-    public function setAutomatic(bool|null $automatic): self;
+    public function setAutomatic(?bool $automatic): self;
 
     /**
      * Allocation method. 'each' = applied independently per item. 'across' = split proportionally by value.
@@ -107,7 +107,7 @@ interface DiscountAppliedDiscountInterface
      * @param string|null $method
      * @return self
      */
-    public function setMethod(string|null $method): self;
+    public function setMethod(?string $method): self;
 
     /**
      * Stacking order for discount calculation. Lower numbers applied first (1 = first).
@@ -115,7 +115,7 @@ interface DiscountAppliedDiscountInterface
      * @param int|null $priority
      * @return self
      */
-    public function setPriority(int|null $priority): self;
+    public function setPriority(?int $priority): self;
 
     /**
      * Breakdown of where this discount was allocated. Sum of allocation amounts equals total amount.
@@ -123,5 +123,5 @@ interface DiscountAppliedDiscountInterface
      * @param DiscountAllocationInterface[]|null $allocations
      * @return self
      */
-    public function setAllocations(array|null $allocations): self;
+    public function setAllocations(?array $allocations): self;
 }

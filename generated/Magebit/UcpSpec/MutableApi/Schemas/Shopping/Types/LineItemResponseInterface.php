@@ -81,8 +81,8 @@ interface LineItemResponseInterface
     /**
      * Parent line item identifier for any nested structures.
      *
-     * @param string|null $parent_id
+     * @param string|null $parentId
      * @return self
      */
-    public function setParentId(string|null $parent_id): self;
+    public function setParentId(?string $parentId): self;
 }

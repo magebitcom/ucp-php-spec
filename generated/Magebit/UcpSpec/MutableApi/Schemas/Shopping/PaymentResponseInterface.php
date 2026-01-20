@@ -54,10 +54,10 @@ interface PaymentResponseInterface
     /**
      * The id of the currently selected payment instrument from the instruments array. Set by the agent when submitting payment, and echoed back by the merchant in finalized state.
      *
-     * @param string|null $selected_instrument_id
+     * @param string|null $selectedInstrumentId
      * @return self
      */
-    public function setSelectedInstrumentId(string|null $selected_instrument_id): self;
+    public function setSelectedInstrumentId(?string $selectedInstrumentId): self;
 
     /**
      * The payment instruments available for this payment. Each instrument is associated with a specific handler via the handler_id field. Handlers can extend the base payment_instrument schema to add handler-specific fields.
@@ -65,5 +65,5 @@ interface PaymentResponseInterface
      * @param PaymentInstrumentInterface[]|null $instruments
      * @return self
      */
-    public function setInstruments(array|null $instruments): self;
+    public function setInstruments(?array $instruments): self;
 }

@@ -29,8 +29,8 @@ interface PlatformConfigInterface
     /**
      * URL where merchant sends order lifecycle events (webhooks).
      *
-     * @param string $webhook_url
+     * @param string $webhookUrl
      * @return self
      */
-    public function setWebhookUrl(string $webhook_url): self;
+    public function setWebhookUrl(string $webhookUrl): self;
 }

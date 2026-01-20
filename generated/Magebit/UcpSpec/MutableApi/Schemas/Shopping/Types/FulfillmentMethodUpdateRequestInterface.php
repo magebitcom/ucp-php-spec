@@ -65,10 +65,10 @@ interface FulfillmentMethodUpdateRequestInterface
     /**
      * Line item IDs fulfilled via this method.
      *
-     * @param string[] $line_item_ids
+     * @param string[] $lineItemIds
      * @return self
      */
-    public function setLineItemIds(array $line_item_ids): self;
+    public function setLineItemIds(array $lineItemIds): self;
 
     /**
      * Available destinations. For shipping: addresses. For pickup: retail locations.
@@ -76,15 +76,15 @@ interface FulfillmentMethodUpdateRequestInterface
      * @param FulfillmentDestinationRequestInterface[]|null $destinations
      * @return self
      */
-    public function setDestinations(array|null $destinations): self;
+    public function setDestinations(?array $destinations): self;
 
     /**
      * ID of the selected destination.
      *
-     * @param string|null $selected_destination_id
+     * @param string|null $selectedDestinationId
      * @return self
      */
-    public function setSelectedDestinationId(string|null $selected_destination_id): self;
+    public function setSelectedDestinationId(?string $selectedDestinationId): self;
 
     /**
      * Fulfillment groups for selecting options. Agent sets selected_option_id on groups to choose shipping method.
@@ -92,5 +92,5 @@ interface FulfillmentMethodUpdateRequestInterface
      * @param FulfillmentGroupUpdateRequestInterface[]|null $groups
      * @return self
      */
-    public function setGroups(array|null $groups): self;
+    public function setGroups(?array $groups): self;
 }

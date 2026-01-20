@@ -359,9 +359,11 @@ class InterfaceBuilder
         
         // Handle nullable types
         $isRequired = in_array($propertyName, $required);
+        $isNullable = false;
         
         if (!$isRequired && $phpType !== 'mixed' && $phpType !== 'null') {
-            // Make optional properties nullable
+            $isNullable = true;
+            // For PHPDoc, keep the union syntax
             if (strpos($phpType, '|') === false) {
                 $phpType .= '|null';
             } elseif (strpos($phpType, 'null') === false) {
@@ -375,12 +377,25 @@ class InterfaceBuilder
         // Generate PHPDoc type with array item types
         $commentType = $this->generatePhpDocType($property, $phpType, $currentFile, $namespace, $parentName, $propertyName);
 
-        // Add parameter
-        $param = $method->addParameter($propertyName);
+        // Convert property name to camelCase for parameter
+        $paramName = $this->typeMapper->toCamelCase($propertyName);
+        
+        // Add parameter with camelCase name
+        $param = $method->addParameter($paramName);
+        
+        // Set parameter type using ?Type syntax for nullable types
         if ($phpType !== 'mixed') {
-            $param->setType($phpType);
+            if ($isNullable) {
+                // Remove |null from the type string for parameter type hint
+                $paramType = str_replace(['|null', 'null|'], '', $phpType);
+                $param->setType($paramType);
+                $param->setNullable(true);
+            } else {
+                $param->setType($phpType);
+            }
         }
-        $method->addComment('@param ' . $commentType . ' $' . $propertyName);
+        
+        $method->addComment('@param ' . $commentType . ' $' . $paramName);
 
         // Set return type to self for method chaining
         $method->setReturnType('self');

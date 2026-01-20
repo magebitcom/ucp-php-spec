@@ -27,8 +27,8 @@ interface PaymentDataInterface
     public function getPaymentData(): PaymentInstrumentInterface;
 
     /**
-     * @param PaymentInstrumentInterface $payment_data
+     * @param PaymentInstrumentInterface $paymentData
      * @return self
      */
-    public function setPaymentData(PaymentInstrumentInterface $payment_data): self;
+    public function setPaymentData(PaymentInstrumentInterface $paymentData): self;
 }

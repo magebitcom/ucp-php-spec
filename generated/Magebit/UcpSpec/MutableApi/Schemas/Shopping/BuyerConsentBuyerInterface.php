@@ -64,26 +64,26 @@ interface BuyerConsentBuyerInterface
     /**
      * First name of the buyer.
      *
-     * @param string|null $first_name
+     * @param string|null $firstName
      * @return self
      */
-    public function setFirstName(string|null $first_name): self;
+    public function setFirstName(?string $firstName): self;
 
     /**
      * Last name of the buyer.
      *
-     * @param string|null $last_name
+     * @param string|null $lastName
      * @return self
      */
-    public function setLastName(string|null $last_name): self;
+    public function setLastName(?string $lastName): self;
 
     /**
      * Optional, buyer's full name (if first_name or last_name fields are present they take precedence).
      *
-     * @param string|null $full_name
+     * @param string|null $fullName
      * @return self
      */
-    public function setFullName(string|null $full_name): self;
+    public function setFullName(?string $fullName): self;
 
     /**
      * Email of the buyer.
@@ -91,15 +91,15 @@ interface BuyerConsentBuyerInterface
      * @param string|null $email
      * @return self
      */
-    public function setEmail(string|null $email): self;
+    public function setEmail(?string $email): self;
 
     /**
      * E.164 standard.
      *
-     * @param string|null $phone_number
+     * @param string|null $phoneNumber
      * @return self
      */
-    public function setPhoneNumber(string|null $phone_number): self;
+    public function setPhoneNumber(?string $phoneNumber): self;
 
     /**
      * Consent tracking fields.
@@ -107,5 +107,5 @@ interface BuyerConsentBuyerInterface
      * @param BuyerConsentConsentInterface|null $consent
      * @return self
      */
-    public function setConsent(BuyerConsentConsentInterface|null $consent): self;
+    public function setConsent(?BuyerConsentConsentInterface $consent): self;
 }

@@ -39,13 +39,13 @@ interface FulfillmentResponseInterface
      * @param FulfillmentMethodResponseInterface[]|null $methods
      * @return self
      */
-    public function setMethods(array|null $methods): self;
+    public function setMethods(?array $methods): self;
 
     /**
      * Inventory availability hints.
      *
-     * @param FulfillmentAvailableMethodResponseInterface[]|null $available_methods
+     * @param FulfillmentAvailableMethodResponseInterface[]|null $availableMethods
      * @return self
      */
-    public function setAvailableMethods(array|null $available_methods): self;
+    public function setAvailableMethods(?array $availableMethods): self;
 }

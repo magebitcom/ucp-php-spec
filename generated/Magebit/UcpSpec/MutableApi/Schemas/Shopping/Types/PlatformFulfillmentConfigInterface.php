@@ -29,8 +29,8 @@ interface PlatformFulfillmentConfigInterface
     /**
      * Enables multiple groups per method.
      *
-     * @param bool|null $supports_multi_group
+     * @param bool|null $supportsMultiGroup
      * @return self
      */
-    public function setSupportsMultiGroup(bool|null $supports_multi_group): self;
+    public function setSupportsMultiGroup(?bool $supportsMultiGroup): self;
 }

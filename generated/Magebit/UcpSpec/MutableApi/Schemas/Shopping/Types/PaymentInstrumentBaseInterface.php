@@ -63,10 +63,10 @@ interface PaymentInstrumentBaseInterface
     /**
      * The unique identifier for the handler instance that produced this instrument. This corresponds to the 'id' field in the Payment Handler definition.
      *
-     * @param string $handler_id
+     * @param string $handlerId
      * @return self
      */
-    public function setHandlerId(string $handler_id): self;
+    public function setHandlerId(string $handlerId): self;
 
     /**
      * The broad category of the instrument (e.g., 'card', 'tokenized_card'). Specific schemas will constrain this to a constant value.
@@ -79,14 +79,14 @@ interface PaymentInstrumentBaseInterface
     /**
      * The billing address associated with this payment method.
      *
-     * @param PostalAddressInterface|null $billing_address
+     * @param PostalAddressInterface|null $billingAddress
      * @return self
      */
-    public function setBillingAddress(PostalAddressInterface|null $billing_address): self;
+    public function setBillingAddress(?PostalAddressInterface $billingAddress): self;
 
     /**
      * @param PaymentCredentialInterface|null $credential
      * @return self
      */
-    public function setCredential(PaymentCredentialInterface|null $credential): self;
+    public function setCredential(?PaymentCredentialInterface $credential): self;
 }

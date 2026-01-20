@@ -58,10 +58,10 @@ interface FulfillmentGroupResponseInterface
     /**
      * Line item IDs included in this group/package.
      *
-     * @param string[] $line_item_ids
+     * @param string[] $lineItemIds
      * @return self
      */
-    public function setLineItemIds(array $line_item_ids): self;
+    public function setLineItemIds(array $lineItemIds): self;
 
     /**
      * Available fulfillment options for this group.
@@ -69,13 +69,13 @@ interface FulfillmentGroupResponseInterface
      * @param FulfillmentOptionResponseInterface[]|null $options
      * @return self
      */
-    public function setOptions(array|null $options): self;
+    public function setOptions(?array $options): self;
 
     /**
      * ID of the selected fulfillment option for this group.
      *
-     * @param string|null $selected_option_id
+     * @param string|null $selectedOptionId
      * @return self
      */
-    public function setSelectedOptionId(string|null $selected_option_id): self;
+    public function setSelectedOptionId(?string $selectedOptionId): self;
 }

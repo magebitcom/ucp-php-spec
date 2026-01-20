@@ -99,7 +99,7 @@ interface CapabilityDiscoveryInterface
      * @param string|null $extends
      * @return self
      */
-    public function setExtends(string|null $extends): self;
+    public function setExtends(?string $extends): self;
 
     /**
      * Capability-specific configuration (structure defined by each capability).
@@ -107,5 +107,5 @@ interface CapabilityDiscoveryInterface
      * @param object|null $config
      * @return self
      */
-    public function setConfig(object|null $config): self;
+    public function setConfig(?object $config): self;
 }

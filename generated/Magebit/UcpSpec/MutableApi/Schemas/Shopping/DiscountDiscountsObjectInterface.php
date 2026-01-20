@@ -37,7 +37,7 @@ interface DiscountDiscountsObjectInterface
      * @param string[]|null $codes
      * @return self
      */
-    public function setCodes(array|null $codes): self;
+    public function setCodes(?array $codes): self;
 
     /**
      * Discounts successfully applied (code-based and automatic).
@@ -45,5 +45,5 @@ interface DiscountDiscountsObjectInterface
      * @param DiscountAppliedDiscountInterface[]|null $applied
      * @return self
      */
-    public function setApplied(array|null $applied): self;
+    public function setApplied(?array $applied): self;
 }

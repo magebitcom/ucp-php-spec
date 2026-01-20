@@ -32,5 +32,5 @@ interface FulfillmentRequestInterface
      * @param FulfillmentMethodCreateRequestInterface[]|null $methods
      * @return self
      */
-    public function setMethods(array|null $methods): self;
+    public function setMethods(?array $methods): self;
 }

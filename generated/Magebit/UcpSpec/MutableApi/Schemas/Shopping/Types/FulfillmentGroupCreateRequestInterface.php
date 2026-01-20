@@ -29,8 +29,8 @@ interface FulfillmentGroupCreateRequestInterface
     /**
      * ID of the selected fulfillment option for this group.
      *
-     * @param string|null $selected_option_id
+     * @param string|null $selectedOptionId
      * @return self
      */
-    public function setSelectedOptionId(string|null $selected_option_id): self;
+    public function setSelectedOptionId(?string $selectedOptionId): self;
 }

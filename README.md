@@ -166,10 +166,10 @@ interface OrderInterface
     function getLineItems(): array;
     
     /**
-     * @param OrderLineItemInterface[] $line_items
+     * @param OrderLineItemInterface[] $lineItems
      * @return self
      */
-    function setLineItems(array $line_items): self;
+    function setLineItems(array $lineItems): self;
 
     /**
      * @return AdjustmentInterface[]|null
@@ -180,7 +180,7 @@ interface OrderInterface
      * @param AdjustmentInterface[]|null $adjustments
      * @return self
      */
-    function setAdjustments(array|null $adjustments): self;
+    function setAdjustments(?array $adjustments): self;
 }
 ```
 

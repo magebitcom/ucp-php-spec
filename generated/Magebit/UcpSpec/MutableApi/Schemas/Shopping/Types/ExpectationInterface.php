@@ -76,18 +76,18 @@ interface ExpectationInterface
     /**
      * Which line items and quantities are in this expectation.
      *
-     * @param ExpectationLineItemsItemInterface[] $line_items
+     * @param ExpectationLineItemsItemInterface[] $lineItems
      * @return self
      */
-    public function setLineItems(array $line_items): self;
+    public function setLineItems(array $lineItems): self;
 
     /**
      * Delivery method type (shipping, pickup, digital).
      *
-     * @param string $method_type
+     * @param string $methodType
      * @return self
      */
-    public function setMethodType(string $method_type): self;
+    public function setMethodType(string $methodType): self;
 
     /**
      * Delivery destination address.
@@ -103,13 +103,13 @@ interface ExpectationInterface
      * @param string|null $description
      * @return self
      */
-    public function setDescription(string|null $description): self;
+    public function setDescription(?string $description): self;
 
     /**
      * When this expectation can be fulfilled: 'now' or ISO 8601 timestamp for future date (backorder, pre-order).
      *
-     * @param string|null $fulfillable_on
+     * @param string|null $fulfillableOn
      * @return self
      */
-    public function setFulfillableOn(string|null $fulfillable_on): self;
+    public function setFulfillableOn(?string $fulfillableOn): self;
 }

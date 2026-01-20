@@ -83,7 +83,7 @@ interface CapabilityResponseInterface
      * @param string|null $spec
      * @return self
      */
-    public function setSpec(string|null $spec): self;
+    public function setSpec(?string $spec): self;
 
     /**
      * URL to JSON Schema for this capability's payload.
@@ -91,7 +91,7 @@ interface CapabilityResponseInterface
      * @param string|null $schema
      * @return self
      */
-    public function setSchema(string|null $schema): self;
+    public function setSchema(?string $schema): self;
 
     /**
      * Parent capability this extends. Present for extensions, absent for root capabilities.
@@ -99,7 +99,7 @@ interface CapabilityResponseInterface
      * @param string|null $extends
      * @return self
      */
-    public function setExtends(string|null $extends): self;
+    public function setExtends(?string $extends): self;
 
     /**
      * Capability-specific configuration (structure defined by each capability).
@@ -107,5 +107,5 @@ interface CapabilityResponseInterface
      * @param object|null $config
      * @return self
      */
-    public function setConfig(object|null $config): self;
+    public function setConfig(?object $config): self;
 }

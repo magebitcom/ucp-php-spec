@@ -36,18 +36,18 @@ interface MerchantFulfillmentConfigInterface
     /**
      * Permits multiple destinations per method type.
      *
-     * @param MerchantFulfillmentConfigAllowsMultiDestinationInterface|null $allows_multi_destination
+     * @param MerchantFulfillmentConfigAllowsMultiDestinationInterface|null $allowsMultiDestination
      * @return self
      */
     public function setAllowsMultiDestination(
-        MerchantFulfillmentConfigAllowsMultiDestinationInterface|null $allows_multi_destination,
+        ?MerchantFulfillmentConfigAllowsMultiDestinationInterface $allowsMultiDestination,
     ): self;
 
     /**
      * Allowed method type combinations.
      *
-     * @param array[]|null $allows_method_combinations
+     * @param array[]|null $allowsMethodCombinations
      * @return self
      */
-    public function setAllowsMethodCombinations(array|null $allows_method_combinations): self;
+    public function setAllowsMethodCombinations(?array $allowsMethodCombinations): self;
 }

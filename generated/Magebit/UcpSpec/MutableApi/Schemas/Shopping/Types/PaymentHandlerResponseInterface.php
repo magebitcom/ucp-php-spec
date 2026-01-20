@@ -99,16 +99,16 @@ interface PaymentHandlerResponseInterface
     /**
      * A URI pointing to a JSON Schema used to validate the structure of the config object.
      *
-     * @param string $config_schema
+     * @param string $configSchema
      * @return self
      */
-    public function setConfigSchema(string $config_schema): self;
+    public function setConfigSchema(string $configSchema): self;
 
     /**
-     * @param string[] $instrument_schemas
+     * @param string[] $instrumentSchemas
      * @return self
      */
-    public function setInstrumentSchemas(array $instrument_schemas): self;
+    public function setInstrumentSchemas(array $instrumentSchemas): self;
 
     /**
      * A dictionary containing provider-specific configuration details, such as merchant IDs, supported networks, or gateway credentials.

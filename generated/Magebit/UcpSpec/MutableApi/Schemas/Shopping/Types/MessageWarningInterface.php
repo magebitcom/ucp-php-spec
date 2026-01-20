@@ -69,7 +69,7 @@ interface MessageWarningInterface
      * @param string|null $path
      * @return self
      */
-    public function setPath(string|null $path): self;
+    public function setPath(?string $path): self;
 
     /**
      * Warning code. Machine-readable identifier for the warning type (e.g., final_sale, prop65, fulfillment_changed, age_restricted, etc.).
@@ -90,8 +90,8 @@ interface MessageWarningInterface
     /**
      * Content format, default = plain.
      *
-     * @param string|null $content_type
+     * @param string|null $contentType
      * @return self
      */
-    public function setContentType(string|null $content_type): self;
+    public function setContentType(?string $contentType): self;
 }

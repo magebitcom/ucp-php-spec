@@ -71,10 +71,10 @@ interface DiscountCheckoutInterface
     /**
      * List of line items being checked out.
      *
-     * @param LineItemUpdateRequestInterface[] $line_items
+     * @param LineItemUpdateRequestInterface[] $lineItems
      * @return self
      */
-    public function setLineItems(array $line_items): self;
+    public function setLineItems(array $lineItems): self;
 
     /**
      * Representation of the buyer.
@@ -82,7 +82,7 @@ interface DiscountCheckoutInterface
      * @param BuyerInterface|null $buyer
      * @return self
      */
-    public function setBuyer(BuyerInterface|null $buyer): self;
+    public function setBuyer(?BuyerInterface $buyer): self;
 
     /**
      * ISO 4217 currency code.
@@ -102,5 +102,5 @@ interface DiscountCheckoutInterface
      * @param DiscountDiscountsObjectInterface|null $discounts
      * @return self
      */
-    public function setDiscounts(DiscountDiscountsObjectInterface|null $discounts): self;
+    public function setDiscounts(?DiscountDiscountsObjectInterface $discounts): self;
 }

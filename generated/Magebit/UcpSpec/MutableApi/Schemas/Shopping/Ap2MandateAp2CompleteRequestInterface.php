@@ -29,8 +29,8 @@ interface Ap2MandateAp2CompleteRequestInterface
     /**
      * SD-JWT+kb proving user authorized this checkout.
      *
-     * @param string $checkout_mandate
+     * @param string $checkoutMandate
      * @return self
      */
-    public function setCheckoutMandate(string $checkout_mandate): self;
+    public function setCheckoutMandate(string $checkoutMandate): self;
 }

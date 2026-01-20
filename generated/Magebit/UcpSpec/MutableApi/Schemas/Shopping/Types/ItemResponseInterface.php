@@ -72,8 +72,8 @@ interface ItemResponseInterface
     /**
      * Product image URI.
      *
-     * @param string|null $image_url
+     * @param string|null $imageUrl
      * @return self
      */
-    public function setImageUrl(string|null $image_url): self;
+    public function setImageUrl(?string $imageUrl): self;
 }

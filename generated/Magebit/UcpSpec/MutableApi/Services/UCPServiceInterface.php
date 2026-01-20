@@ -83,7 +83,7 @@ interface UCPServiceInterface
      * @param UCPServiceRestInterface|null $rest
      * @return self
      */
-    public function setRest(UCPServiceRestInterface|null $rest): self;
+    public function setRest(?UCPServiceRestInterface $rest): self;
 
     /**
      * MCP transport binding
@@ -91,7 +91,7 @@ interface UCPServiceInterface
      * @param UCPServiceMcpInterface|null $mcp
      * @return self
      */
-    public function setMcp(UCPServiceMcpInterface|null $mcp): self;
+    public function setMcp(?UCPServiceMcpInterface $mcp): self;
 
     /**
      * A2A transport binding
@@ -99,7 +99,7 @@ interface UCPServiceInterface
      * @param UCPServiceA2aInterface|null $a2a
      * @return self
      */
-    public function setA2a(UCPServiceA2aInterface|null $a2a): self;
+    public function setA2a(?UCPServiceA2aInterface $a2a): self;
 
     /**
      * Embedded transport binding (JSON-RPC 2.0 over postMessage). Unlike REST/MCP, the endpoint is per-capability (i.e. per-checkout via continue_url), not per-service.
@@ -107,5 +107,5 @@ interface UCPServiceInterface
      * @param UCPServiceEmbeddedInterface|null $embedded
      * @return self
      */
-    public function setEmbedded(UCPServiceEmbeddedInterface|null $embedded): self;
+    public function setEmbedded(?UCPServiceEmbeddedInterface $embedded): self;
 }

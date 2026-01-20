@@ -60,5 +60,5 @@ interface LinkInterface
      * @param string|null $title
      * @return self
      */
-    public function setTitle(string|null $title): self;
+    public function setTitle(?string $title): self;
 }

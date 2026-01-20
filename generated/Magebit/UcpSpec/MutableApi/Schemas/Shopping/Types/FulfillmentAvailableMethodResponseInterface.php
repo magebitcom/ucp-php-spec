@@ -61,18 +61,18 @@ interface FulfillmentAvailableMethodResponseInterface
     /**
      * Line items available for this fulfillment method.
      *
-     * @param string[] $line_item_ids
+     * @param string[] $lineItemIds
      * @return self
      */
-    public function setLineItemIds(array $line_item_ids): self;
+    public function setLineItemIds(array $lineItemIds): self;
 
     /**
      * 'now' for immediate availability, or ISO 8601 date for future (preorders, transfers).
      *
-     * @param string|null $fulfillable_on
+     * @param string|null $fulfillableOn
      * @return self
      */
-    public function setFulfillableOn(string|null $fulfillable_on): self;
+    public function setFulfillableOn(?string $fulfillableOn): self;
 
     /**
      * Human-readable availability info (e.g., 'Available for pickup at Downtown Store today').
@@ -80,5 +80,5 @@ interface FulfillmentAvailableMethodResponseInterface
      * @param string|null $description
      * @return self
      */
-    public function setDescription(string|null $description): self;
+    public function setDescription(?string $description): self;
 }

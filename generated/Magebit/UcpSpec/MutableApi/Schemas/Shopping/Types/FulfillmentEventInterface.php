@@ -86,10 +86,10 @@ interface FulfillmentEventInterface
     /**
      * RFC 3339 timestamp when this fulfillment event occurred.
      *
-     * @param string $occurred_at
+     * @param string $occurredAt
      * @return self
      */
-    public function setOccurredAt(string $occurred_at): self;
+    public function setOccurredAt(string $occurredAt): self;
 
     /**
      * Fulfillment event type. Common values include: processing (preparing to ship), shipped (handed to carrier), in_transit (in delivery network), delivered (received by buyer), failed_attempt (delivery attempt failed), canceled (fulfillment canceled), undeliverable (cannot be delivered), returned_to_sender (returned to merchant).
@@ -102,26 +102,26 @@ interface FulfillmentEventInterface
     /**
      * Which line items and quantities are fulfilled in this event.
      *
-     * @param FulfillmentEventLineItemsItemInterface[] $line_items
+     * @param FulfillmentEventLineItemsItemInterface[] $lineItems
      * @return self
      */
-    public function setLineItems(array $line_items): self;
+    public function setLineItems(array $lineItems): self;
 
     /**
      * Carrier tracking number (required if type != processing).
      *
-     * @param string|null $tracking_number
+     * @param string|null $trackingNumber
      * @return self
      */
-    public function setTrackingNumber(string|null $tracking_number): self;
+    public function setTrackingNumber(?string $trackingNumber): self;
 
     /**
      * URL to track this shipment (required if type != processing).
      *
-     * @param string|null $tracking_url
+     * @param string|null $trackingUrl
      * @return self
      */
-    public function setTrackingUrl(string|null $tracking_url): self;
+    public function setTrackingUrl(?string $trackingUrl): self;
 
     /**
      * Carrier name (e.g., 'FedEx', 'USPS').
@@ -129,7 +129,7 @@ interface FulfillmentEventInterface
      * @param string|null $carrier
      * @return self
      */
-    public function setCarrier(string|null $carrier): self;
+    public function setCarrier(?string $carrier): self;
 
     /**
      * Human-readable description of the shipment status or delivery information (e.g., 'Delivered to front door', 'Out for delivery').
@@ -137,5 +137,5 @@ interface FulfillmentEventInterface
      * @param string|null $description
      * @return self
      */
-    public function setDescription(string|null $description): self;
+    public function setDescription(?string $description): self;
 }

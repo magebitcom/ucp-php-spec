@@ -99,82 +99,82 @@ interface ShippingDestinationResponseInterface
     /**
      * An address extension such as an apartment number, C/O or alternative name.
      *
-     * @param string|null $extended_address
+     * @param string|null $extendedAddress
      * @return self
      */
-    public function setExtendedAddress(string|null $extended_address): self;
+    public function setExtendedAddress(?string $extendedAddress): self;
 
     /**
      * The street address.
      *
-     * @param string|null $street_address
+     * @param string|null $streetAddress
      * @return self
      */
-    public function setStreetAddress(string|null $street_address): self;
+    public function setStreetAddress(?string $streetAddress): self;
 
     /**
      * The locality in which the street address is, and which is in the region. For example, Mountain View.
      *
-     * @param string|null $address_locality
+     * @param string|null $addressLocality
      * @return self
      */
-    public function setAddressLocality(string|null $address_locality): self;
+    public function setAddressLocality(?string $addressLocality): self;
 
     /**
      * The region in which the locality is, and which is in the country. Required for applicable countries (i.e. state in US, province in CA). For example, California or another appropriate first-level Administrative division.
      *
-     * @param string|null $address_region
+     * @param string|null $addressRegion
      * @return self
      */
-    public function setAddressRegion(string|null $address_region): self;
+    public function setAddressRegion(?string $addressRegion): self;
 
     /**
      * The country. Recommended to be in 2-letter ISO 3166-1 alpha-2 format, for example "US". For backward compatibility, a 3-letter ISO 3166-1 alpha-3 country code such as "SGP" or a full country name such as "Singapore" can also be used.
      *
-     * @param string|null $address_country
+     * @param string|null $addressCountry
      * @return self
      */
-    public function setAddressCountry(string|null $address_country): self;
+    public function setAddressCountry(?string $addressCountry): self;
 
     /**
      * The postal code. For example, 94043.
      *
-     * @param string|null $postal_code
+     * @param string|null $postalCode
      * @return self
      */
-    public function setPostalCode(string|null $postal_code): self;
+    public function setPostalCode(?string $postalCode): self;
 
     /**
      * Optional. First name of the contact associated with the address.
      *
-     * @param string|null $first_name
+     * @param string|null $firstName
      * @return self
      */
-    public function setFirstName(string|null $first_name): self;
+    public function setFirstName(?string $firstName): self;
 
     /**
      * Optional. Last name of the contact associated with the address.
      *
-     * @param string|null $last_name
+     * @param string|null $lastName
      * @return self
      */
-    public function setLastName(string|null $last_name): self;
+    public function setLastName(?string $lastName): self;
 
     /**
      * Optional. Full name of the contact associated with the address (if first_name or last_name fields are present they take precedence).
      *
-     * @param string|null $full_name
+     * @param string|null $fullName
      * @return self
      */
-    public function setFullName(string|null $full_name): self;
+    public function setFullName(?string $fullName): self;
 
     /**
      * Optional. Phone number of the contact associated with the address.
      *
-     * @param string|null $phone_number
+     * @param string|null $phoneNumber
      * @return self
      */
-    public function setPhoneNumber(string|null $phone_number): self;
+    public function setPhoneNumber(?string $phoneNumber): self;
 
     /**
      * ID specific to this shipping destination.

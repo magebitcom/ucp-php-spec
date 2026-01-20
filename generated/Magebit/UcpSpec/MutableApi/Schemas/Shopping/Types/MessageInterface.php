@@ -89,15 +89,15 @@ interface MessageInterface
      * @param string|null $path
      * @return self
      */
-    public function setPath(string|null $path): self;
+    public function setPath(?string $path): self;
 
     /**
      * Content format, default = plain.
      *
-     * @param string|null $content_type
+     * @param string|null $contentType
      * @return self
      */
-    public function setContentType(string|null $content_type): self;
+    public function setContentType(?string $contentType): self;
 
     /**
      * Human-readable message.

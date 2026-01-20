@@ -95,26 +95,26 @@ interface OrderInterface
     /**
      * Associated checkout ID for reconciliation.
      *
-     * @param string $checkout_id
+     * @param string $checkoutId
      * @return self
      */
-    public function setCheckoutId(string $checkout_id): self;
+    public function setCheckoutId(string $checkoutId): self;
 
     /**
      * Permalink to access the order on merchant site.
      *
-     * @param string $permalink_url
+     * @param string $permalinkUrl
      * @return self
      */
-    public function setPermalinkUrl(string $permalink_url): self;
+    public function setPermalinkUrl(string $permalinkUrl): self;
 
     /**
      * Immutable line items — source of truth for what was ordered.
      *
-     * @param OrderLineItemInterface[] $line_items
+     * @param OrderLineItemInterface[] $lineItems
      * @return self
      */
-    public function setLineItems(array $line_items): self;
+    public function setLineItems(array $lineItems): self;
 
     /**
      * Fulfillment data: buyer expectations and what actually happened.
@@ -130,7 +130,7 @@ interface OrderInterface
      * @param AdjustmentInterface[]|null $adjustments
      * @return self
      */
-    public function setAdjustments(array|null $adjustments): self;
+    public function setAdjustments(?array $adjustments): self;
 
     /**
      * Different totals for the order.

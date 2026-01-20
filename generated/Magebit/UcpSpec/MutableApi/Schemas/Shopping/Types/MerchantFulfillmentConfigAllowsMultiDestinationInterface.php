@@ -37,7 +37,7 @@ interface MerchantFulfillmentConfigAllowsMultiDestinationInterface
      * @param bool|null $shipping
      * @return self
      */
-    public function setShipping(bool|null $shipping): self;
+    public function setShipping(?bool $shipping): self;
 
     /**
      * Multiple pickup locations allowed.
@@ -45,5 +45,5 @@ interface MerchantFulfillmentConfigAllowsMultiDestinationInterface
      * @param bool|null $pickup
      * @return self
      */
-    public function setPickup(bool|null $pickup): self;
+    public function setPickup(?bool $pickup): self;
 }

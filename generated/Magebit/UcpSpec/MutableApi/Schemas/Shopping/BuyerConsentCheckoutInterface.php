@@ -137,10 +137,10 @@ interface BuyerConsentCheckoutInterface
     /**
      * List of line items being checked out.
      *
-     * @param LineItemResponseInterface[] $line_items
+     * @param LineItemResponseInterface[] $lineItems
      * @return self
      */
-    public function setLineItems(array $line_items): self;
+    public function setLineItems(array $lineItems): self;
 
     /**
      * Buyer with consent tracking.
@@ -148,7 +148,7 @@ interface BuyerConsentCheckoutInterface
      * @param BuyerConsentBuyerInterface|null $buyer
      * @return self
      */
-    public function setBuyer(BuyerConsentBuyerInterface|null $buyer): self;
+    public function setBuyer(?BuyerConsentBuyerInterface $buyer): self;
 
     /**
      * Checkout state indicating the current phase and required action. See Checkout Status lifecycle documentation for state transition details.
@@ -180,7 +180,7 @@ interface BuyerConsentCheckoutInterface
      * @param MessageInterface[]|null $messages
      * @return self
      */
-    public function setMessages(array|null $messages): self;
+    public function setMessages(?array $messages): self;
 
     /**
      * Links to be displayed by the platform (Privacy Policy, TOS). Mandatory for legal compliance.
@@ -193,18 +193,18 @@ interface BuyerConsentCheckoutInterface
     /**
      * RFC 3339 expiry timestamp. Default TTL is 6 hours from creation if not sent.
      *
-     * @param string|null $expires_at
+     * @param string|null $expiresAt
      * @return self
      */
-    public function setExpiresAt(string|null $expires_at): self;
+    public function setExpiresAt(?string $expiresAt): self;
 
     /**
      * URL for checkout handoff and session recovery. MUST be provided when status is requires_escalation. See specification for format and availability requirements.
      *
-     * @param string|null $continue_url
+     * @param string|null $continueUrl
      * @return self
      */
-    public function setContinueUrl(string|null $continue_url): self;
+    public function setContinueUrl(?string $continueUrl): self;
 
     /**
      * @param PaymentResponseInterface $payment
@@ -218,5 +218,5 @@ interface BuyerConsentCheckoutInterface
      * @param OrderConfirmationInterface|null $order
      * @return self
      */
-    public function setOrder(OrderConfirmationInterface|null $order): self;
+    public function setOrder(?OrderConfirmationInterface $order): self;
 }

@@ -97,10 +97,10 @@ interface CardCredentialInterface
     /**
      * The type of card number. Network tokens are preferred with fallback to FPAN. See PCI Scope for more details.
      *
-     * @param string $card_number_type
+     * @param string $cardNumberType
      * @return self
      */
-    public function setCardNumberType(string $card_number_type): self;
+    public function setCardNumberType(string $cardNumberType): self;
 
     /**
      * Card number.
@@ -108,23 +108,23 @@ interface CardCredentialInterface
      * @param string|null $number
      * @return self
      */
-    public function setNumber(string|null $number): self;
+    public function setNumber(?string $number): self;
 
     /**
      * The month of the card's expiration date (1-12).
      *
-     * @param int|null $expiry_month
+     * @param int|null $expiryMonth
      * @return self
      */
-    public function setExpiryMonth(int|null $expiry_month): self;
+    public function setExpiryMonth(?int $expiryMonth): self;
 
     /**
      * The year of the card's expiration date.
      *
-     * @param int|null $expiry_year
+     * @param int|null $expiryYear
      * @return self
      */
-    public function setExpiryYear(int|null $expiry_year): self;
+    public function setExpiryYear(?int $expiryYear): self;
 
     /**
      * Cardholder name.
@@ -132,7 +132,7 @@ interface CardCredentialInterface
      * @param string|null $name
      * @return self
      */
-    public function setName(string|null $name): self;
+    public function setName(?string $name): self;
 
     /**
      * Card CVC number.
@@ -140,7 +140,7 @@ interface CardCredentialInterface
      * @param string|null $cvc
      * @return self
      */
-    public function setCvc(string|null $cvc): self;
+    public function setCvc(?string $cvc): self;
 
     /**
      * Cryptogram provided with network tokens.
@@ -148,13 +148,13 @@ interface CardCredentialInterface
      * @param string|null $cryptogram
      * @return self
      */
-    public function setCryptogram(string|null $cryptogram): self;
+    public function setCryptogram(?string $cryptogram): self;
 
     /**
      * Electronic Commerce Indicator / Security Level Indicator provided with network tokens.
      *
-     * @param string|null $eci_value
+     * @param string|null $eciValue
      * @return self
      */
-    public function setEciValue(string|null $eci_value): self;
+    public function setEciValue(?string $eciValue): self;
 }

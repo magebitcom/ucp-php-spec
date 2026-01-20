@@ -52,13 +52,13 @@ interface UCPDiscoveryProfileInterface
      * @param UCPDiscoveryProfilePaymentInterface|null $payment
      * @return self
      */
-    public function setPayment(UCPDiscoveryProfilePaymentInterface|null $payment): self;
+    public function setPayment(?UCPDiscoveryProfilePaymentInterface $payment): self;
 
     /**
      * Public keys for signature verification (JWK format). Used to verify signed responses, webhooks, and other authenticated messages from this party.
      *
-     * @param UCPDiscoveryProfileSigningKeysItemInterface[]|null $signing_keys
+     * @param UCPDiscoveryProfileSigningKeysItemInterface[]|null $signingKeys
      * @return self
      */
-    public function setSigningKeys(array|null $signing_keys): self;
+    public function setSigningKeys(?array $signingKeys): self;
 }

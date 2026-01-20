@@ -32,5 +32,5 @@ interface Ap2MandateCompleteRequestWithAp2Interface
      * @param Ap2MandateAp2CompleteRequestInterface|null $ap2
      * @return self
      */
-    public function setAp2(Ap2MandateAp2CompleteRequestInterface|null $ap2): self;
+    public function setAp2(?Ap2MandateAp2CompleteRequestInterface $ap2): self;
 }

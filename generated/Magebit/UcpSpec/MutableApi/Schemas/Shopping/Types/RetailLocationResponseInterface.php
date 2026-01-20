@@ -62,5 +62,5 @@ interface RetailLocationResponseInterface
      * @param PostalAddressInterface|null $address
      * @return self
      */
-    public function setAddress(PostalAddressInterface|null $address): self;
+    public function setAddress(?PostalAddressInterface $address): self;
 }

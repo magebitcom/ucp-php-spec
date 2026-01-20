@@ -62,7 +62,7 @@ interface CapabilityBaseInterface
      * @param string|null $name
      * @return self
      */
-    public function setName(string|null $name): self;
+    public function setName(?string $name): self;
 
     /**
      * Capability version in YYYY-MM-DD format.
@@ -70,7 +70,7 @@ interface CapabilityBaseInterface
      * @param string|null $version
      * @return self
      */
-    public function setVersion(string|null $version): self;
+    public function setVersion(?string $version): self;
 
     /**
      * URL to human-readable specification document.
@@ -78,7 +78,7 @@ interface CapabilityBaseInterface
      * @param string|null $spec
      * @return self
      */
-    public function setSpec(string|null $spec): self;
+    public function setSpec(?string $spec): self;
 
     /**
      * URL to JSON Schema for this capability's payload.
@@ -86,7 +86,7 @@ interface CapabilityBaseInterface
      * @param string|null $schema
      * @return self
      */
-    public function setSchema(string|null $schema): self;
+    public function setSchema(?string $schema): self;
 
     /**
      * Parent capability this extends. Present for extensions, absent for root capabilities.
@@ -94,7 +94,7 @@ interface CapabilityBaseInterface
      * @param string|null $extends
      * @return self
      */
-    public function setExtends(string|null $extends): self;
+    public function setExtends(?string $extends): self;
 
     /**
      * Capability-specific configuration (structure defined by each capability).
@@ -102,5 +102,5 @@ interface CapabilityBaseInterface
      * @param object|null $config
      * @return self
      */
-    public function setConfig(object|null $config): self;
+    public function setConfig(?object $config): self;
 }

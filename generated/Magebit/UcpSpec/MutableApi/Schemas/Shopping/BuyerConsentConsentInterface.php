@@ -51,7 +51,7 @@ interface BuyerConsentConsentInterface
      * @param bool|null $analytics
      * @return self
      */
-    public function setAnalytics(bool|null $analytics): self;
+    public function setAnalytics(?bool $analytics): self;
 
     /**
      * Consent for storing user preferences.
@@ -59,7 +59,7 @@ interface BuyerConsentConsentInterface
      * @param bool|null $preferences
      * @return self
      */
-    public function setPreferences(bool|null $preferences): self;
+    public function setPreferences(?bool $preferences): self;
 
     /**
      * Consent for marketing communications.
@@ -67,13 +67,13 @@ interface BuyerConsentConsentInterface
      * @param bool|null $marketing
      * @return self
      */
-    public function setMarketing(bool|null $marketing): self;
+    public function setMarketing(?bool $marketing): self;
 
     /**
      * Consent for selling data to third parties (CCPA).
      *
-     * @param bool|null $sale_of_data
+     * @param bool|null $saleOfData
      * @return self
      */
-    public function setSaleOfData(bool|null $sale_of_data): self;
+    public function setSaleOfData(?bool $saleOfData): self;
 }

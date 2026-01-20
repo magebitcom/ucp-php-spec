@@ -32,5 +32,5 @@ interface UCPDiscoveryProfilePaymentInterface
      * @param PaymentHandlerResponseInterface[]|null $handlers
      * @return self
      */
-    public function setHandlers(array|null $handlers): self;
+    public function setHandlers(?array $handlers): self;
 }

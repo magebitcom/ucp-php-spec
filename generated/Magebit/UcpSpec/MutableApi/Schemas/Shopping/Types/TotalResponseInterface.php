@@ -57,10 +57,10 @@ interface TotalResponseInterface
     /**
      * Text to display against the amount. Should reflect appropriate method (e.g., 'Shipping', 'Delivery').
      *
-     * @param string|null $display_text
+     * @param string|null $displayText
      * @return self
      */
-    public function setDisplayText(string|null $display_text): self;
+    public function setDisplayText(?string $displayText): self;
 
     /**
      * If type == total, sums subtotal - discount + fulfillment + tax + fee. Should be >= 0. Amount in minor (cents) currency units.

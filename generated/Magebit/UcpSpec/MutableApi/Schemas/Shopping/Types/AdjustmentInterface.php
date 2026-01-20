@@ -91,10 +91,10 @@ interface AdjustmentInterface
     /**
      * RFC 3339 timestamp when this adjustment occurred.
      *
-     * @param string $occurred_at
+     * @param string $occurredAt
      * @return self
      */
-    public function setOccurredAt(string $occurred_at): self;
+    public function setOccurredAt(string $occurredAt): self;
 
     /**
      * Adjustment status.
@@ -107,10 +107,10 @@ interface AdjustmentInterface
     /**
      * Which line items and quantities are affected (optional).
      *
-     * @param AdjustmentLineItemsItemInterface[]|null $line_items
+     * @param AdjustmentLineItemsItemInterface[]|null $lineItems
      * @return self
      */
-    public function setLineItems(array|null $line_items): self;
+    public function setLineItems(?array $lineItems): self;
 
     /**
      * Amount in minor units (cents) for refunds, credits, price adjustments (optional).
@@ -118,7 +118,7 @@ interface AdjustmentInterface
      * @param int|null $amount
      * @return self
      */
-    public function setAmount(int|null $amount): self;
+    public function setAmount(?int $amount): self;
 
     /**
      * Human-readable reason or description (e.g., 'Defective item', 'Customer requested').
@@ -126,5 +126,5 @@ interface AdjustmentInterface
      * @param string|null $description
      * @return self
      */
-    public function setDescription(string|null $description): self;
+    public function setDescription(?string $description): self;
 }

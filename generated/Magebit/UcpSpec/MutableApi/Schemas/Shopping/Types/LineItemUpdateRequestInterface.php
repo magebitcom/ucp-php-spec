@@ -47,7 +47,7 @@ interface LineItemUpdateRequestInterface
      * @param string|null $id
      * @return self
      */
-    public function setId(string|null $id): self;
+    public function setId(?string $id): self;
 
     /**
      * @param ItemUpdateRequestInterface $item
@@ -66,8 +66,8 @@ interface LineItemUpdateRequestInterface
     /**
      * Parent line item identifier for any nested structures.
      *
-     * @param string|null $parent_id
+     * @param string|null $parentId
      * @return self
      */
-    public function setParentId(string|null $parent_id): self;
+    public function setParentId(?string $parentId): self;
 }

@@ -29,8 +29,8 @@ interface Ap2MandateAp2CheckoutResponseInterface
     /**
      * Merchant's signature proving checkout terms are authentic.
      *
-     * @param string $merchant_authorization
+     * @param string $merchantAuthorization
      * @return self
      */
-    public function setMerchantAuthorization(string $merchant_authorization): self;
+    public function setMerchantAuthorization(string $merchantAuthorization): self;
 }
