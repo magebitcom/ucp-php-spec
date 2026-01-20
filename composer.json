@@ -5,7 +5,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Magebit\\UcpSpec\\": "generated/Magebit/UcpSpec/"
+            "Magebit\\UcpSpec\\Api\\": "generated/Magebit/UcpSpec/Api/"
         }
     },
     "autoload-dev": {

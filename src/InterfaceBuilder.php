@@ -51,6 +51,11 @@ class InterfaceBuilder
         string $namespace,
         string $currentFile
     ): PhpFile {
+        // Append "Interface" suffix if not already present
+        if (!str_ends_with($interfaceName, 'Interface')) {
+            $interfaceName .= 'Interface';
+        }
+        
         $file = new PhpFile();
         $file->setStrictTypes();
         $file->addComment('This file is auto-generated. Do not edit manually.');

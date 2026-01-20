@@ -187,6 +187,11 @@ class TypeMapper
             // Get namespace for current file
             $namespace = $this->parser->getNamespaceFromPath($currentFile);
             
+            // Append "Interface" suffix
+            if (!str_ends_with($interfaceName, 'Interface')) {
+                $interfaceName .= 'Interface';
+            }
+            
             return '\\' . $namespace . '\\' . $interfaceName;
         }
 
@@ -211,6 +216,11 @@ class TypeMapper
             $schema = $this->parser->getRootSchema($targetFile);
             $interfaceName = $this->parser->getInterfaceName($schema, $targetFile);
             
+            // Append "Interface" suffix
+            if (!str_ends_with($interfaceName, 'Interface')) {
+                $interfaceName .= 'Interface';
+            }
+            
             return '\\' . $targetNamespace . '\\' . $interfaceName;
         }
 
@@ -233,6 +243,11 @@ class TypeMapper
             $fileBaseName = $this->sanitizeInterfaceName($fileBaseName);
             $defInterfaceName = $this->sanitizeInterfaceName($defName);
             $interfaceName = $fileBaseName . $defInterfaceName;
+        }
+
+        // Append "Interface" suffix
+        if (!str_ends_with($interfaceName, 'Interface')) {
+            $interfaceName .= 'Interface';
         }
 
         return '\\' . $targetNamespace . '\\' . $interfaceName;
@@ -405,10 +420,17 @@ class TypeMapper
      */
     public function generateInlineInterfaceName(string $parentName, string $propertyName): string
     {
+        // Remove "Interface" suffix from parent name if present
+        $parentNameWithoutSuffix = $parentName;
+        if (str_ends_with($parentName, 'Interface')) {
+            $parentNameWithoutSuffix = substr($parentName, 0, -9); // Remove "Interface"
+        }
+        
         // Clean up property name and convert to PascalCase
         $cleanPropertyName = $this->toPascalCase($propertyName);
         
-        return $parentName . $cleanPropertyName;
+        // Combine and add "Interface" suffix
+        return $parentNameWithoutSuffix . $cleanPropertyName . 'Interface';
     }
 
     /**

@@ -129,9 +129,16 @@ class Generator
         echo "  Generating interface: {$interfaceName}\n";
 
         $file = $this->builder->buildInterface($interfaceName, $schema, $namespace, $filePath);
-        $outputPath = $this->builder->saveInterface($file, $this->outputDir, $namespace, $interfaceName);
         
-        $this->builder->markGenerated($namespace, $interfaceName);
+        // Append "Interface" suffix for filename
+        $fileInterfaceName = $interfaceName;
+        if (!str_ends_with($fileInterfaceName, 'Interface')) {
+            $fileInterfaceName .= 'Interface';
+        }
+        
+        $outputPath = $this->builder->saveInterface($file, $this->outputDir, $namespace, $fileInterfaceName);
+        
+        $this->builder->markGenerated($namespace, $fileInterfaceName);
 
         echo "    Saved to: " . $this->getRelativePath($outputPath) . "\n";
     }
@@ -196,9 +203,16 @@ class Generator
         echo "  Generating definition interface: {$interfaceName}\n";
 
         $file = $this->builder->buildDefinitionInterface($interfaceName, $definition, $namespace, $currentFile);
-        $outputPath = $this->builder->saveInterface($file, $this->outputDir, $namespace, $interfaceName);
         
-        $this->builder->markGenerated($namespace, $interfaceName);
+        // Append "Interface" suffix for filename
+        $fileInterfaceName = $interfaceName;
+        if (!str_ends_with($fileInterfaceName, 'Interface')) {
+            $fileInterfaceName .= 'Interface';
+        }
+        
+        $outputPath = $this->builder->saveInterface($file, $this->outputDir, $namespace, $fileInterfaceName);
+        
+        $this->builder->markGenerated($namespace, $fileInterfaceName);
 
         echo "    Saved to: " . $this->getRelativePath($outputPath) . "\n";
 

@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * This file is auto-generated. Do not edit manually.
+ *
+ * @author    Magebit <info@magebit.com>
+ * @copyright Copyright (c) Magebit, Ltd. (https://magebit.com)
+ * @license   MIT
+ */
+
+declare(strict_types=1);
+
+namespace Magebit\UcpSpec\Api\Schemas;
+
+use Magebit\UcpSpec\Api\Services\UCPServiceInterface;
+
+/**
+ * Full UCP metadata for /.well-known/ucp discovery.
+ *
+ * Schema: UCP Discovery Profile
+ */
+interface UcpDiscoveryProfileInterface
+{
+    /**
+     * @return string
+     */
+    public function getVersion(): string;
+
+    /**
+     * @return array<string, UCPServiceInterface>
+     */
+    public function getServices(): object;
+
+    /**
+     * Supported capabilities and extensions.
+     *
+     * @return CapabilityDiscoveryInterface[]
+     */
+    public function getCapabilities(): array;
+}

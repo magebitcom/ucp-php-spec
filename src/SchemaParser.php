@@ -249,13 +249,13 @@ class SchemaParser
         $relativePath = preg_replace('#^spec/schemas/?#', '', $relativePath);
 
         if ($relativePath === '.' || $relativePath === '') {
-            return 'Magebit\\UcpSpec';
+            return 'Magebit\\UcpSpec\\Api';
         }
 
         // Convert path to namespace
         $parts = explode('/', $relativePath);
         $parts = array_map('ucfirst', $parts);
         
-        return 'Magebit\\UcpSpec\\' . implode('\\', $parts);
+        return 'Magebit\\UcpSpec\\Api\\' . implode('\\', $parts);
     }
 }

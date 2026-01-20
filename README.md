@@ -27,17 +27,17 @@ composer require magebitcom/ucp-php-spec
 
 ### Using the Interfaces
 
-The generated interfaces are available under the `Magebit\UcpSpec` namespace:
+The generated interfaces are available under the `Magebit\UcpSpec\Api` namespace:
 
 ```php
 <?php
 
-use Magebit\UcpSpec\Schemas\Shopping\Order;
-use Magebit\UcpSpec\Schemas\Shopping\Types\OrderLineItem;
-use Magebit\UcpSpec\Schemas\Shopping\CheckoutResponse;
+use Magebit\UcpSpec\Api\Schemas\Shopping\OrderInterface;
+use Magebit\UcpSpec\Api\Schemas\Shopping\Types\OrderLineItemInterface;
+use Magebit\UcpSpec\Api\Schemas\Shopping\CheckoutResponseInterface;
 
 // Implement the interfaces in your application
-class MyOrder implements Order
+class MyOrder implements OrderInterface
 {
     public function getId(): string
     {
@@ -46,7 +46,7 @@ class MyOrder implements Order
 
     public function getLineItems(): array
     {
-        return $this->lineItems; // OrderLineItem[]
+        return $this->lineItems; // OrderLineItemInterface[]
     }
 
     // ... implement other methods
@@ -55,10 +55,10 @@ class MyOrder implements Order
 
 ### Available Namespaces
 
-- `Magebit\UcpSpec\Schemas\Shopping` - Shopping and order interfaces
-- `Magebit\UcpSpec\Schemas\Shopping\Types` - Common types (addresses, items, etc.)
-- `Magebit\UcpSpec\Discovery` - Discovery profile interfaces
-- `Magebit\UcpSpec\Services` - Service definition interfaces
+- `Magebit\UcpSpec\Api\Schemas\Shopping` - Shopping and order interfaces
+- `Magebit\UcpSpec\Api\Schemas\Shopping\Types` - Common types (addresses, items, etc.)
+- `Magebit\UcpSpec\Api\Discovery` - Discovery profile interfaces
+- `Magebit\UcpSpec\Api\Services` - Service definition interfaces
 
 ### Type Safety
 
@@ -71,7 +71,7 @@ All interfaces include:
 Example:
 
 ```php
-interface Order
+interface OrderInterface
 {
     /**
      * Unique order identifier.
@@ -83,33 +83,17 @@ interface Order
     /**
      * Immutable line items — source of truth for what was ordered.
      *
-     * @return OrderLineItem[]
+     * @return OrderLineItemInterface[]
      */
     function getLineItems(): array;
 
     /**
      * Append-only event log of money movements.
      *
-     * @return Adjustment[]|null
+     * @return AdjustmentInterface[]|null
      */
     function getAdjustments(): array|null;
 }
-```
-
-## Specification Structure
-
-The UCP specification is organized as follows:
-
-```
-spec/
-├── schemas/              # Core schema definitions
-│   ├── shopping/        # Shopping domain
-│   │   ├── order.json
-│   │   ├── checkout_resp.json
-│   │   └── types/       # Reusable types
-│   └── ucp.json         # Protocol metadata
-├── discovery/           # Discovery profiles
-└── services/            # Service definitions
 ```
 
 ## Regenerating Interfaces
@@ -137,9 +121,9 @@ The generator preserves directory structure in namespaces:
 
 | Spec File | Generated Interface |
 |-----------|-------------------|
-| `spec/schemas/shopping/order.json` | `Magebit\UcpSpec\Schemas\Shopping\Order` |
-| `spec/schemas/shopping/types/postal_address.json` | `Magebit\UcpSpec\Schemas\Shopping\Types\PostalAddress` |
-| `spec/discovery/profile_schema.json` | `Magebit\UcpSpec\Discovery\UCPDiscoveryProfile` |
+| `spec/schemas/shopping/order.json` | `Magebit\UcpSpec\Api\Schemas\Shopping\OrderInterface` |
+| `spec/schemas/shopping/types/postal_address.json` | `Magebit\UcpSpec\Api\Schemas\Shopping\Types\PostalAddressInterface` |
+| `spec/discovery/profile_schema.json` | `Magebit\UcpSpec\Api\Discovery\UCPDiscoveryProfileInterface` |
 
 ## Type Mapping
 
@@ -151,9 +135,9 @@ JSON Schema types are mapped to PHP as follows:
 | `integer` | `int` | `@return int` |
 | `number` | `float` | `@return float` |
 | `boolean` | `bool` | `@return bool` |
-| `array` | `array` | `@return Type[]` |
+| `array` | `array` | `@return TypeInterface[]` |
 | `object` | Interface | `@return InterfaceName` |
-| `null` | `null` | `@return Type\|null` |
+| `null` | `null` | `@return TypeInterface\|null` |
 | `oneOf`/`anyOf` | Union | `@return string\|int` |
 
 ## Contributing
@@ -182,4 +166,4 @@ MIT License - see [LICENSE.md](LICENSE.md) for details.
 
 *Have questions or need help? Contact us at info@magebit.com*
 
-[https://magebit.com](magebit.com)
+[https://magebit.com](https://magebit.com)
