@@ -60,9 +60,9 @@ interface OrderInterface
     /**
      * Fulfillment data: buyer expectations and what actually happened.
      *
-     * @return object
+     * @return OrderFulfillmentInterface
      */
-    public function getFulfillment(): object;
+    public function getFulfillment(): OrderFulfillmentInterface;
 
     /**
      * Append-only event log of money movements (refunds, returns, credits, disputes, cancellations, etc.) that exist independently of fulfillment.

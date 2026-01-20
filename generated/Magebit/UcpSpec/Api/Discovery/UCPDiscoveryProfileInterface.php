@@ -29,14 +29,14 @@ interface UCPDiscoveryProfileInterface
     /**
      * Payment configuration containing handlers
      *
-     * @return object|null
+     * @return UCPDiscoveryProfilePaymentInterface|null
      */
-    public function getPayment(): object|null;
+    public function getPayment(): UCPDiscoveryProfilePaymentInterface|null;
 
     /**
      * Public keys for signature verification (JWK format). Used to verify signed responses, webhooks, and other authenticated messages from this party.
      *
-     * @return object[]|null
+     * @return UCPDiscoveryProfileSigningKeysItemInterface[]|null
      */
     public function getSigningKeys(): array|null;
 }

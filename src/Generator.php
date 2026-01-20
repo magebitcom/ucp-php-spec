@@ -54,13 +54,37 @@ class Generator
 
         echo "Found " . count($schemaFiles) . " schema files\n";
 
-        // Process each schema file
+        // Generate Api namespace (immutable - getters only)
+        echo "\n=== Generating Api namespace (immutable) ===\n";
+        $this->builder->setGenerateSetters(false);
+        $this->builder->setNamespaceBase('Api');
+        $this->typeMapper->setNamespaceBase('Api');
+        
         foreach ($schemaFiles as $schemaFile) {
-            $this->processSchemaFile($schemaFile);
+            $this->processSchemaFile($schemaFile, 'Api');
+        }
+        
+        $apiCount = count($this->builder->getGeneratedInterfaces());
+
+        // Reset for MutableApi generation
+        $this->processedFiles = [];
+        $this->builder = new InterfaceBuilder($this->parser, $this->typeMapper);
+
+        // Generate MutableApi namespace (mutable - getters and setters)
+        echo "\n=== Generating MutableApi namespace (mutable) ===\n";
+        $this->builder->setGenerateSetters(true);
+        $this->builder->setNamespaceBase('MutableApi');
+        $this->typeMapper->setNamespaceBase('MutableApi');
+        
+        foreach ($schemaFiles as $schemaFile) {
+            $this->processSchemaFile($schemaFile, 'MutableApi');
         }
 
-        echo "\nGeneration complete!\n";
-        echo "Generated " . count($this->builder->getGeneratedInterfaces()) . " interfaces\n";
+        $mutableApiCount = count($this->builder->getGeneratedInterfaces());
+
+        echo "\n=== Generation complete! ===\n";
+        echo "Generated " . $apiCount . " Api interfaces (immutable)\n";
+        echo "Generated " . $mutableApiCount . " MutableApi interfaces (mutable)\n";
         echo "Output directory: " . $this->outputDir . "\n";
     }
 
@@ -68,9 +92,10 @@ class Generator
      * Process a single schema file
      *
      * @param string $filePath Path to the schema file
+     * @param string $namespaceBase Namespace base ('Api' or 'MutableApi')
      * @return void
      */
-    private function processSchemaFile(string $filePath): void
+    private function processSchemaFile(string $filePath, string $namespaceBase = 'Api'): void
     {
         // Skip if already processed
         if (isset($this->processedFiles[$filePath])) {
@@ -85,7 +110,7 @@ class Generator
             $schema = $this->parser->loadSchema($filePath);
 
             // Get namespace for this file
-            $namespace = $this->parser->getNamespaceFromPath($filePath);
+            $namespace = $this->parser->getNamespaceFromPath($filePath, $namespaceBase);
 
             // Generate interface for root schema if it's an object
             if ($this->parser->hasRootObject($filePath)) {

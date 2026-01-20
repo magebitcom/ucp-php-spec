@@ -22,6 +22,8 @@ class InterfaceBuilder
     private TypeMapper $typeMapper;
     private PsrPrinter $printer;
     private array $generatedInterfaces = [];
+    private bool $generateSetters = false;
+    private string $namespaceBase = 'Api';
 
     /**
      * Constructor
@@ -34,6 +36,28 @@ class InterfaceBuilder
         $this->parser = $parser;
         $this->typeMapper = $typeMapper;
         $this->printer = new PsrPrinter();
+    }
+
+    /**
+     * Set whether to generate setter methods
+     *
+     * @param bool $generateSetters True to generate setters
+     * @return void
+     */
+    public function setGenerateSetters(bool $generateSetters): void
+    {
+        $this->generateSetters = $generateSetters;
+    }
+
+    /**
+     * Set namespace base
+     *
+     * @param string $namespaceBase Namespace base ('Api' or 'MutableApi')
+     * @return void
+     */
+    public function setNamespaceBase(string $namespaceBase): void
+    {
+        $this->namespaceBase = $namespaceBase;
     }
 
     /**
@@ -178,6 +202,13 @@ class InterfaceBuilder
         foreach ($properties as $propertyName => $property) {
             $this->addPropertyMethod($interface, $propertyName, $property, $required, $currentFile, $namespace);
         }
+
+        // Add setter methods if enabled
+        if ($this->generateSetters) {
+            foreach ($properties as $propertyName => $property) {
+                $this->addSetterMethod($interface, $propertyName, $property, $required, $currentFile, $namespace);
+            }
+        }
     }
 
     /**
@@ -258,8 +289,11 @@ class InterfaceBuilder
             $method->addComment('');
         }
 
-        // Map type
-        $phpType = $this->typeMapper->mapType($property, $currentFile);
+        // Get parent interface name from the interface
+        $parentName = $interface->getName();
+
+        // Map type with context for inline objects
+        $phpType = $this->typeMapper->mapType($property, $currentFile, $parentName, $propertyName);
         
         // Handle nullable types
         $isRequired = in_array($propertyName, $required);
@@ -282,8 +316,75 @@ class InterfaceBuilder
         }
 
         // Generate PHPDoc type with array item types
-        $commentType = $this->generatePhpDocType($property, $phpType, $currentFile, $namespace);
+        $commentType = $this->generatePhpDocType($property, $phpType, $currentFile, $namespace, $parentName, $propertyName);
         $method->addComment('@return ' . $commentType);
+    }
+
+    /**
+     * Add a single property as setter method
+     *
+     * @param InterfaceType $interface Interface to add method to
+     * @param string $propertyName Name of the property
+     * @param array $property Property schema definition
+     * @param array $required Array of required property names
+     * @param string $currentFile Current file path for resolving references
+     * @param \Nette\PhpGenerator\PhpNamespace $namespace Namespace for use statements
+     * @return void
+     */
+    private function addSetterMethod(
+        InterfaceType $interface,
+        string $propertyName,
+        array $property,
+        array $required,
+        string $currentFile,
+        \Nette\PhpGenerator\PhpNamespace $namespace
+    ): void {
+        // Convert property name to setter method name
+        $methodName = 'set' . $this->toPascalCase($propertyName);
+
+        $method = $interface->addMethod($methodName);
+        $method->setPublic();
+
+        // Add description
+        if (isset($property['description'])) {
+            $method->addComment($property['description']);
+            $method->addComment('');
+        }
+
+        // Get parent interface name from the interface
+        $parentName = $interface->getName();
+
+        // Map type with context for inline objects
+        $phpType = $this->typeMapper->mapType($property, $currentFile, $parentName, $propertyName);
+        
+        // Handle nullable types
+        $isRequired = in_array($propertyName, $required);
+        
+        if (!$isRequired && $phpType !== 'mixed' && $phpType !== 'null') {
+            // Make optional properties nullable
+            if (strpos($phpType, '|') === false) {
+                $phpType .= '|null';
+            } elseif (strpos($phpType, 'null') === false) {
+                $phpType .= '|null';
+            }
+        }
+
+        // Add use statements for all referenced types
+        $this->addUseStatementsForType($phpType, $namespace);
+
+        // Generate PHPDoc type with array item types
+        $commentType = $this->generatePhpDocType($property, $phpType, $currentFile, $namespace, $parentName, $propertyName);
+
+        // Add parameter
+        $param = $method->addParameter($propertyName);
+        if ($phpType !== 'mixed') {
+            $param->setType($phpType);
+        }
+        $method->addComment('@param ' . $commentType . ' $' . $propertyName);
+
+        // Set return type to self for method chaining
+        $method->setReturnType('self');
+        $method->addComment('@return self');
     }
 
     /**
@@ -293,13 +394,17 @@ class InterfaceBuilder
      * @param string $phpType PHP type hint
      * @param string $currentFile Current file path for resolving references
      * @param \Nette\PhpGenerator\PhpNamespace $namespace Namespace for use statements
+     * @param string|null $parentName Parent interface name for inline objects
+     * @param string|null $propertyName Property name for inline objects
      * @return string PHPDoc type annotation (e.g., "Type[]" or "Type[]|null")
      */
     private function generatePhpDocType(
         array $property,
         string $phpType,
         string $currentFile,
-        \Nette\PhpGenerator\PhpNamespace $namespace
+        \Nette\PhpGenerator\PhpNamespace $namespace,
+        ?string $parentName = null,
+        ?string $propertyName = null
     ): string {
         // Resolve $ref if present
         if (isset($property['$ref'])) {
@@ -315,7 +420,7 @@ class InterfaceBuilder
         
         // Check if we're dealing with an array with items
         if ($propertyType === 'array' && isset($property['items'])) {
-            $itemType = $this->typeMapper->getArrayItemType($property, $currentFile);
+            $itemType = $this->typeMapper->getArrayItemType($property, $currentFile, $parentName, $propertyName);
             
             if ($itemType !== null && $itemType !== 'mixed') {
                 // Add use statement for item type

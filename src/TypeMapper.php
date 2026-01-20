@@ -14,6 +14,7 @@ namespace Magebit\UcpSpecGenerator;
 class TypeMapper
 {
     private SchemaParser $parser;
+    private string $namespaceBase = 'Api';
 
     /**
      * Constructor
@@ -26,14 +27,31 @@ class TypeMapper
     }
 
     /**
+     * Set namespace base
+     *
+     * @param string $namespaceBase Namespace base ('Api' or 'MutableApi')
+     * @return void
+     */
+    public function setNamespaceBase(string $namespaceBase): void
+    {
+        $this->namespaceBase = $namespaceBase;
+    }
+
+    /**
      * Map JSON Schema type to PHP type
      *
      * @param array $property Property schema definition
      * @param string $currentFile Current file path for resolving references
+     * @param string|null $parentName Parent interface name for inline objects
+     * @param string|null $propertyName Property name for inline objects
      * @return string PHP type (e.g., "string", "int", "array", or FQN for objects)
      */
-    public function mapType(array $property, string $currentFile): string
-    {
+    public function mapType(
+        array $property, 
+        string $currentFile, 
+        ?string $parentName = null, 
+        ?string $propertyName = null
+    ): string {
         // Handle $ref
         if (isset($property['$ref'])) {
             return $this->resolveRefType($property['$ref'], $currentFile);
@@ -41,7 +59,7 @@ class TypeMapper
 
         // Handle allOf (treat as the first type for simplicity)
         if (isset($property['allOf'])) {
-            return $this->mapType($property['allOf'][0], $currentFile);
+            return $this->mapType($property['allOf'][0], $currentFile, $parentName, $propertyName);
         }
 
         // Handle oneOf/anyOf as union types
@@ -69,7 +87,7 @@ class TypeMapper
             'boolean' => 'bool',
             'null' => 'null',
             'array' => $this->mapArrayType($property, $currentFile),
-            'object' => $this->mapObjectType($property, $currentFile),
+            'object' => $this->mapObjectType($property, $currentFile, $parentName, $propertyName),
             default => 'mixed',
         };
     }
@@ -92,15 +110,23 @@ class TypeMapper
      *
      * @param array $property Property schema definition with 'items' key
      * @param string $currentFile Current file path for resolving references
+     * @param string|null $parentName Parent interface name for inline objects
+     * @param string|null $propertyName Property name for inline objects
      * @return string|null Item type or null if no items defined
      */
-    public function getArrayItemType(array $property, string $currentFile): ?string
-    {
+    public function getArrayItemType(
+        array $property, 
+        string $currentFile, 
+        ?string $parentName = null, 
+        ?string $propertyName = null
+    ): ?string {
         if (!isset($property['items'])) {
             return null;
         }
 
-        return $this->mapType($property['items'], $currentFile);
+        // For array items, append 'Item' to property name for inline objects
+        $itemPropertyName = $propertyName !== null ? $propertyName . '_item' : null;
+        return $this->mapType($property['items'], $currentFile, $parentName, $itemPropertyName);
     }
 
     /**
@@ -108,15 +134,22 @@ class TypeMapper
      *
      * @param array $property Property schema definition
      * @param string $currentFile Current file path for resolving references
-     * @return string Returns 'object'
+     * @param string|null $parentName Parent interface name for inline objects
+     * @param string|null $propertyName Property name for inline objects
+     * @return string Returns interface FQN or 'object'
      */
-    private function mapObjectType(array $property, string $currentFile): string
-    {
-        // If object has properties, it needs a separate interface
-        if (isset($property['properties'])) {
-            // Generate a unique interface name for this inline object
-            // This will be handled by the InterfaceBuilder
-            return 'object';
+    private function mapObjectType(
+        array $property, 
+        string $currentFile, 
+        ?string $parentName = null, 
+        ?string $propertyName = null
+    ): string {
+        // If object has properties, it's an inline object that needs a separate interface
+        if (isset($property['properties']) && $parentName !== null && $propertyName !== null) {
+            // Generate the interface name for this inline object
+            $interfaceName = $this->generateInlineInterfaceName($parentName, $propertyName);
+            $namespace = $this->parser->getNamespaceFromPath($currentFile, $this->namespaceBase);
+            return '\\' . $namespace . '\\' . $interfaceName;
         }
 
         return 'object';
@@ -185,7 +218,7 @@ class TypeMapper
             }
             
             // Get namespace for current file
-            $namespace = $this->parser->getNamespaceFromPath($currentFile);
+            $namespace = $this->parser->getNamespaceFromPath($currentFile, $this->namespaceBase);
             
             // Append "Interface" suffix
             if (!str_ends_with($interfaceName, 'Interface')) {
@@ -209,7 +242,7 @@ class TypeMapper
         }
 
         // Get namespace for target file
-        $targetNamespace = $this->parser->getNamespaceFromPath($targetFile);
+        $targetNamespace = $this->parser->getNamespaceFromPath($targetFile, $this->namespaceBase);
 
         // If pointer is empty or just #, use the root schema
         if (empty($pointer) || $pointer === '') {

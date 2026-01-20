@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * This file is auto-generated. Do not edit manually.
+ *
+ * @author    Magebit <info@magebit.com>
+ * @copyright Copyright (c) Magebit, Ltd. (https://magebit.com)
+ * @license   MIT
+ */
+
+declare(strict_types=1);
+
+namespace Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types;
+
+/**
+ * A fulfillment option within a group (e.g., Standard Shipping $5, Express $15).
+ *
+ * Schema: Fulfillment Option Request
+ */
+interface FulfillmentOptionRequestInterface
+{
+}

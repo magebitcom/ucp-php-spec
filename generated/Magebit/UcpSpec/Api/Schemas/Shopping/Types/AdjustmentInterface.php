@@ -54,7 +54,7 @@ interface AdjustmentInterface
     /**
      * Which line items and quantities are affected (optional).
      *
-     * @return object[]|null
+     * @return AdjustmentLineItemsItemInterface[]|null
      */
     public function getLineItems(): array|null;
 

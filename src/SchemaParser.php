@@ -237,9 +237,10 @@ class SchemaParser
      * Get namespace from file path
      *
      * @param string $filePath Path to the schema file
+     * @param string $namespaceBase Base namespace to use ('Api' or 'MutableApi')
      * @return string Fully qualified namespace (e.g., "Magebit\UcpSpec\Shopping")
      */
-    public function getNamespaceFromPath(string $filePath): string
+    public function getNamespaceFromPath(string $filePath, string $namespaceBase = 'Api'): string
     {
         // Remove base directory and file name
         $relativePath = str_replace($this->baseDir . '/', '', $filePath);
@@ -249,13 +250,13 @@ class SchemaParser
         $relativePath = preg_replace('#^spec/schemas/?#', '', $relativePath);
 
         if ($relativePath === '.' || $relativePath === '') {
-            return 'Magebit\\UcpSpec\\Api';
+            return 'Magebit\\UcpSpec\\' . $namespaceBase;
         }
 
         // Convert path to namespace
         $parts = explode('/', $relativePath);
         $parts = array_map('ucfirst', $parts);
         
-        return 'Magebit\\UcpSpec\\Api\\' . implode('\\', $parts);
+        return 'Magebit\\UcpSpec\\' . $namespaceBase . '\\' . implode('\\', $parts);
     }
 }

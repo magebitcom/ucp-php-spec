@@ -36,28 +36,28 @@ interface UCPServiceInterface
     /**
      * REST transport binding
      *
-     * @return object|null
+     * @return UCPServiceRestInterface|null
      */
-    public function getRest(): object|null;
+    public function getRest(): UCPServiceRestInterface|null;
 
     /**
      * MCP transport binding
      *
-     * @return object|null
+     * @return UCPServiceMcpInterface|null
      */
-    public function getMcp(): object|null;
+    public function getMcp(): UCPServiceMcpInterface|null;
 
     /**
      * A2A transport binding
      *
-     * @return object|null
+     * @return UCPServiceA2aInterface|null
      */
-    public function getA2a(): object|null;
+    public function getA2a(): UCPServiceA2aInterface|null;
 
     /**
      * Embedded transport binding (JSON-RPC 2.0 over postMessage). Unlike REST/MCP, the endpoint is per-capability (i.e. per-checkout via continue_url), not per-service.
      *
-     * @return object|null
+     * @return UCPServiceEmbeddedInterface|null
      */
-    public function getEmbedded(): object|null;
+    public function getEmbedded(): UCPServiceEmbeddedInterface|null;
 }

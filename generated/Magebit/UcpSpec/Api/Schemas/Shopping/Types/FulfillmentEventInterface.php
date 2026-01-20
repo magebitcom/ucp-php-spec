@@ -43,7 +43,7 @@ interface FulfillmentEventInterface
     /**
      * Which line items and quantities are fulfilled in this event.
      *
-     * @return object[]
+     * @return FulfillmentEventLineItemsItemInterface[]
      */
     public function getLineItems(): array;
 

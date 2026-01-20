@@ -38,9 +38,9 @@ interface OrderLineItemInterface
     /**
      * Quantity tracking. Both total and fulfilled are derived from events.
      *
-     * @return object
+     * @return OrderLineItemQuantityInterface
      */
-    public function getQuantity(): object;
+    public function getQuantity(): OrderLineItemQuantityInterface;
 
     /**
      * Line item totals breakdown.

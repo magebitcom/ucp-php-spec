@@ -33,7 +33,7 @@ interface ExpectationInterface
     /**
      * Which line items and quantities are in this expectation.
      *
-     * @return object[]
+     * @return ExpectationLineItemsItemInterface[]
      */
     public function getLineItems(): array;
 

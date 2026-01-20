@@ -22,9 +22,9 @@ interface MerchantFulfillmentConfigInterface
     /**
      * Permits multiple destinations per method type.
      *
-     * @return object|null
+     * @return MerchantFulfillmentConfigAllowsMultiDestinationInterface|null
      */
-    public function getAllowsMultiDestination(): object|null;
+    public function getAllowsMultiDestination(): MerchantFulfillmentConfigAllowsMultiDestinationInterface|null;
 
     /**
      * Allowed method type combinations.
