@@ -139,12 +139,23 @@ class SchemaParser
      * Check if schema has a root object definition
      *
      * @param string $filePath Path to the schema file
-     * @return bool True if schema has type: "object"
+     * @return bool True if schema has type: "object" or composite types (oneOf/anyOf/allOf)
      */
     public function hasRootObject(string $filePath): bool
     {
         $schema = $this->loadSchema($filePath);
-        return isset($schema['type']) && $schema['type'] === 'object';
+        
+        // Check for explicit object type
+        if (isset($schema['type']) && $schema['type'] === 'object') {
+            return true;
+        }
+        
+        // Check for composite types (oneOf/anyOf/allOf) - these should generate interfaces
+        if (isset($schema['oneOf']) || isset($schema['anyOf']) || isset($schema['allOf'])) {
+            return true;
+        }
+        
+        return false;
     }
 
     /**
