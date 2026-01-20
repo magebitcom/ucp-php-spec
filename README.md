@@ -25,18 +25,24 @@ composer require magebitcom/ucp-php-spec
 
 ## Usage
 
-### Using the Interfaces
+### Two Interface Variants
 
-The generated interfaces are available under the `Magebit\UcpSpec\Api` namespace:
+This package generates two sets of interfaces:
+
+1. **`Api`** - Immutable interfaces with getters only (read-only)
+2. **`MutableApi`** - Mutable interfaces with getters and setters (read-write)
+
+### Using Immutable Interfaces (Api)
+
+The `Api` namespace contains immutable interfaces with only getter methods:
 
 ```php
 <?php
 
 use Magebit\UcpSpec\Api\Schemas\Shopping\OrderInterface;
 use Magebit\UcpSpec\Api\Schemas\Shopping\Types\OrderLineItemInterface;
-use Magebit\UcpSpec\Api\Schemas\Shopping\CheckoutResponseInterface;
 
-// Implement the interfaces in your application
+// Implement the immutable interface
 class MyOrder implements OrderInterface
 {
     public function getId(): string
@@ -49,16 +55,65 @@ class MyOrder implements OrderInterface
         return $this->lineItems; // OrderLineItemInterface[]
     }
 
-    // ... implement other methods
+    // ... implement other getter methods
+}
+```
+
+### Using Mutable Interfaces (MutableApi)
+
+The `MutableApi` namespace contains mutable interfaces with both getters and setters:
+
+```php
+<?php
+
+use Magebit\UcpSpec\MutableApi\Schemas\Shopping\OrderInterface;
+use Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\OrderLineItemInterface;
+
+// Implement the mutable interface
+class MyMutableOrder implements OrderInterface
+{
+    private string $orderId;
+    private array $lineItems;
+
+    public function getId(): string
+    {
+        return $this->orderId;
+    }
+
+    public function setId(string $id): self
+    {
+        $this->orderId = $id;
+        return $this;
+    }
+
+    public function getLineItems(): array
+    {
+        return $this->lineItems;
+    }
+
+    public function setLineItems(array $lineItems): self
+    {
+        $this->lineItems = $lineItems;
+        return $this; // Fluent interface for method chaining
+    }
+
+    // ... implement other getter and setter methods
 }
 ```
 
 ### Available Namespaces
 
+**Immutable (Api):**
 - `Magebit\UcpSpec\Api\Schemas\Shopping` - Shopping and order interfaces
-- `Magebit\UcpSpec\Api\Schemas\Shopping\Types` - Common types (addresses, items, etc.)
+- `Magebit\UcpSpec\Api\Schemas\Shopping\Types` - Common types
 - `Magebit\UcpSpec\Api\Discovery` - Discovery profile interfaces
 - `Magebit\UcpSpec\Api\Services` - Service definition interfaces
+
+**Mutable (MutableApi):**
+- `Magebit\UcpSpec\MutableApi\Schemas\Shopping` - Shopping and order interfaces
+- `Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types` - Common types
+- `Magebit\UcpSpec\MutableApi\Discovery` - Discovery profile interfaces
+- `Magebit\UcpSpec\MutableApi\Services` - Service definition interfaces
 
 ### Type Safety
 
@@ -67,8 +122,9 @@ All interfaces include:
 - ✅ Nullable types for optional properties
 - ✅ Union types where applicable
 - ✅ PHPDoc with array item types
+- ✅ Fluent interface for setters (return `self`)
 
-Example:
+**Immutable Interface Example (Api):**
 
 ```php
 interface OrderInterface
@@ -96,6 +152,38 @@ interface OrderInterface
 }
 ```
 
+**Mutable Interface Example (MutableApi):**
+
+```php
+interface OrderInterface
+{
+    function getId(): string;
+    function setId(string $id): self;
+
+    /**
+     * @return OrderLineItemInterface[]
+     */
+    function getLineItems(): array;
+    
+    /**
+     * @param OrderLineItemInterface[] $line_items
+     * @return self
+     */
+    function setLineItems(array $line_items): self;
+
+    /**
+     * @return AdjustmentInterface[]|null
+     */
+    function getAdjustments(): array|null;
+    
+    /**
+     * @param AdjustmentInterface[]|null $adjustments
+     * @return self
+     */
+    function setAdjustments(array|null $adjustments): self;
+}
+```
+
 ## Regenerating Interfaces
 
 If you need to regenerate the interfaces from the JSON Schema files (e.g., after updating the spec):
@@ -115,15 +203,17 @@ php generate.php
 php generate.php --clean
 ```
 
+The generator automatically creates both `Api` (immutable) and `MutableApi` (mutable) namespaces in a single run.
+
 ## Namespace Mapping
 
-The generator preserves directory structure in namespaces:
+The generator preserves directory structure in namespaces and creates both immutable and mutable variants:
 
-| Spec File | Generated Interface |
-|-----------|-------------------|
-| `spec/schemas/shopping/order.json` | `Magebit\UcpSpec\Api\Schemas\Shopping\OrderInterface` |
-| `spec/schemas/shopping/types/postal_address.json` | `Magebit\UcpSpec\Api\Schemas\Shopping\Types\PostalAddressInterface` |
-| `spec/discovery/profile_schema.json` | `Magebit\UcpSpec\Api\Discovery\UCPDiscoveryProfileInterface` |
+| Spec File | Immutable Interface (Api) | Mutable Interface (MutableApi) |
+|-----------|---------------------------|--------------------------------|
+| `spec/schemas/shopping/order.json` | `Magebit\UcpSpec\Api\Schemas\Shopping\OrderInterface` | `Magebit\UcpSpec\MutableApi\Schemas\Shopping\OrderInterface` |
+| `spec/schemas/shopping/types/postal_address.json` | `Magebit\UcpSpec\Api\Schemas\Shopping\Types\PostalAddressInterface` | `Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\PostalAddressInterface` |
+| `spec/discovery/profile_schema.json` | `Magebit\UcpSpec\Api\Discovery\UCPDiscoveryProfileInterface` | `Magebit\UcpSpec\MutableApi\Discovery\UCPDiscoveryProfileInterface` |
 
 ## Type Mapping
 
