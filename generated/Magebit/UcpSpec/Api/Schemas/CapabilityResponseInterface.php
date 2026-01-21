@@ -64,7 +64,7 @@ interface CapabilityResponseInterface
     /**
      * Capability-specific configuration (structure defined by each capability).
      *
-     * @return object|null
+     * @return array<mixed>|null
      */
-    public function getConfig(): object|null;
+    public function getConfig(): array|null;
 }

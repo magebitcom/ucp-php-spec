@@ -64,9 +64,9 @@ interface CapabilityResponseInterface
     /**
      * Capability-specific configuration (structure defined by each capability).
      *
-     * @return object|null
+     * @return array<mixed>|null
      */
-    public function getConfig(): object|null;
+    public function getConfig(): array|null;
 
     /**
      * Stable capability identifier in reverse-domain notation (e.g., dev.ucp.shopping.checkout). Used in capability negotiation.
@@ -111,8 +111,8 @@ interface CapabilityResponseInterface
     /**
      * Capability-specific configuration (structure defined by each capability).
      *
-     * @param object|null $config
+     * @param array<mixed>|null $config
      * @return self
      */
-    public function setConfig(?object $config): self;
+    public function setConfig(?array $config): self;
 }

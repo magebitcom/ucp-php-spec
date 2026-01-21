@@ -144,16 +144,21 @@ class TypeMapper
         ?string $parentName = null, 
         ?string $propertyName = null
     ): string {
+        // Check if object has non-empty properties
+        $hasProperties = isset($property['properties']) && is_array($property['properties']) && count($property['properties']) > 0;
+        
         // If object has properties, it's an inline object that needs a separate interface
-        if (isset($property['properties']) && $parentName !== null && $propertyName !== null) {
+        if ($hasProperties && $parentName !== null && $propertyName !== null) {
             // Generate the interface name for this inline object
             $interfaceName = $this->generateInlineInterfaceName($parentName, $propertyName);
             $namespace = $this->parser->getNamespaceFromPath($currentFile, $this->namespaceBase);
             return '\\' . $namespace . '\\' . $interfaceName;
         }
 
-        // If object has additionalProperties but no properties, it's a dictionary/map - use array
-        if (isset($property['additionalProperties']) && !isset($property['properties'])) {
+        // If object has no properties (or empty properties), it's a dictionary/map - use array
+        // In JSON Schema, when additionalProperties is not specified, it defaults to true
+        // So objects without properties are dictionaries
+        if (!$hasProperties) {
             return 'array';
         }
 
@@ -173,11 +178,16 @@ class TypeMapper
         try {
             $resolvedSchema = $this->parser->resolveRef($ref, $currentFile);
             
-            // Check if it's a map/dictionary type (object with only additionalProperties)
+            // Check if it's a map/dictionary type (object with no properties or empty properties)
+            // In JSON Schema, when additionalProperties is not specified, it defaults to true
+            // So objects without properties are dictionaries
+            $hasProperties = isset($resolvedSchema['properties']) && 
+                            is_array($resolvedSchema['properties']) && 
+                            count($resolvedSchema['properties']) > 0;
+            
             if (isset($resolvedSchema['type']) && 
                 $resolvedSchema['type'] === 'object' && 
-                isset($resolvedSchema['additionalProperties']) && 
-                !isset($resolvedSchema['properties']) &&
+                !$hasProperties &&
                 !isset($resolvedSchema['allOf']) &&
                 !isset($resolvedSchema['oneOf']) &&
                 !isset($resolvedSchema['anyOf'])) {

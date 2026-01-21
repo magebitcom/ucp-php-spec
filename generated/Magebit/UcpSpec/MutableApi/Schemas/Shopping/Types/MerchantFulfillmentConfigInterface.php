@@ -32,7 +32,7 @@ interface MerchantFulfillmentConfigInterface
     /**
      * Allowed method type combinations.
      *
-     * @return array[]|null
+     * @return array<array<string>>|null
      */
     public function getAllowsMethodCombinations(): array|null;
 
@@ -49,7 +49,7 @@ interface MerchantFulfillmentConfigInterface
     /**
      * Allowed method type combinations.
      *
-     * @param array[]|null $allowsMethodCombinations
+     * @param array<array<string>>|null $allowsMethodCombinations
      * @return self
      */
     public function setAllowsMethodCombinations(?array $allowsMethodCombinations): self;

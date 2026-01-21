@@ -479,6 +479,31 @@ class InterfaceBuilder
                 // Simplify item type for PHPDoc
                 $simplifiedItemType = $this->simplifyTypeForComment($itemType, $namespace);
                 
+                // Check if this is a nested array (array of arrays)
+                $itemsSchema = $property['items'];
+                if (isset($itemsSchema['type']) && $itemsSchema['type'] === 'array' && isset($itemsSchema['items'])) {
+                    // Nested array - check inner array's item type
+                    $innerItemType = $this->typeMapper->getArrayItemType($itemsSchema, $currentFile, $parentName, $propertyName);
+                    
+                    if ($innerItemType !== null && $innerItemType !== 'mixed') {
+                        // Inner array has known item type
+                        $this->addUseStatementsForType($innerItemType, $namespace);
+                        $simplifiedInnerType = $this->simplifyTypeForComment($innerItemType, $namespace);
+                        
+                        // Handle nullable arrays
+                        if (strpos($phpType, '|null') !== false || strpos($phpType, 'null|') !== false) {
+                            return 'array<array<' . $simplifiedInnerType . '>>|null';
+                        }
+                        return 'array<array<' . $simplifiedInnerType . '>>';
+                    }
+                    
+                    // Inner array item type is unknown - use array<array<mixed>>
+                    if (strpos($phpType, '|null') !== false || strpos($phpType, 'null|') !== false) {
+                        return 'array<array<mixed>>|null';
+                    }
+                    return 'array<array<mixed>>';
+                }
+                
                 // Handle nullable arrays
                 if (strpos($phpType, '|null') !== false || strpos($phpType, 'null|') !== false) {
                     return $simplifiedItemType . '[]|null';
@@ -486,14 +511,24 @@ class InterfaceBuilder
                 
                 return $simplifiedItemType . '[]';
             }
+            
+            // Item type is unknown or mixed - use array<mixed>
+            if (strpos($phpType, '|null') !== false || strpos($phpType, 'null|') !== false) {
+                return 'array<mixed>|null';
+            }
+            return 'array<mixed>';
         }
         
         // Check if we're dealing with an object with additionalProperties (map/dictionary)
         // Only treat as dictionary if it has additionalProperties AND no properties defined
         // Objects with properties are inline objects that should have interfaces, not dictionaries
+        $hasProperties = isset($property['properties']) && 
+                        is_array($property['properties']) && 
+                        count($property['properties']) > 0;
+        
         if ($propertyType === 'object' && 
             isset($property['additionalProperties']) && 
-            !isset($property['properties'])) {
+            !$hasProperties) {
             $valueType = null;
             
             // Check if additionalProperties is a boolean (true = any type allowed = mixed)
@@ -540,7 +575,16 @@ class InterfaceBuilder
             return 'array<mixed>';
         }
 
-        // For non-array types or arrays without items, simplify normally
+        // For arrays without item type information, use array<mixed>
+        $baseType = str_replace(['|null', 'null|'], '', $phpType);
+        if ($baseType === 'array') {
+            if (strpos($phpType, '|null') !== false || strpos($phpType, 'null|') !== false) {
+                return 'array<mixed>|null';
+            }
+            return 'array<mixed>';
+        }
+        
+        // For non-array types, simplify normally
         return $this->simplifyTypeForComment($phpType, $namespace);
     }
 
