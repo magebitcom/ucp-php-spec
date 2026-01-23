@@ -29,7 +29,7 @@ interface PaymentResponseInterface
     /**
      * Processing configurations that define how payment instruments can be collected. Each handler specifies a tokenization or payment collection strategy.
      *
-     * @return PaymentHandlerResponseInterface[]
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\PaymentHandlerResponseInterface[]
      */
     public function getHandlers(): array;
 
@@ -43,14 +43,14 @@ interface PaymentResponseInterface
     /**
      * The payment instruments available for this payment. Each instrument is associated with a specific handler via the handler_id field. Handlers can extend the base payment_instrument schema to add handler-specific fields.
      *
-     * @return PaymentInstrumentInterface[]|null
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\PaymentInstrumentInterface[]|null
      */
     public function getInstruments(): array|null;
 
     /**
      * Processing configurations that define how payment instruments can be collected. Each handler specifies a tokenization or payment collection strategy.
      *
-     * @param PaymentHandlerResponseInterface[] $handlers
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\PaymentHandlerResponseInterface[] $handlers
      * @return self
      */
     public function setHandlers(array $handlers): self;
@@ -66,7 +66,7 @@ interface PaymentResponseInterface
     /**
      * The payment instruments available for this payment. Each instrument is associated with a specific handler via the handler_id field. Handlers can extend the base payment_instrument schema to add handler-specific fields.
      *
-     * @param PaymentInstrumentInterface[]|null $instruments
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\PaymentInstrumentInterface[]|null $instruments
      * @return self
      */
     public function setInstruments(?array $instruments): self;

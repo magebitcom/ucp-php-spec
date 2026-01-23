@@ -31,7 +31,7 @@ interface LineItemResponseInterface
     public function getId(): string;
 
     /**
-     * @return ItemResponseInterface
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\Types\ItemResponseInterface
      */
     public function getItem(): ItemResponseInterface;
 
@@ -45,7 +45,7 @@ interface LineItemResponseInterface
     /**
      * Line item totals breakdown.
      *
-     * @return TotalResponseInterface[]
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\Types\TotalResponseInterface[]
      */
     public function getTotals(): array;
 

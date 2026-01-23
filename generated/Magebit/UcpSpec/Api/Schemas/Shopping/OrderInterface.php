@@ -34,7 +34,7 @@ interface OrderInterface
     public const KEY_TOTALS = 'totals';
 
     /**
-     * @return UcpResponseOrderInterface
+     * @return \Magebit\UcpSpec\Api\Schemas\UcpResponseOrderInterface
      */
     public function getUcp(): UcpResponseOrderInterface;
 
@@ -62,28 +62,28 @@ interface OrderInterface
     /**
      * Immutable line items — source of truth for what was ordered.
      *
-     * @return OrderLineItemInterface[]
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\Types\OrderLineItemInterface[]
      */
     public function getLineItems(): array;
 
     /**
      * Fulfillment data: buyer expectations and what actually happened.
      *
-     * @return OrderFulfillmentInterface
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\OrderFulfillmentInterface
      */
     public function getFulfillment(): OrderFulfillmentInterface;
 
     /**
      * Append-only event log of money movements (refunds, returns, credits, disputes, cancellations, etc.) that exist independently of fulfillment.
      *
-     * @return AdjustmentInterface[]|null
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\Types\AdjustmentInterface[]|null
      */
     public function getAdjustments(): array|null;
 
     /**
      * Different totals for the order.
      *
-     * @return TotalResponseInterface[]
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\Types\TotalResponseInterface[]
      */
     public function getTotals(): array;
 }

@@ -25,21 +25,21 @@ interface FulfillmentResponseInterface
     /**
      * Fulfillment methods for cart items.
      *
-     * @return FulfillmentMethodResponseInterface[]|null
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\FulfillmentMethodResponseInterface[]|null
      */
     public function getMethods(): array|null;
 
     /**
      * Inventory availability hints.
      *
-     * @return FulfillmentAvailableMethodResponseInterface[]|null
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\FulfillmentAvailableMethodResponseInterface[]|null
      */
     public function getAvailableMethods(): array|null;
 
     /**
      * Fulfillment methods for cart items.
      *
-     * @param FulfillmentMethodResponseInterface[]|null $methods
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\FulfillmentMethodResponseInterface[]|null $methods
      * @return self
      */
     public function setMethods(?array $methods): self;
@@ -47,7 +47,7 @@ interface FulfillmentResponseInterface
     /**
      * Inventory availability hints.
      *
-     * @param FulfillmentAvailableMethodResponseInterface[]|null $availableMethods
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\FulfillmentAvailableMethodResponseInterface[]|null $availableMethods
      * @return self
      */
     public function setAvailableMethods(?array $availableMethods): self;

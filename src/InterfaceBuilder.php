@@ -676,17 +676,9 @@ class InterfaceBuilder
             return $type;
         }
 
-        // If it's a fully qualified name (starts with \), simplify it
+        // If it's a fully qualified name (starts with \), return it as-is (FQN)
         if (strpos($type, '\\') === 0) {
-            $fqn = ltrim($type, '\\');
-            
-            // Check if it's in the same namespace
-            $currentNamespace = $namespace->getName();
-            $typeNamespace = substr($fqn, 0, strrpos($fqn, '\\'));
-            
-            // Return just the class name (with or without namespace doesn't matter for comment)
-            $parts = explode('\\', $fqn);
-            return end($parts);
+            return $type;
         }
 
         return $type;

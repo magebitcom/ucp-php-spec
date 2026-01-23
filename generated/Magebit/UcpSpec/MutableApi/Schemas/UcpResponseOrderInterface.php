@@ -30,7 +30,7 @@ interface UcpResponseOrderInterface
     /**
      * Active capabilities for this response.
      *
-     * @return CapabilityResponseInterface[]
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\CapabilityResponseInterface[]
      */
     public function getCapabilities(): array;
 
@@ -43,7 +43,7 @@ interface UcpResponseOrderInterface
     /**
      * Active capabilities for this response.
      *
-     * @param CapabilityResponseInterface[] $capabilities
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\CapabilityResponseInterface[] $capabilities
      * @return self
      */
     public function setCapabilities(array $capabilities): self;

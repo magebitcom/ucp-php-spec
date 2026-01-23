@@ -24,7 +24,7 @@ interface FulfillmentRequestInterface
     /**
      * Fulfillment methods for cart items.
      *
-     * @return FulfillmentMethodCreateRequestInterface[]|null
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\Types\FulfillmentMethodCreateRequestInterface[]|null
      */
     public function getMethods(): array|null;
 }

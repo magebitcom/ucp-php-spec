@@ -31,14 +31,14 @@ interface UcpDiscoveryProfileInterface
     public function getVersion(): string;
 
     /**
-     * @return array<string, UCPServiceInterface>
+     * @return array<string, \Magebit\UcpSpec\Api\Services\UCPServiceInterface>
      */
     public function getServices(): array;
 
     /**
      * Supported capabilities and extensions.
      *
-     * @return CapabilityDiscoveryInterface[]
+     * @return \Magebit\UcpSpec\Api\Schemas\CapabilityDiscoveryInterface[]
      */
     public function getCapabilities(): array;
 }

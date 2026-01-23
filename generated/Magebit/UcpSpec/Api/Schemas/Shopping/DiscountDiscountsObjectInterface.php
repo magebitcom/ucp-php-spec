@@ -30,7 +30,7 @@ interface DiscountDiscountsObjectInterface
     /**
      * Discounts successfully applied (code-based and automatic).
      *
-     * @return DiscountAppliedDiscountInterface[]|null
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\DiscountAppliedDiscountInterface[]|null
      */
     public function getApplied(): array|null;
 }

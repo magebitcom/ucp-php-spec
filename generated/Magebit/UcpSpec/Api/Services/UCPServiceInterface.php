@@ -43,28 +43,28 @@ interface UCPServiceInterface
     /**
      * REST transport binding
      *
-     * @return UCPServiceRestInterface|null
+     * @return \Magebit\UcpSpec\Api\Services\UCPServiceRestInterface|null
      */
     public function getRest(): UCPServiceRestInterface|null;
 
     /**
      * MCP transport binding
      *
-     * @return UCPServiceMcpInterface|null
+     * @return \Magebit\UcpSpec\Api\Services\UCPServiceMcpInterface|null
      */
     public function getMcp(): UCPServiceMcpInterface|null;
 
     /**
      * A2A transport binding
      *
-     * @return UCPServiceA2aInterface|null
+     * @return \Magebit\UcpSpec\Api\Services\UCPServiceA2aInterface|null
      */
     public function getA2a(): UCPServiceA2aInterface|null;
 
     /**
      * Embedded transport binding (JSON-RPC 2.0 over postMessage). Unlike REST/MCP, the endpoint is per-capability (i.e. per-checkout via continue_url), not per-service.
      *
-     * @return UCPServiceEmbeddedInterface|null
+     * @return \Magebit\UcpSpec\Api\Services\UCPServiceEmbeddedInterface|null
      */
     public function getEmbedded(): UCPServiceEmbeddedInterface|null;
 }

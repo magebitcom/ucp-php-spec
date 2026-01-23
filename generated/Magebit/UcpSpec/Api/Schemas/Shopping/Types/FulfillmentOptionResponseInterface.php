@@ -72,7 +72,7 @@ interface FulfillmentOptionResponseInterface
     /**
      * Fulfillment option totals breakdown.
      *
-     * @return TotalResponseInterface[]
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\Types\TotalResponseInterface[]
      */
     public function getTotals(): array;
 }

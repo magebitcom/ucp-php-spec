@@ -41,7 +41,7 @@ interface FulfillmentGroupResponseInterface
     /**
      * Available fulfillment options for this group.
      *
-     * @return FulfillmentOptionResponseInterface[]|null
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\FulfillmentOptionResponseInterface[]|null
      */
     public function getOptions(): array|null;
 
@@ -71,7 +71,7 @@ interface FulfillmentGroupResponseInterface
     /**
      * Available fulfillment options for this group.
      *
-     * @param FulfillmentOptionResponseInterface[]|null $options
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\FulfillmentOptionResponseInterface[]|null $options
      * @return self
      */
     public function setOptions(?array $options): self;

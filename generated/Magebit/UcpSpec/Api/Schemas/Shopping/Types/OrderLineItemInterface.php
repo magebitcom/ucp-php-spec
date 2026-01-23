@@ -37,21 +37,21 @@ interface OrderLineItemInterface
     /**
      * Product data (id, title, price, image_url).
      *
-     * @return ItemResponseInterface
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\Types\ItemResponseInterface
      */
     public function getItem(): ItemResponseInterface;
 
     /**
      * Quantity tracking. Both total and fulfilled are derived from events.
      *
-     * @return OrderLineItemQuantityInterface
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\Types\OrderLineItemQuantityInterface
      */
     public function getQuantity(): OrderLineItemQuantityInterface;
 
     /**
      * Line item totals breakdown.
      *
-     * @return TotalResponseInterface[]
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\Types\TotalResponseInterface[]
      */
     public function getTotals(): array;
 

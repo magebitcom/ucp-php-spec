@@ -39,14 +39,14 @@ interface DiscountCheckoutInterface
     /**
      * List of line items being checked out.
      *
-     * @return LineItemUpdateRequestInterface[]
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\Types\LineItemUpdateRequestInterface[]
      */
     public function getLineItems(): array;
 
     /**
      * Representation of the buyer.
      *
-     * @return BuyerInterface|null
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\Types\BuyerInterface|null
      */
     public function getBuyer(): BuyerInterface|null;
 
@@ -58,12 +58,12 @@ interface DiscountCheckoutInterface
     public function getCurrency(): string;
 
     /**
-     * @return PaymentUpdateRequestInterface
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\PaymentUpdateRequestInterface
      */
     public function getPayment(): PaymentUpdateRequestInterface;
 
     /**
-     * @return DiscountDiscountsObjectInterface|null
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\DiscountDiscountsObjectInterface|null
      */
     public function getDiscounts(): DiscountDiscountsObjectInterface|null;
 }

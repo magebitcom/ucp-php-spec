@@ -49,12 +49,12 @@ interface PaymentInstrumentBaseInterface
     /**
      * The billing address associated with this payment method.
      *
-     * @return PostalAddressInterface|null
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\Types\PostalAddressInterface|null
      */
     public function getBillingAddress(): PostalAddressInterface|null;
 
     /**
-     * @return PaymentCredentialInterface|null
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\Types\PaymentCredentialInterface|null
      */
     public function getCredential(): PaymentCredentialInterface|null;
 }

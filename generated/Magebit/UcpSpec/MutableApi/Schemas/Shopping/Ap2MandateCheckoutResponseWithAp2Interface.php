@@ -49,7 +49,7 @@ interface Ap2MandateCheckoutResponseWithAp2Interface
     public const STATUS_CANCELED = 'canceled';
 
     /**
-     * @return UcpResponseCheckoutInterface
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\UcpResponseCheckoutInterface
      */
     public function getUcp(): UcpResponseCheckoutInterface;
 
@@ -63,14 +63,14 @@ interface Ap2MandateCheckoutResponseWithAp2Interface
     /**
      * List of line items being checked out.
      *
-     * @return LineItemResponseInterface[]
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\LineItemResponseInterface[]
      */
     public function getLineItems(): array;
 
     /**
      * Representation of the buyer.
      *
-     * @return BuyerInterface|null
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\BuyerInterface|null
      */
     public function getBuyer(): BuyerInterface|null;
 
@@ -91,21 +91,21 @@ interface Ap2MandateCheckoutResponseWithAp2Interface
     /**
      * Different cart totals.
      *
-     * @return TotalResponseInterface[]
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\TotalResponseInterface[]
      */
     public function getTotals(): array;
 
     /**
      * List of messages with error and info about the checkout session state.
      *
-     * @return MessageInterface[]|null
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\MessageInterface[]|null
      */
     public function getMessages(): array|null;
 
     /**
      * Links to be displayed by the platform (Privacy Policy, TOS). Mandatory for legal compliance.
      *
-     * @return LinkInterface[]
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\LinkInterface[]
      */
     public function getLinks(): array;
 
@@ -124,26 +124,26 @@ interface Ap2MandateCheckoutResponseWithAp2Interface
     public function getContinueUrl(): string|null;
 
     /**
-     * @return PaymentResponseInterface
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\PaymentResponseInterface
      */
     public function getPayment(): PaymentResponseInterface;
 
     /**
      * Details about an order created for this checkout session.
      *
-     * @return OrderConfirmationInterface|null
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\OrderConfirmationInterface|null
      */
     public function getOrder(): OrderConfirmationInterface|null;
 
     /**
      * AP2 extension data including merchant authorization.
      *
-     * @return Ap2MandateAp2CheckoutResponseInterface|null
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Ap2MandateAp2CheckoutResponseInterface|null
      */
     public function getAp2(): Ap2MandateAp2CheckoutResponseInterface|null;
 
     /**
-     * @param UcpResponseCheckoutInterface $ucp
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\UcpResponseCheckoutInterface $ucp
      * @return self
      */
     public function setUcp(UcpResponseCheckoutInterface $ucp): self;
@@ -159,7 +159,7 @@ interface Ap2MandateCheckoutResponseWithAp2Interface
     /**
      * List of line items being checked out.
      *
-     * @param LineItemResponseInterface[] $lineItems
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\LineItemResponseInterface[] $lineItems
      * @return self
      */
     public function setLineItems(array $lineItems): self;
@@ -167,7 +167,7 @@ interface Ap2MandateCheckoutResponseWithAp2Interface
     /**
      * Representation of the buyer.
      *
-     * @param BuyerInterface|null $buyer
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\BuyerInterface|null $buyer
      * @return self
      */
     public function setBuyer(?BuyerInterface $buyer): self;
@@ -191,7 +191,7 @@ interface Ap2MandateCheckoutResponseWithAp2Interface
     /**
      * Different cart totals.
      *
-     * @param TotalResponseInterface[] $totals
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\TotalResponseInterface[] $totals
      * @return self
      */
     public function setTotals(array $totals): self;
@@ -199,7 +199,7 @@ interface Ap2MandateCheckoutResponseWithAp2Interface
     /**
      * List of messages with error and info about the checkout session state.
      *
-     * @param MessageInterface[]|null $messages
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\MessageInterface[]|null $messages
      * @return self
      */
     public function setMessages(?array $messages): self;
@@ -207,7 +207,7 @@ interface Ap2MandateCheckoutResponseWithAp2Interface
     /**
      * Links to be displayed by the platform (Privacy Policy, TOS). Mandatory for legal compliance.
      *
-     * @param LinkInterface[] $links
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\LinkInterface[] $links
      * @return self
      */
     public function setLinks(array $links): self;
@@ -229,7 +229,7 @@ interface Ap2MandateCheckoutResponseWithAp2Interface
     public function setContinueUrl(?string $continueUrl): self;
 
     /**
-     * @param PaymentResponseInterface $payment
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\PaymentResponseInterface $payment
      * @return self
      */
     public function setPayment(PaymentResponseInterface $payment): self;
@@ -237,7 +237,7 @@ interface Ap2MandateCheckoutResponseWithAp2Interface
     /**
      * Details about an order created for this checkout session.
      *
-     * @param OrderConfirmationInterface|null $order
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\OrderConfirmationInterface|null $order
      * @return self
      */
     public function setOrder(?OrderConfirmationInterface $order): self;
@@ -245,7 +245,7 @@ interface Ap2MandateCheckoutResponseWithAp2Interface
     /**
      * AP2 extension data including merchant authorization.
      *
-     * @param Ap2MandateAp2CheckoutResponseInterface|null $ap2
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Ap2MandateAp2CheckoutResponseInterface|null $ap2
      * @return self
      */
     public function setAp2(?Ap2MandateAp2CheckoutResponseInterface $ap2): self;

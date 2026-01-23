@@ -25,14 +25,14 @@ interface FulfillmentResponseInterface
     /**
      * Fulfillment methods for cart items.
      *
-     * @return FulfillmentMethodResponseInterface[]|null
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\Types\FulfillmentMethodResponseInterface[]|null
      */
     public function getMethods(): array|null;
 
     /**
      * Inventory availability hints.
      *
-     * @return FulfillmentAvailableMethodResponseInterface[]|null
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\Types\FulfillmentAvailableMethodResponseInterface[]|null
      */
     public function getAvailableMethods(): array|null;
 }

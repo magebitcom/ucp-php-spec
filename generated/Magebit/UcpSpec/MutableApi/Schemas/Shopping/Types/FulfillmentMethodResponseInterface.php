@@ -52,7 +52,7 @@ interface FulfillmentMethodResponseInterface
     /**
      * Available destinations. For shipping: addresses. For pickup: retail locations.
      *
-     * @return FulfillmentDestinationResponseInterface[]|null
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\FulfillmentDestinationResponseInterface[]|null
      */
     public function getDestinations(): array|null;
 
@@ -66,7 +66,7 @@ interface FulfillmentMethodResponseInterface
     /**
      * Fulfillment groups for selecting options. Agent sets selected_option_id on groups to choose shipping method.
      *
-     * @return FulfillmentGroupResponseInterface[]|null
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\FulfillmentGroupResponseInterface[]|null
      */
     public function getGroups(): array|null;
 
@@ -97,7 +97,7 @@ interface FulfillmentMethodResponseInterface
     /**
      * Available destinations. For shipping: addresses. For pickup: retail locations.
      *
-     * @param FulfillmentDestinationResponseInterface[]|null $destinations
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\FulfillmentDestinationResponseInterface[]|null $destinations
      * @return self
      */
     public function setDestinations(?array $destinations): self;
@@ -113,7 +113,7 @@ interface FulfillmentMethodResponseInterface
     /**
      * Fulfillment groups for selecting options. Agent sets selected_option_id on groups to choose shipping method.
      *
-     * @param FulfillmentGroupResponseInterface[]|null $groups
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\FulfillmentGroupResponseInterface[]|null $groups
      * @return self
      */
     public function setGroups(?array $groups): self;

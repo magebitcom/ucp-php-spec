@@ -24,14 +24,14 @@ interface FulfillmentRequestInterface
     /**
      * Fulfillment methods for cart items.
      *
-     * @return FulfillmentMethodCreateRequestInterface[]|null
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\FulfillmentMethodCreateRequestInterface[]|null
      */
     public function getMethods(): array|null;
 
     /**
      * Fulfillment methods for cart items.
      *
-     * @param FulfillmentMethodCreateRequestInterface[]|null $methods
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\FulfillmentMethodCreateRequestInterface[]|null $methods
      * @return self
      */
     public function setMethods(?array $methods): self;

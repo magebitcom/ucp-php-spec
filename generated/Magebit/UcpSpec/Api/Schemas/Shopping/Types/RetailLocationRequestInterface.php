@@ -32,7 +32,7 @@ interface RetailLocationRequestInterface
     /**
      * Physical address of the location.
      *
-     * @return PostalAddressInterface|null
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\Types\PostalAddressInterface|null
      */
     public function getAddress(): PostalAddressInterface|null;
 }

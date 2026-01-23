@@ -32,7 +32,7 @@ interface BindingInterface
     /**
      * The participant this token is bound to. Required when acting on behalf of another participant (e.g., agent tokenizing for merchant). Omit when the authenticated caller is the binding target.
      *
-     * @return PaymentIdentityInterface|null
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\Types\PaymentIdentityInterface|null
      */
     public function getIdentity(): PaymentIdentityInterface|null;
 }

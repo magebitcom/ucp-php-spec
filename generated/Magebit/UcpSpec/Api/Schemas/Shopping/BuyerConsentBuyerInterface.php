@@ -64,7 +64,7 @@ interface BuyerConsentBuyerInterface
     /**
      * Consent tracking fields.
      *
-     * @return BuyerConsentConsentInterface|null
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\BuyerConsentConsentInterface|null
      */
     public function getConsent(): BuyerConsentConsentInterface|null;
 }

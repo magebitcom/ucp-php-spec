@@ -39,7 +39,7 @@ interface ExpectationInterface
     /**
      * Which line items and quantities are in this expectation.
      *
-     * @return ExpectationLineItemsItemInterface[]
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\ExpectationLineItemsItemInterface[]
      */
     public function getLineItems(): array;
 
@@ -53,7 +53,7 @@ interface ExpectationInterface
     /**
      * Delivery destination address.
      *
-     * @return PostalAddressInterface
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\PostalAddressInterface
      */
     public function getDestination(): PostalAddressInterface;
 
@@ -82,7 +82,7 @@ interface ExpectationInterface
     /**
      * Which line items and quantities are in this expectation.
      *
-     * @param ExpectationLineItemsItemInterface[] $lineItems
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\ExpectationLineItemsItemInterface[] $lineItems
      * @return self
      */
     public function setLineItems(array $lineItems): self;
@@ -98,7 +98,7 @@ interface ExpectationInterface
     /**
      * Delivery destination address.
      *
-     * @param PostalAddressInterface $destination
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\PostalAddressInterface $destination
      * @return self
      */
     public function setDestination(PostalAddressInterface $destination): self;

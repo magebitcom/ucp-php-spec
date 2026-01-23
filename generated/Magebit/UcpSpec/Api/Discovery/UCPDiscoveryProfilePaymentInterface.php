@@ -24,7 +24,7 @@ interface UCPDiscoveryProfilePaymentInterface
     /**
      * Payment handler definitions that describe how instruments can be collected
      *
-     * @return PaymentHandlerResponseInterface[]|null
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\Types\PaymentHandlerResponseInterface[]|null
      */
     public function getHandlers(): array|null;
 }

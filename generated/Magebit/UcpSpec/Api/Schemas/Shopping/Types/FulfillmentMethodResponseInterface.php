@@ -52,7 +52,7 @@ interface FulfillmentMethodResponseInterface
     /**
      * Available destinations. For shipping: addresses. For pickup: retail locations.
      *
-     * @return FulfillmentDestinationResponseInterface[]|null
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\Types\FulfillmentDestinationResponseInterface[]|null
      */
     public function getDestinations(): array|null;
 
@@ -66,7 +66,7 @@ interface FulfillmentMethodResponseInterface
     /**
      * Fulfillment groups for selecting options. Agent sets selected_option_id on groups to choose shipping method.
      *
-     * @return FulfillmentGroupResponseInterface[]|null
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\Types\FulfillmentGroupResponseInterface[]|null
      */
     public function getGroups(): array|null;
 }

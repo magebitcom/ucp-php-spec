@@ -30,7 +30,7 @@ interface LineItemUpdateRequestInterface
     public function getId(): string|null;
 
     /**
-     * @return ItemUpdateRequestInterface
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\ItemUpdateRequestInterface
      */
     public function getItem(): ItemUpdateRequestInterface;
 
@@ -55,7 +55,7 @@ interface LineItemUpdateRequestInterface
     public function setId(?string $id): self;
 
     /**
-     * @param ItemUpdateRequestInterface $item
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\ItemUpdateRequestInterface $item
      * @return self
      */
     public function setItem(ItemUpdateRequestInterface $item): self;

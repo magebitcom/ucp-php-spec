@@ -24,7 +24,7 @@ interface Ap2MandateCompleteRequestWithAp2Interface
     /**
      * AP2 extension data including checkout mandate.
      *
-     * @return Ap2MandateAp2CompleteRequestInterface|null
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\Ap2MandateAp2CompleteRequestInterface|null
      */
     public function getAp2(): Ap2MandateAp2CompleteRequestInterface|null;
 }

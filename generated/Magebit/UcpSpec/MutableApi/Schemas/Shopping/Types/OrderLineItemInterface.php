@@ -37,21 +37,21 @@ interface OrderLineItemInterface
     /**
      * Product data (id, title, price, image_url).
      *
-     * @return ItemResponseInterface
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\ItemResponseInterface
      */
     public function getItem(): ItemResponseInterface;
 
     /**
      * Quantity tracking. Both total and fulfilled are derived from events.
      *
-     * @return OrderLineItemQuantityInterface
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\OrderLineItemQuantityInterface
      */
     public function getQuantity(): OrderLineItemQuantityInterface;
 
     /**
      * Line item totals breakdown.
      *
-     * @return TotalResponseInterface[]
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\TotalResponseInterface[]
      */
     public function getTotals(): array;
 
@@ -80,7 +80,7 @@ interface OrderLineItemInterface
     /**
      * Product data (id, title, price, image_url).
      *
-     * @param ItemResponseInterface $item
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\ItemResponseInterface $item
      * @return self
      */
     public function setItem(ItemResponseInterface $item): self;
@@ -88,7 +88,7 @@ interface OrderLineItemInterface
     /**
      * Quantity tracking. Both total and fulfilled are derived from events.
      *
-     * @param OrderLineItemQuantityInterface $quantity
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\OrderLineItemQuantityInterface $quantity
      * @return self
      */
     public function setQuantity(OrderLineItemQuantityInterface $quantity): self;
@@ -96,7 +96,7 @@ interface OrderLineItemInterface
     /**
      * Line item totals breakdown.
      *
-     * @param TotalResponseInterface[] $totals
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\TotalResponseInterface[] $totals
      * @return self
      */
     public function setTotals(array $totals): self;

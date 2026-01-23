@@ -24,14 +24,14 @@ interface UCPDiscoveryProfilePaymentInterface
     /**
      * Payment handler definitions that describe how instruments can be collected
      *
-     * @return PaymentHandlerResponseInterface[]|null
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\PaymentHandlerResponseInterface[]|null
      */
     public function getHandlers(): array|null;
 
     /**
      * Payment handler definitions that describe how instruments can be collected
      *
-     * @param PaymentHandlerResponseInterface[]|null $handlers
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\PaymentHandlerResponseInterface[]|null $handlers
      * @return self
      */
     public function setHandlers(?array $handlers): self;

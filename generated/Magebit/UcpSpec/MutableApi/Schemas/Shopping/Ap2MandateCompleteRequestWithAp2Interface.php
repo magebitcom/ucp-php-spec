@@ -24,14 +24,14 @@ interface Ap2MandateCompleteRequestWithAp2Interface
     /**
      * AP2 extension data including checkout mandate.
      *
-     * @return Ap2MandateAp2CompleteRequestInterface|null
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Ap2MandateAp2CompleteRequestInterface|null
      */
     public function getAp2(): Ap2MandateAp2CompleteRequestInterface|null;
 
     /**
      * AP2 extension data including checkout mandate.
      *
-     * @param Ap2MandateAp2CompleteRequestInterface|null $ap2
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Ap2MandateAp2CompleteRequestInterface|null $ap2
      * @return self
      */
     public function setAp2(?Ap2MandateAp2CompleteRequestInterface $ap2): self;

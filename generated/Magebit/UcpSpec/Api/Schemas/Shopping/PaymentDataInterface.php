@@ -24,7 +24,7 @@ interface PaymentDataInterface
     public const KEY_PAYMENT_DATA = 'payment_data';
 
     /**
-     * @return PaymentInstrumentInterface
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\Types\PaymentInstrumentInterface
      */
     public function getPaymentData(): PaymentInstrumentInterface;
 }

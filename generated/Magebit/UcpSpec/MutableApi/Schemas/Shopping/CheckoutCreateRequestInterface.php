@@ -30,14 +30,14 @@ interface CheckoutCreateRequestInterface
     /**
      * List of line items being checked out.
      *
-     * @return LineItemCreateRequestInterface[]
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\LineItemCreateRequestInterface[]
      */
     public function getLineItems(): array;
 
     /**
      * Representation of the buyer.
      *
-     * @return BuyerInterface|null
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\BuyerInterface|null
      */
     public function getBuyer(): BuyerInterface|null;
 
@@ -49,14 +49,14 @@ interface CheckoutCreateRequestInterface
     public function getCurrency(): string;
 
     /**
-     * @return PaymentCreateRequestInterface
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\PaymentCreateRequestInterface
      */
     public function getPayment(): PaymentCreateRequestInterface;
 
     /**
      * List of line items being checked out.
      *
-     * @param LineItemCreateRequestInterface[] $lineItems
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\LineItemCreateRequestInterface[] $lineItems
      * @return self
      */
     public function setLineItems(array $lineItems): self;
@@ -64,7 +64,7 @@ interface CheckoutCreateRequestInterface
     /**
      * Representation of the buyer.
      *
-     * @param BuyerInterface|null $buyer
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\BuyerInterface|null $buyer
      * @return self
      */
     public function setBuyer(?BuyerInterface $buyer): self;
@@ -78,7 +78,7 @@ interface CheckoutCreateRequestInterface
     public function setCurrency(string $currency): self;
 
     /**
-     * @param PaymentCreateRequestInterface $payment
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\PaymentCreateRequestInterface $payment
      * @return self
      */
     public function setPayment(PaymentCreateRequestInterface $payment): self;

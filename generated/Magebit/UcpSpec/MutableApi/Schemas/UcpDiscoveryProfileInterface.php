@@ -31,14 +31,14 @@ interface UcpDiscoveryProfileInterface
     public function getVersion(): string;
 
     /**
-     * @return array<string, UCPServiceInterface>
+     * @return array<string, \Magebit\UcpSpec\MutableApi\Services\UCPServiceInterface>
      */
     public function getServices(): array;
 
     /**
      * Supported capabilities and extensions.
      *
-     * @return CapabilityDiscoveryInterface[]
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\CapabilityDiscoveryInterface[]
      */
     public function getCapabilities(): array;
 
@@ -49,7 +49,7 @@ interface UcpDiscoveryProfileInterface
     public function setVersion(string $version): self;
 
     /**
-     * @param array<string, UCPServiceInterface> $services
+     * @param array<string, \Magebit\UcpSpec\MutableApi\Services\UCPServiceInterface> $services
      * @return self
      */
     public function setServices(array $services): self;
@@ -57,7 +57,7 @@ interface UcpDiscoveryProfileInterface
     /**
      * Supported capabilities and extensions.
      *
-     * @param CapabilityDiscoveryInterface[] $capabilities
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\CapabilityDiscoveryInterface[] $capabilities
      * @return self
      */
     public function setCapabilities(array $capabilities): self;

@@ -38,14 +38,14 @@ interface CheckoutUpdateRequestInterface
     /**
      * List of line items being checked out.
      *
-     * @return LineItemUpdateRequestInterface[]
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\LineItemUpdateRequestInterface[]
      */
     public function getLineItems(): array;
 
     /**
      * Representation of the buyer.
      *
-     * @return BuyerInterface|null
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\BuyerInterface|null
      */
     public function getBuyer(): BuyerInterface|null;
 
@@ -57,7 +57,7 @@ interface CheckoutUpdateRequestInterface
     public function getCurrency(): string;
 
     /**
-     * @return PaymentUpdateRequestInterface
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\PaymentUpdateRequestInterface
      */
     public function getPayment(): PaymentUpdateRequestInterface;
 
@@ -72,7 +72,7 @@ interface CheckoutUpdateRequestInterface
     /**
      * List of line items being checked out.
      *
-     * @param LineItemUpdateRequestInterface[] $lineItems
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\LineItemUpdateRequestInterface[] $lineItems
      * @return self
      */
     public function setLineItems(array $lineItems): self;
@@ -80,7 +80,7 @@ interface CheckoutUpdateRequestInterface
     /**
      * Representation of the buyer.
      *
-     * @param BuyerInterface|null $buyer
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\BuyerInterface|null $buyer
      * @return self
      */
     public function setBuyer(?BuyerInterface $buyer): self;
@@ -94,7 +94,7 @@ interface CheckoutUpdateRequestInterface
     public function setCurrency(string $currency): self;
 
     /**
-     * @param PaymentUpdateRequestInterface $payment
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\PaymentUpdateRequestInterface $payment
      * @return self
      */
     public function setPayment(PaymentUpdateRequestInterface $payment): self;

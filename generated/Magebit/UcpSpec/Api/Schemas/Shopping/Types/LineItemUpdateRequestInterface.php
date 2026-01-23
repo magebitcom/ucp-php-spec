@@ -30,7 +30,7 @@ interface LineItemUpdateRequestInterface
     public function getId(): string|null;
 
     /**
-     * @return ItemUpdateRequestInterface
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\Types\ItemUpdateRequestInterface
      */
     public function getItem(): ItemUpdateRequestInterface;
 

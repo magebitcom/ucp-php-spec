@@ -26,26 +26,26 @@ interface UCPDiscoveryProfileInterface
     public const KEY_SIGNING_KEYS = 'signing_keys';
 
     /**
-     * @return UcpDiscoveryProfileInterface
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\UcpDiscoveryProfileInterface
      */
     public function getUcp(): UcpDiscoveryProfileInterface1;
 
     /**
      * Payment configuration containing handlers
      *
-     * @return UCPDiscoveryProfilePaymentInterface|null
+     * @return \Magebit\UcpSpec\MutableApi\Discovery\UCPDiscoveryProfilePaymentInterface|null
      */
     public function getPayment(): UCPDiscoveryProfilePaymentInterface|null;
 
     /**
      * Public keys for signature verification (JWK format). Used to verify signed responses, webhooks, and other authenticated messages from this party.
      *
-     * @return UCPDiscoveryProfileSigningKeysItemInterface[]|null
+     * @return \Magebit\UcpSpec\MutableApi\Discovery\UCPDiscoveryProfileSigningKeysItemInterface[]|null
      */
     public function getSigningKeys(): array|null;
 
     /**
-     * @param UcpDiscoveryProfileInterface $ucp
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\UcpDiscoveryProfileInterface $ucp
      * @return self
      */
     public function setUcp(UcpDiscoveryProfileInterface1 $ucp): self;
@@ -53,7 +53,7 @@ interface UCPDiscoveryProfileInterface
     /**
      * Payment configuration containing handlers
      *
-     * @param UCPDiscoveryProfilePaymentInterface|null $payment
+     * @param \Magebit\UcpSpec\MutableApi\Discovery\UCPDiscoveryProfilePaymentInterface|null $payment
      * @return self
      */
     public function setPayment(?UCPDiscoveryProfilePaymentInterface $payment): self;
@@ -61,7 +61,7 @@ interface UCPDiscoveryProfileInterface
     /**
      * Public keys for signature verification (JWK format). Used to verify signed responses, webhooks, and other authenticated messages from this party.
      *
-     * @param UCPDiscoveryProfileSigningKeysItemInterface[]|null $signingKeys
+     * @param \Magebit\UcpSpec\MutableApi\Discovery\UCPDiscoveryProfileSigningKeysItemInterface[]|null $signingKeys
      * @return self
      */
     public function setSigningKeys(?array $signingKeys): self;

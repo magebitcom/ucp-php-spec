@@ -30,7 +30,7 @@ interface UcpResponseCheckoutInterface
     /**
      * Active capabilities for this response.
      *
-     * @return CapabilityResponseInterface[]
+     * @return \Magebit\UcpSpec\Api\Schemas\CapabilityResponseInterface[]
      */
     public function getCapabilities(): array;
 }

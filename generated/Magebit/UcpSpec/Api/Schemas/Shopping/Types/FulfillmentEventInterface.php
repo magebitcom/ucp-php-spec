@@ -52,7 +52,7 @@ interface FulfillmentEventInterface
     /**
      * Which line items and quantities are fulfilled in this event.
      *
-     * @return FulfillmentEventLineItemsItemInterface[]
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\Types\FulfillmentEventLineItemsItemInterface[]
      */
     public function getLineItems(): array;
 

@@ -39,7 +39,7 @@ interface ExpectationInterface
     /**
      * Which line items and quantities are in this expectation.
      *
-     * @return ExpectationLineItemsItemInterface[]
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\Types\ExpectationLineItemsItemInterface[]
      */
     public function getLineItems(): array;
 
@@ -53,7 +53,7 @@ interface ExpectationInterface
     /**
      * Delivery destination address.
      *
-     * @return PostalAddressInterface
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\Types\PostalAddressInterface
      */
     public function getDestination(): PostalAddressInterface;
 

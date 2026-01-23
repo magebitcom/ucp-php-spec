@@ -25,7 +25,7 @@ interface MerchantFulfillmentConfigInterface
     /**
      * Permits multiple destinations per method type.
      *
-     * @return MerchantFulfillmentConfigAllowsMultiDestinationInterface|null
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\MerchantFulfillmentConfigAllowsMultiDestinationInterface|null
      */
     public function getAllowsMultiDestination(): MerchantFulfillmentConfigAllowsMultiDestinationInterface|null;
 
@@ -39,7 +39,7 @@ interface MerchantFulfillmentConfigInterface
     /**
      * Permits multiple destinations per method type.
      *
-     * @param MerchantFulfillmentConfigAllowsMultiDestinationInterface|null $allowsMultiDestination
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\MerchantFulfillmentConfigAllowsMultiDestinationInterface|null $allowsMultiDestination
      * @return self
      */
     public function setAllowsMultiDestination(

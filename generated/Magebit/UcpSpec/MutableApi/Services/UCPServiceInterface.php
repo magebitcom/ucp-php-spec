@@ -43,28 +43,28 @@ interface UCPServiceInterface
     /**
      * REST transport binding
      *
-     * @return UCPServiceRestInterface|null
+     * @return \Magebit\UcpSpec\MutableApi\Services\UCPServiceRestInterface|null
      */
     public function getRest(): UCPServiceRestInterface|null;
 
     /**
      * MCP transport binding
      *
-     * @return UCPServiceMcpInterface|null
+     * @return \Magebit\UcpSpec\MutableApi\Services\UCPServiceMcpInterface|null
      */
     public function getMcp(): UCPServiceMcpInterface|null;
 
     /**
      * A2A transport binding
      *
-     * @return UCPServiceA2aInterface|null
+     * @return \Magebit\UcpSpec\MutableApi\Services\UCPServiceA2aInterface|null
      */
     public function getA2a(): UCPServiceA2aInterface|null;
 
     /**
      * Embedded transport binding (JSON-RPC 2.0 over postMessage). Unlike REST/MCP, the endpoint is per-capability (i.e. per-checkout via continue_url), not per-service.
      *
-     * @return UCPServiceEmbeddedInterface|null
+     * @return \Magebit\UcpSpec\MutableApi\Services\UCPServiceEmbeddedInterface|null
      */
     public function getEmbedded(): UCPServiceEmbeddedInterface|null;
 
@@ -87,7 +87,7 @@ interface UCPServiceInterface
     /**
      * REST transport binding
      *
-     * @param UCPServiceRestInterface|null $rest
+     * @param \Magebit\UcpSpec\MutableApi\Services\UCPServiceRestInterface|null $rest
      * @return self
      */
     public function setRest(?UCPServiceRestInterface $rest): self;
@@ -95,7 +95,7 @@ interface UCPServiceInterface
     /**
      * MCP transport binding
      *
-     * @param UCPServiceMcpInterface|null $mcp
+     * @param \Magebit\UcpSpec\MutableApi\Services\UCPServiceMcpInterface|null $mcp
      * @return self
      */
     public function setMcp(?UCPServiceMcpInterface $mcp): self;
@@ -103,7 +103,7 @@ interface UCPServiceInterface
     /**
      * A2A transport binding
      *
-     * @param UCPServiceA2aInterface|null $a2a
+     * @param \Magebit\UcpSpec\MutableApi\Services\UCPServiceA2aInterface|null $a2a
      * @return self
      */
     public function setA2a(?UCPServiceA2aInterface $a2a): self;
@@ -111,7 +111,7 @@ interface UCPServiceInterface
     /**
      * Embedded transport binding (JSON-RPC 2.0 over postMessage). Unlike REST/MCP, the endpoint is per-capability (i.e. per-checkout via continue_url), not per-service.
      *
-     * @param UCPServiceEmbeddedInterface|null $embedded
+     * @param \Magebit\UcpSpec\MutableApi\Services\UCPServiceEmbeddedInterface|null $embedded
      * @return self
      */
     public function setEmbedded(?UCPServiceEmbeddedInterface $embedded): self;

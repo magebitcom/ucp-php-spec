@@ -23,7 +23,7 @@ interface LineItemCreateRequestInterface
     public const KEY_QUANTITY = 'quantity';
 
     /**
-     * @return ItemCreateRequestInterface
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\ItemCreateRequestInterface
      */
     public function getItem(): ItemCreateRequestInterface;
 
@@ -35,7 +35,7 @@ interface LineItemCreateRequestInterface
     public function getQuantity(): int;
 
     /**
-     * @param ItemCreateRequestInterface $item
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\ItemCreateRequestInterface $item
      * @return self
      */
     public function setItem(ItemCreateRequestInterface $item): self;

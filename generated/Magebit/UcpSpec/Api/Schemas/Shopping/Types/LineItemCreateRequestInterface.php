@@ -23,7 +23,7 @@ interface LineItemCreateRequestInterface
     public const KEY_QUANTITY = 'quantity';
 
     /**
-     * @return ItemCreateRequestInterface
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\Types\ItemCreateRequestInterface
      */
     public function getItem(): ItemCreateRequestInterface;
 

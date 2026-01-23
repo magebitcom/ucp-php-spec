@@ -24,12 +24,12 @@ interface PaymentDataInterface
     public const KEY_PAYMENT_DATA = 'payment_data';
 
     /**
-     * @return PaymentInstrumentInterface
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\PaymentInstrumentInterface
      */
     public function getPaymentData(): PaymentInstrumentInterface;
 
     /**
-     * @param PaymentInstrumentInterface $paymentData
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\PaymentInstrumentInterface $paymentData
      * @return self
      */
     public function setPaymentData(PaymentInstrumentInterface $paymentData): self;

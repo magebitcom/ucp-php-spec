@@ -72,7 +72,7 @@ interface FulfillmentOptionResponseInterface
     /**
      * Fulfillment option totals breakdown.
      *
-     * @return TotalResponseInterface[]
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\TotalResponseInterface[]
      */
     public function getTotals(): array;
 
@@ -127,7 +127,7 @@ interface FulfillmentOptionResponseInterface
     /**
      * Fulfillment option totals breakdown.
      *
-     * @param TotalResponseInterface[] $totals
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\TotalResponseInterface[] $totals
      * @return self
      */
     public function setTotals(array $totals): self;

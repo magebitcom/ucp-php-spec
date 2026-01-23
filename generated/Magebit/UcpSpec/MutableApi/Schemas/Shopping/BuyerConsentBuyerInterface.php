@@ -64,7 +64,7 @@ interface BuyerConsentBuyerInterface
     /**
      * Consent tracking fields.
      *
-     * @return BuyerConsentConsentInterface|null
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\BuyerConsentConsentInterface|null
      */
     public function getConsent(): BuyerConsentConsentInterface|null;
 
@@ -111,7 +111,7 @@ interface BuyerConsentBuyerInterface
     /**
      * Consent tracking fields.
      *
-     * @param BuyerConsentConsentInterface|null $consent
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\BuyerConsentConsentInterface|null $consent
      * @return self
      */
     public function setConsent(?BuyerConsentConsentInterface $consent): self;

@@ -31,7 +31,7 @@ interface LineItemResponseInterface
     public function getId(): string;
 
     /**
-     * @return ItemResponseInterface
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\ItemResponseInterface
      */
     public function getItem(): ItemResponseInterface;
 
@@ -45,7 +45,7 @@ interface LineItemResponseInterface
     /**
      * Line item totals breakdown.
      *
-     * @return TotalResponseInterface[]
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\TotalResponseInterface[]
      */
     public function getTotals(): array;
 
@@ -63,7 +63,7 @@ interface LineItemResponseInterface
     public function setId(string $id): self;
 
     /**
-     * @param ItemResponseInterface $item
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\ItemResponseInterface $item
      * @return self
      */
     public function setItem(ItemResponseInterface $item): self;
@@ -79,7 +79,7 @@ interface LineItemResponseInterface
     /**
      * Line item totals breakdown.
      *
-     * @param TotalResponseInterface[] $totals
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\TotalResponseInterface[] $totals
      * @return self
      */
     public function setTotals(array $totals): self;

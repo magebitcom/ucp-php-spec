@@ -61,7 +61,7 @@ interface AdjustmentInterface
     /**
      * Which line items and quantities are affected (optional).
      *
-     * @return AdjustmentLineItemsItemInterface[]|null
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\AdjustmentLineItemsItemInterface[]|null
      */
     public function getLineItems(): array|null;
 
@@ -114,7 +114,7 @@ interface AdjustmentInterface
     /**
      * Which line items and quantities are affected (optional).
      *
-     * @param AdjustmentLineItemsItemInterface[]|null $lineItems
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\AdjustmentLineItemsItemInterface[]|null $lineItems
      * @return self
      */
     public function setLineItems(?array $lineItems): self;

@@ -26,21 +26,21 @@ interface UCPDiscoveryProfileInterface
     public const KEY_SIGNING_KEYS = 'signing_keys';
 
     /**
-     * @return UcpDiscoveryProfileInterface
+     * @return \Magebit\UcpSpec\Api\Schemas\UcpDiscoveryProfileInterface
      */
     public function getUcp(): UcpDiscoveryProfileInterface1;
 
     /**
      * Payment configuration containing handlers
      *
-     * @return UCPDiscoveryProfilePaymentInterface|null
+     * @return \Magebit\UcpSpec\Api\Discovery\UCPDiscoveryProfilePaymentInterface|null
      */
     public function getPayment(): UCPDiscoveryProfilePaymentInterface|null;
 
     /**
      * Public keys for signature verification (JWK format). Used to verify signed responses, webhooks, and other authenticated messages from this party.
      *
-     * @return UCPDiscoveryProfileSigningKeysItemInterface[]|null
+     * @return \Magebit\UcpSpec\Api\Discovery\UCPDiscoveryProfileSigningKeysItemInterface[]|null
      */
     public function getSigningKeys(): array|null;
 }

@@ -55,12 +55,12 @@ interface CardPaymentInstrumentInterface
     /**
      * The billing address associated with this payment method.
      *
-     * @return PostalAddressInterface|null
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\PostalAddressInterface|null
      */
     public function getBillingAddress(): PostalAddressInterface|null;
 
     /**
-     * @return PaymentCredentialInterface|null
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\PaymentCredentialInterface|null
      */
     public function getCredential(): PaymentCredentialInterface|null;
 
@@ -133,13 +133,13 @@ interface CardPaymentInstrumentInterface
     /**
      * The billing address associated with this payment method.
      *
-     * @param PostalAddressInterface|null $billingAddress
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\PostalAddressInterface|null $billingAddress
      * @return self
      */
     public function setBillingAddress(?PostalAddressInterface $billingAddress): self;
 
     /**
-     * @param PaymentCredentialInterface|null $credential
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\PaymentCredentialInterface|null $credential
      * @return self
      */
     public function setCredential(?PaymentCredentialInterface $credential): self;

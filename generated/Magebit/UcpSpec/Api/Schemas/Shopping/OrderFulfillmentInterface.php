@@ -26,14 +26,14 @@ interface OrderFulfillmentInterface
     /**
      * Buyer-facing groups representing when/how items will be delivered. Can be split, merged, or adjusted post-order.
      *
-     * @return ExpectationInterface[]|null
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\Types\ExpectationInterface[]|null
      */
     public function getExpectations(): array|null;
 
     /**
      * Append-only event log of actual shipments. Each event references line items by ID.
      *
-     * @return FulfillmentEventInterface[]|null
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\Types\FulfillmentEventInterface[]|null
      */
     public function getEvents(): array|null;
 }

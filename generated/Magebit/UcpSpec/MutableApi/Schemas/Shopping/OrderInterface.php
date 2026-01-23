@@ -34,7 +34,7 @@ interface OrderInterface
     public const KEY_TOTALS = 'totals';
 
     /**
-     * @return UcpResponseOrderInterface
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\UcpResponseOrderInterface
      */
     public function getUcp(): UcpResponseOrderInterface;
 
@@ -62,33 +62,33 @@ interface OrderInterface
     /**
      * Immutable line items — source of truth for what was ordered.
      *
-     * @return OrderLineItemInterface[]
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\OrderLineItemInterface[]
      */
     public function getLineItems(): array;
 
     /**
      * Fulfillment data: buyer expectations and what actually happened.
      *
-     * @return OrderFulfillmentInterface
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\OrderFulfillmentInterface
      */
     public function getFulfillment(): OrderFulfillmentInterface;
 
     /**
      * Append-only event log of money movements (refunds, returns, credits, disputes, cancellations, etc.) that exist independently of fulfillment.
      *
-     * @return AdjustmentInterface[]|null
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\AdjustmentInterface[]|null
      */
     public function getAdjustments(): array|null;
 
     /**
      * Different totals for the order.
      *
-     * @return TotalResponseInterface[]
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\TotalResponseInterface[]
      */
     public function getTotals(): array;
 
     /**
-     * @param UcpResponseOrderInterface $ucp
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\UcpResponseOrderInterface $ucp
      * @return self
      */
     public function setUcp(UcpResponseOrderInterface $ucp): self;
@@ -120,7 +120,7 @@ interface OrderInterface
     /**
      * Immutable line items — source of truth for what was ordered.
      *
-     * @param OrderLineItemInterface[] $lineItems
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\OrderLineItemInterface[] $lineItems
      * @return self
      */
     public function setLineItems(array $lineItems): self;
@@ -128,7 +128,7 @@ interface OrderInterface
     /**
      * Fulfillment data: buyer expectations and what actually happened.
      *
-     * @param OrderFulfillmentInterface $fulfillment
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\OrderFulfillmentInterface $fulfillment
      * @return self
      */
     public function setFulfillment(OrderFulfillmentInterface $fulfillment): self;
@@ -136,7 +136,7 @@ interface OrderInterface
     /**
      * Append-only event log of money movements (refunds, returns, credits, disputes, cancellations, etc.) that exist independently of fulfillment.
      *
-     * @param AdjustmentInterface[]|null $adjustments
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\AdjustmentInterface[]|null $adjustments
      * @return self
      */
     public function setAdjustments(?array $adjustments): self;
@@ -144,7 +144,7 @@ interface OrderInterface
     /**
      * Different totals for the order.
      *
-     * @param TotalResponseInterface[] $totals
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\TotalResponseInterface[] $totals
      * @return self
      */
     public function setTotals(array $totals): self;

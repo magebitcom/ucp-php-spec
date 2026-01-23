@@ -38,14 +38,14 @@ interface CheckoutUpdateRequestInterface
     /**
      * List of line items being checked out.
      *
-     * @return LineItemUpdateRequestInterface[]
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\Types\LineItemUpdateRequestInterface[]
      */
     public function getLineItems(): array;
 
     /**
      * Representation of the buyer.
      *
-     * @return BuyerInterface|null
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\Types\BuyerInterface|null
      */
     public function getBuyer(): BuyerInterface|null;
 
@@ -57,7 +57,7 @@ interface CheckoutUpdateRequestInterface
     public function getCurrency(): string;
 
     /**
-     * @return PaymentUpdateRequestInterface
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\PaymentUpdateRequestInterface
      */
     public function getPayment(): PaymentUpdateRequestInterface;
 }

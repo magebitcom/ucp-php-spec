@@ -72,7 +72,7 @@ interface DiscountAppliedDiscountInterface
     /**
      * Breakdown of where this discount was allocated. Sum of allocation amounts equals total amount.
      *
-     * @return DiscountAllocationInterface[]|null
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\DiscountAllocationInterface[]|null
      */
     public function getAllocations(): array|null;
 
@@ -127,7 +127,7 @@ interface DiscountAppliedDiscountInterface
     /**
      * Breakdown of where this discount was allocated. Sum of allocation amounts equals total amount.
      *
-     * @param DiscountAllocationInterface[]|null $allocations
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\DiscountAllocationInterface[]|null $allocations
      * @return self
      */
     public function setAllocations(?array $allocations): self;

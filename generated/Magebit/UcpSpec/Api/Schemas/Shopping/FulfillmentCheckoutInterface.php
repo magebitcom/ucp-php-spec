@@ -49,7 +49,7 @@ interface FulfillmentCheckoutInterface
     public const STATUS_CANCELED = 'canceled';
 
     /**
-     * @return UcpResponseCheckoutInterface
+     * @return \Magebit\UcpSpec\Api\Schemas\UcpResponseCheckoutInterface
      */
     public function getUcp(): UcpResponseCheckoutInterface;
 
@@ -63,14 +63,14 @@ interface FulfillmentCheckoutInterface
     /**
      * List of line items being checked out.
      *
-     * @return LineItemResponseInterface[]
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\Types\LineItemResponseInterface[]
      */
     public function getLineItems(): array;
 
     /**
      * Representation of the buyer.
      *
-     * @return BuyerInterface|null
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\Types\BuyerInterface|null
      */
     public function getBuyer(): BuyerInterface|null;
 
@@ -91,21 +91,21 @@ interface FulfillmentCheckoutInterface
     /**
      * Different cart totals.
      *
-     * @return TotalResponseInterface[]
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\Types\TotalResponseInterface[]
      */
     public function getTotals(): array;
 
     /**
      * List of messages with error and info about the checkout session state.
      *
-     * @return MessageInterface[]|null
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\Types\MessageInterface[]|null
      */
     public function getMessages(): array|null;
 
     /**
      * Links to be displayed by the platform (Privacy Policy, TOS). Mandatory for legal compliance.
      *
-     * @return LinkInterface[]
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\Types\LinkInterface[]
      */
     public function getLinks(): array;
 
@@ -124,21 +124,21 @@ interface FulfillmentCheckoutInterface
     public function getContinueUrl(): string|null;
 
     /**
-     * @return PaymentResponseInterface
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\PaymentResponseInterface
      */
     public function getPayment(): PaymentResponseInterface;
 
     /**
      * Details about an order created for this checkout session.
      *
-     * @return OrderConfirmationInterface|null
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\Types\OrderConfirmationInterface|null
      */
     public function getOrder(): OrderConfirmationInterface|null;
 
     /**
      * Fulfillment details.
      *
-     * @return FulfillmentFulfillmentInterface|null
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\FulfillmentFulfillmentInterface|null
      */
     public function getFulfillment(): FulfillmentFulfillmentInterface|null;
 }
