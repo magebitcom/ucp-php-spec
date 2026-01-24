@@ -18,7 +18,7 @@ use Magebit\UcpSpec\Api\Schemas\Shopping\Types\LinkInterface;
 use Magebit\UcpSpec\Api\Schemas\Shopping\Types\MessageInterface;
 use Magebit\UcpSpec\Api\Schemas\Shopping\Types\OrderConfirmationInterface;
 use Magebit\UcpSpec\Api\Schemas\Shopping\Types\TotalResponseInterface;
-use Magebit\UcpSpec\Api\Schemas\UcpResponseCheckoutInterface;
+use Magebit\UcpSpec\Api\Schemas\UcpResponseCheckoutSchemaInterface;
 
 /**
  * Base checkout schema. Extensions compose onto this using allOf.
@@ -48,9 +48,9 @@ interface CheckoutResponseInterface
     public const STATUS_CANCELED = 'canceled';
 
     /**
-     * @return \Magebit\UcpSpec\Api\Schemas\UcpResponseCheckoutInterface
+     * @return \Magebit\UcpSpec\Api\Schemas\UcpResponseCheckoutSchemaInterface
      */
-    public function getUcp(): UcpResponseCheckoutInterface;
+    public function getUcp(): UcpResponseCheckoutSchemaInterface;
 
     /**
      * Unique identifier of the checkout session.
@@ -81,7 +81,7 @@ interface CheckoutResponseInterface
     public function getStatus(): string;
 
     /**
-     * ISO 4217 currency code.
+     * ISO 4217 currency code reflecting the merchant's market determination. Derived from address, context, and geo IP—buyers provide signals, merchants determine currency.
      *
      * @return string
      */
@@ -123,9 +123,9 @@ interface CheckoutResponseInterface
     public function getContinueUrl(): string|null;
 
     /**
-     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\PaymentResponseInterface
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\PaymentInterface|null
      */
-    public function getPayment(): PaymentResponseInterface;
+    public function getPayment(): PaymentInterface|null;
 
     /**
      * Details about an order created for this checkout session.

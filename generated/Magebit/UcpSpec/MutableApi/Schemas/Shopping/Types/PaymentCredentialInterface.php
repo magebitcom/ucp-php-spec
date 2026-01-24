@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types;
 
 /**
- * Container for sensitive payment data. Use the specific schema matching the 'type' field.
+ * The base definition for any payment credential. Handlers define specific credential types.
  *
  * Schema: Payment Credential
  */
@@ -22,14 +22,14 @@ interface PaymentCredentialInterface
     public const KEY_TYPE = 'type';
 
     /**
-     * The specific type of token produced by the handler (e.g., 'stripe_token').
+     * The credential type discriminator. Specific schemas will constrain this to a constant value.
      *
      * @return string
      */
     public function getType(): string;
 
     /**
-     * The specific type of token produced by the handler (e.g., 'stripe_token').
+     * The credential type discriminator. Specific schemas will constrain this to a constant value.
      *
      * @param string $type
      * @return self

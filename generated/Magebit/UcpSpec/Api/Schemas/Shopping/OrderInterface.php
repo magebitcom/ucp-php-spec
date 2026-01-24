@@ -15,7 +15,7 @@ namespace Magebit\UcpSpec\Api\Schemas\Shopping;
 use Magebit\UcpSpec\Api\Schemas\Shopping\Types\AdjustmentInterface;
 use Magebit\UcpSpec\Api\Schemas\Shopping\Types\OrderLineItemInterface;
 use Magebit\UcpSpec\Api\Schemas\Shopping\Types\TotalResponseInterface;
-use Magebit\UcpSpec\Api\Schemas\UcpResponseOrderInterface;
+use Magebit\UcpSpec\Api\Schemas\UcpResponseOrderSchemaInterface;
 
 /**
  * Order schema with immutable line items, buyer-facing fulfillment expectations, and append-only event logs.
@@ -34,9 +34,9 @@ interface OrderInterface
     public const KEY_TOTALS = 'totals';
 
     /**
-     * @return \Magebit\UcpSpec\Api\Schemas\UcpResponseOrderInterface
+     * @return \Magebit\UcpSpec\Api\Schemas\UcpResponseOrderSchemaInterface
      */
-    public function getUcp(): UcpResponseOrderInterface;
+    public function getUcp(): UcpResponseOrderSchemaInterface;
 
     /**
      * Unique order identifier.

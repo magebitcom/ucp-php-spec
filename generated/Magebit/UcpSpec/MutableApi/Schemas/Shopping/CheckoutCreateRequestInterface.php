@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Magebit\UcpSpec\MutableApi\Schemas\Shopping;
 
 use Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\BuyerInterface;
+use Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\ContextInterface;
 use Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\LineItemCreateRequestInterface;
 
 /**
@@ -24,7 +25,7 @@ interface CheckoutCreateRequestInterface
 {
     public const KEY_LINE_ITEMS = 'line_items';
     public const KEY_BUYER = 'buyer';
-    public const KEY_CURRENCY = 'currency';
+    public const KEY_CONTEXT = 'context';
     public const KEY_PAYMENT = 'payment';
 
     /**
@@ -42,16 +43,14 @@ interface CheckoutCreateRequestInterface
     public function getBuyer(): BuyerInterface|null;
 
     /**
-     * ISO 4217 currency code.
-     *
-     * @return string
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\ContextInterface|null
      */
-    public function getCurrency(): string;
+    public function getContext(): ContextInterface|null;
 
     /**
-     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\PaymentCreateRequestInterface
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\PaymentInterface|null
      */
-    public function getPayment(): PaymentCreateRequestInterface;
+    public function getPayment(): PaymentInterface|null;
 
     /**
      * List of line items being checked out.
@@ -70,16 +69,14 @@ interface CheckoutCreateRequestInterface
     public function setBuyer(?BuyerInterface $buyer): self;
 
     /**
-     * ISO 4217 currency code.
-     *
-     * @param string $currency
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\ContextInterface|null $context
      * @return self
      */
-    public function setCurrency(string $currency): self;
+    public function setContext(?ContextInterface $context): self;
 
     /**
-     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\PaymentCreateRequestInterface $payment
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\PaymentInterface|null $payment
      * @return self
      */
-    public function setPayment(PaymentCreateRequestInterface $payment): self;
+    public function setPayment(?PaymentInterface $payment): self;
 }

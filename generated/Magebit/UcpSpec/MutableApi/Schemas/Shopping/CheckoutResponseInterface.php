@@ -18,7 +18,7 @@ use Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\LinkInterface;
 use Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\MessageInterface;
 use Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\OrderConfirmationInterface;
 use Magebit\UcpSpec\MutableApi\Schemas\Shopping\Types\TotalResponseInterface;
-use Magebit\UcpSpec\MutableApi\Schemas\UcpResponseCheckoutInterface;
+use Magebit\UcpSpec\MutableApi\Schemas\UcpResponseCheckoutSchemaInterface;
 
 /**
  * Base checkout schema. Extensions compose onto this using allOf.
@@ -48,9 +48,9 @@ interface CheckoutResponseInterface
     public const STATUS_CANCELED = 'canceled';
 
     /**
-     * @return \Magebit\UcpSpec\MutableApi\Schemas\UcpResponseCheckoutInterface
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\UcpResponseCheckoutSchemaInterface
      */
-    public function getUcp(): UcpResponseCheckoutInterface;
+    public function getUcp(): UcpResponseCheckoutSchemaInterface;
 
     /**
      * Unique identifier of the checkout session.
@@ -81,7 +81,7 @@ interface CheckoutResponseInterface
     public function getStatus(): string;
 
     /**
-     * ISO 4217 currency code.
+     * ISO 4217 currency code reflecting the merchant's market determination. Derived from address, context, and geo IP—buyers provide signals, merchants determine currency.
      *
      * @return string
      */
@@ -123,9 +123,9 @@ interface CheckoutResponseInterface
     public function getContinueUrl(): string|null;
 
     /**
-     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\PaymentResponseInterface
+     * @return \Magebit\UcpSpec\MutableApi\Schemas\Shopping\PaymentInterface|null
      */
-    public function getPayment(): PaymentResponseInterface;
+    public function getPayment(): PaymentInterface|null;
 
     /**
      * Details about an order created for this checkout session.
@@ -135,10 +135,10 @@ interface CheckoutResponseInterface
     public function getOrder(): OrderConfirmationInterface|null;
 
     /**
-     * @param \Magebit\UcpSpec\MutableApi\Schemas\UcpResponseCheckoutInterface $ucp
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\UcpResponseCheckoutSchemaInterface $ucp
      * @return self
      */
-    public function setUcp(UcpResponseCheckoutInterface $ucp): self;
+    public function setUcp(UcpResponseCheckoutSchemaInterface $ucp): self;
 
     /**
      * Unique identifier of the checkout session.
@@ -173,7 +173,7 @@ interface CheckoutResponseInterface
     public function setStatus(string $status): self;
 
     /**
-     * ISO 4217 currency code.
+     * ISO 4217 currency code reflecting the merchant's market determination. Derived from address, context, and geo IP—buyers provide signals, merchants determine currency.
      *
      * @param string $currency
      * @return self
@@ -221,10 +221,10 @@ interface CheckoutResponseInterface
     public function setContinueUrl(?string $continueUrl): self;
 
     /**
-     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\PaymentResponseInterface $payment
+     * @param \Magebit\UcpSpec\MutableApi\Schemas\Shopping\PaymentInterface|null $payment
      * @return self
      */
-    public function setPayment(PaymentResponseInterface $payment): self;
+    public function setPayment(?PaymentInterface $payment): self;
 
     /**
      * Details about an order created for this checkout session.

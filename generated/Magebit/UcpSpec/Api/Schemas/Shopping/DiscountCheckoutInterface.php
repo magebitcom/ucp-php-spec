@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Magebit\UcpSpec\Api\Schemas\Shopping;
 
 use Magebit\UcpSpec\Api\Schemas\Shopping\Types\BuyerInterface;
+use Magebit\UcpSpec\Api\Schemas\Shopping\Types\ContextInterface;
 use Magebit\UcpSpec\Api\Schemas\Shopping\Types\LineItemUpdateRequestInterface;
 
 /**
@@ -25,7 +26,7 @@ interface DiscountCheckoutInterface
     public const KEY_ID = 'id';
     public const KEY_LINE_ITEMS = 'line_items';
     public const KEY_BUYER = 'buyer';
-    public const KEY_CURRENCY = 'currency';
+    public const KEY_CONTEXT = 'context';
     public const KEY_PAYMENT = 'payment';
     public const KEY_DISCOUNTS = 'discounts';
 
@@ -51,16 +52,14 @@ interface DiscountCheckoutInterface
     public function getBuyer(): BuyerInterface|null;
 
     /**
-     * ISO 4217 currency code.
-     *
-     * @return string
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\Types\ContextInterface|null
      */
-    public function getCurrency(): string;
+    public function getContext(): ContextInterface|null;
 
     /**
-     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\PaymentUpdateRequestInterface
+     * @return \Magebit\UcpSpec\Api\Schemas\Shopping\PaymentInterface|null
      */
-    public function getPayment(): PaymentUpdateRequestInterface;
+    public function getPayment(): PaymentInterface|null;
 
     /**
      * @return \Magebit\UcpSpec\Api\Schemas\Shopping\DiscountDiscountsObjectInterface|null
