@@ -205,6 +205,32 @@ class TypeMapper
                 return $this->mapType($resolvedSchema, $currentFile);
             }
         } catch (\Exception $e) {
+            // If resolution fails for a relative ref, try resolving from common source files
+            // This handles cases where a schema references a definition from another file
+            // (e.g., entity definition in ucp.json with relative refs)
+            if (strpos($ref, '#') === 0) {
+                // Try resolving from ucp.json if current file is not ucp.json
+                $currentDir = dirname($currentFile);
+                $ucpFile = realpath($currentDir . '/ucp.json');
+                
+                if ($ucpFile && $ucpFile !== $currentFile) {
+                    try {
+                        $resolvedSchema = $this->parser->resolveRef($ref, $ucpFile);
+                        
+                        // Check if it's a simple type
+                        $hasComplexType = isset($resolvedSchema['allOf']) || 
+                                         isset($resolvedSchema['oneOf']) || 
+                                         isset($resolvedSchema['anyOf']) ||
+                                         isset($resolvedSchema['properties']);
+                        
+                        if (!$hasComplexType && isset($resolvedSchema['type']) && $resolvedSchema['type'] !== 'object') {
+                            return $this->mapType($resolvedSchema, $ucpFile);
+                        }
+                    } catch (\Exception $e2) {
+                        // If that also fails, fall through to interface name generation
+                    }
+                }
+            }
             // If resolution fails, fall back to interface name generation
         }
         

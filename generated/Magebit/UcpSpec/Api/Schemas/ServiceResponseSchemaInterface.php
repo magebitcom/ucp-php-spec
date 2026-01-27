@@ -34,9 +34,9 @@ interface ServiceResponseSchemaInterface
     /**
      * Entity version in YYYY-MM-DD format.
      *
-     * @return \Magebit\UcpSpec\Api\Schemas\ServiceVersionInterface
+     * @return string
      */
-    public function getVersion(): ServiceVersionInterface;
+    public function getVersion(): string;
 
     /**
      * URL to human-readable specification document.

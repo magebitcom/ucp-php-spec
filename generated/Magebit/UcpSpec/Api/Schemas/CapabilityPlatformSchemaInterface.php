@@ -29,9 +29,9 @@ interface CapabilityPlatformSchemaInterface
     /**
      * Entity version in YYYY-MM-DD format.
      *
-     * @return \Magebit\UcpSpec\Api\Schemas\CapabilityVersionInterface
+     * @return string
      */
-    public function getVersion(): CapabilityVersionInterface;
+    public function getVersion(): string;
 
     /**
      * URL to human-readable specification document.

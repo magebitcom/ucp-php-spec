@@ -23,9 +23,9 @@ interface PaymentHandlerBaseInterface
     /**
      * Entity version in YYYY-MM-DD format.
      *
-     * @return \Magebit\UcpSpec\MutableApi\Schemas\PaymentHandlerVersionInterface
+     * @return string
      */
-    public function getVersion(): PaymentHandlerVersionInterface;
+    public function getVersion(): string;
 
     /**
      * URL to human-readable specification document.
@@ -58,10 +58,10 @@ interface PaymentHandlerBaseInterface
     /**
      * Entity version in YYYY-MM-DD format.
      *
-     * @param \Magebit\UcpSpec\MutableApi\Schemas\PaymentHandlerVersionInterface $version
+     * @param string $version
      * @return self
      */
-    public function setVersion(PaymentHandlerVersionInterface $version): self;
+    public function setVersion(string $version): self;
 
     /**
      * URL to human-readable specification document.

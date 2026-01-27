@@ -34,9 +34,9 @@ interface ServicePlatformSchemaInterface
     /**
      * Entity version in YYYY-MM-DD format.
      *
-     * @return \Magebit\UcpSpec\MutableApi\Schemas\ServiceVersionInterface
+     * @return string
      */
-    public function getVersion(): ServiceVersionInterface;
+    public function getVersion(): string;
 
     /**
      * URL to human-readable specification document.
@@ -83,10 +83,10 @@ interface ServicePlatformSchemaInterface
     /**
      * Entity version in YYYY-MM-DD format.
      *
-     * @param \Magebit\UcpSpec\MutableApi\Schemas\ServiceVersionInterface $version
+     * @param string $version
      * @return self
      */
-    public function setVersion(ServiceVersionInterface $version): self;
+    public function setVersion(string $version): self;
 
     /**
      * URL to human-readable specification document.

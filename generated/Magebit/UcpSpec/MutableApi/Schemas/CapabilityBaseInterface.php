@@ -24,9 +24,9 @@ interface CapabilityBaseInterface
     /**
      * Entity version in YYYY-MM-DD format.
      *
-     * @return \Magebit\UcpSpec\MutableApi\Schemas\CapabilityVersionInterface
+     * @return string
      */
-    public function getVersion(): CapabilityVersionInterface;
+    public function getVersion(): string;
 
     /**
      * URL to human-readable specification document.
@@ -66,10 +66,10 @@ interface CapabilityBaseInterface
     /**
      * Entity version in YYYY-MM-DD format.
      *
-     * @param \Magebit\UcpSpec\MutableApi\Schemas\CapabilityVersionInterface $version
+     * @param string $version
      * @return self
      */
-    public function setVersion(CapabilityVersionInterface $version): self;
+    public function setVersion(string $version): self;
 
     /**
      * URL to human-readable specification document.
