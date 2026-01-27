@@ -30,17 +30,23 @@ interface UcpResponseCheckoutSchemaInterface
     public function getVersion(): string;
 
     /**
-     * @return mixed
+     * Service registry keyed by reverse-domain name.
+     *
+     * @return array<string, array<\Magebit\UcpSpec\Api\Schemas\ServiceResponseSchemaInterface>>|null
      */
-    public function getServices();
+    public function getServices(): array|null;
 
     /**
-     * @return mixed
+     * Capability registry keyed by reverse-domain name.
+     *
+     * @return array<string, array<\Magebit\UcpSpec\Api\Schemas\CapabilityResponseSchemaInterface>>|null
      */
-    public function getCapabilities();
+    public function getCapabilities(): array|null;
 
     /**
-     * @return mixed
+     * Payment handler registry keyed by reverse-domain name.
+     *
+     * @return array<string, array<\Magebit\UcpSpec\Api\Schemas\PaymentHandlerResponseSchemaInterface>>
      */
-    public function getPaymentHandlers();
+    public function getPaymentHandlers(): array;
 }

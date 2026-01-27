@@ -30,19 +30,25 @@ interface UcpResponseCheckoutSchemaInterface
     public function getVersion(): string;
 
     /**
-     * @return mixed
+     * Service registry keyed by reverse-domain name.
+     *
+     * @return array<string, array<\Magebit\UcpSpec\MutableApi\Schemas\ServiceResponseSchemaInterface>>|null
      */
-    public function getServices();
+    public function getServices(): array|null;
 
     /**
-     * @return mixed
+     * Capability registry keyed by reverse-domain name.
+     *
+     * @return array<string, array<\Magebit\UcpSpec\MutableApi\Schemas\CapabilityResponseSchemaInterface>>|null
      */
-    public function getCapabilities();
+    public function getCapabilities(): array|null;
 
     /**
-     * @return mixed
+     * Payment handler registry keyed by reverse-domain name.
+     *
+     * @return array<string, array<\Magebit\UcpSpec\MutableApi\Schemas\PaymentHandlerResponseSchemaInterface>>
      */
-    public function getPaymentHandlers();
+    public function getPaymentHandlers(): array;
 
     /**
      * @param string $version
@@ -51,20 +57,26 @@ interface UcpResponseCheckoutSchemaInterface
     public function setVersion(string $version): self;
 
     /**
-     * @param mixed $services
+     * Service registry keyed by reverse-domain name.
+     *
+     * @param array<string, array<\Magebit\UcpSpec\MutableApi\Schemas\ServiceResponseSchemaInterface>>|null $services
      * @return self
      */
-    public function setServices($services): self;
+    public function setServices(?array $services): self;
 
     /**
-     * @param mixed $capabilities
+     * Capability registry keyed by reverse-domain name.
+     *
+     * @param array<string, array<\Magebit\UcpSpec\MutableApi\Schemas\CapabilityResponseSchemaInterface>>|null $capabilities
      * @return self
      */
-    public function setCapabilities($capabilities): self;
+    public function setCapabilities(?array $capabilities): self;
 
     /**
-     * @param mixed $paymentHandlers
+     * Payment handler registry keyed by reverse-domain name.
+     *
+     * @param array<string, array<\Magebit\UcpSpec\MutableApi\Schemas\PaymentHandlerResponseSchemaInterface>> $paymentHandlers
      * @return self
      */
-    public function setPaymentHandlers($paymentHandlers): self;
+    public function setPaymentHandlers(array $paymentHandlers): self;
 }

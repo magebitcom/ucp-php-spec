@@ -30,17 +30,23 @@ interface UcpBusinessSchemaInterface
     public function getVersion(): string;
 
     /**
-     * @return mixed
+     * Service registry keyed by reverse-domain name.
+     *
+     * @return array<string, array<\Magebit\UcpSpec\Api\Schemas\ServiceBusinessSchemaInterface>>
      */
-    public function getServices();
+    public function getServices(): array;
 
     /**
-     * @return mixed
+     * Capability registry keyed by reverse-domain name.
+     *
+     * @return array<string, array<\Magebit\UcpSpec\Api\Schemas\CapabilityBusinessSchemaInterface>>|null
      */
-    public function getCapabilities();
+    public function getCapabilities(): array|null;
 
     /**
-     * @return mixed
+     * Payment handler registry keyed by reverse-domain name.
+     *
+     * @return array<string, array<\Magebit\UcpSpec\Api\Schemas\PaymentHandlerBusinessSchemaInterface>>
      */
-    public function getPaymentHandlers();
+    public function getPaymentHandlers(): array;
 }

@@ -30,19 +30,25 @@ interface UcpBusinessSchemaInterface
     public function getVersion(): string;
 
     /**
-     * @return mixed
+     * Service registry keyed by reverse-domain name.
+     *
+     * @return array<string, array<\Magebit\UcpSpec\MutableApi\Schemas\ServiceBusinessSchemaInterface>>
      */
-    public function getServices();
+    public function getServices(): array;
 
     /**
-     * @return mixed
+     * Capability registry keyed by reverse-domain name.
+     *
+     * @return array<string, array<\Magebit\UcpSpec\MutableApi\Schemas\CapabilityBusinessSchemaInterface>>|null
      */
-    public function getCapabilities();
+    public function getCapabilities(): array|null;
 
     /**
-     * @return mixed
+     * Payment handler registry keyed by reverse-domain name.
+     *
+     * @return array<string, array<\Magebit\UcpSpec\MutableApi\Schemas\PaymentHandlerBusinessSchemaInterface>>
      */
-    public function getPaymentHandlers();
+    public function getPaymentHandlers(): array;
 
     /**
      * @param string $version
@@ -51,20 +57,26 @@ interface UcpBusinessSchemaInterface
     public function setVersion(string $version): self;
 
     /**
-     * @param mixed $services
+     * Service registry keyed by reverse-domain name.
+     *
+     * @param array<string, array<\Magebit\UcpSpec\MutableApi\Schemas\ServiceBusinessSchemaInterface>> $services
      * @return self
      */
-    public function setServices($services): self;
+    public function setServices(array $services): self;
 
     /**
-     * @param mixed $capabilities
+     * Capability registry keyed by reverse-domain name.
+     *
+     * @param array<string, array<\Magebit\UcpSpec\MutableApi\Schemas\CapabilityBusinessSchemaInterface>>|null $capabilities
      * @return self
      */
-    public function setCapabilities($capabilities): self;
+    public function setCapabilities(?array $capabilities): self;
 
     /**
-     * @param mixed $paymentHandlers
+     * Payment handler registry keyed by reverse-domain name.
+     *
+     * @param array<string, array<\Magebit\UcpSpec\MutableApi\Schemas\PaymentHandlerBusinessSchemaInterface>> $paymentHandlers
      * @return self
      */
-    public function setPaymentHandlers($paymentHandlers): self;
+    public function setPaymentHandlers(array $paymentHandlers): self;
 }

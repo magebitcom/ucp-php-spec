@@ -35,9 +35,9 @@ interface CardCredentialInterface
     /**
      * The credential type identifier for card credentials.
      *
-     * @return mixed
+     * @return string
      */
-    public function getType();
+    public function getType(): string;
 
     /**
      * The type of card number. Network tokens are preferred with fallback to FPAN. See PCI Scope for more details.

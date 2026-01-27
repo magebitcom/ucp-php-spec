@@ -32,19 +32,21 @@ interface UcpResponseOrderSchemaInterface
     /**
      * Service registry keyed by reverse-domain name.
      *
-     * @return array<string, array>|null
+     * @return array<string, array<\Magebit\UcpSpec\Api\Schemas\ServiceBaseInterface>>|null
      */
     public function getServices(): array|null;
 
     /**
-     * @return mixed
+     * Capability registry keyed by reverse-domain name.
+     *
+     * @return array<string, array<\Magebit\UcpSpec\Api\Schemas\CapabilityResponseSchemaInterface>>|null
      */
-    public function getCapabilities();
+    public function getCapabilities(): array|null;
 
     /**
      * Payment handler registry keyed by reverse-domain name.
      *
-     * @return array<string, array>|null
+     * @return array<string, array<\Magebit\UcpSpec\Api\Schemas\PaymentHandlerBaseInterface>>|null
      */
     public function getPaymentHandlers(): array|null;
 }

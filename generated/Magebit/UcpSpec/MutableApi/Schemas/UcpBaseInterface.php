@@ -30,21 +30,21 @@ interface UcpBaseInterface
     /**
      * Service registry keyed by reverse-domain name.
      *
-     * @return array<string, array>|null
+     * @return array<string, array<\Magebit\UcpSpec\MutableApi\Schemas\ServiceBaseInterface>>|null
      */
     public function getServices(): array|null;
 
     /**
      * Capability registry keyed by reverse-domain name.
      *
-     * @return array<string, array>|null
+     * @return array<string, array<\Magebit\UcpSpec\MutableApi\Schemas\CapabilityBaseInterface>>|null
      */
     public function getCapabilities(): array|null;
 
     /**
      * Payment handler registry keyed by reverse-domain name.
      *
-     * @return array<string, array>|null
+     * @return array<string, array<\Magebit\UcpSpec\MutableApi\Schemas\PaymentHandlerBaseInterface>>|null
      */
     public function getPaymentHandlers(): array|null;
 
@@ -57,7 +57,7 @@ interface UcpBaseInterface
     /**
      * Service registry keyed by reverse-domain name.
      *
-     * @param array<string, array>|null $services
+     * @param array<string, array<\Magebit\UcpSpec\MutableApi\Schemas\ServiceBaseInterface>>|null $services
      * @return self
      */
     public function setServices(?array $services): self;
@@ -65,7 +65,7 @@ interface UcpBaseInterface
     /**
      * Capability registry keyed by reverse-domain name.
      *
-     * @param array<string, array>|null $capabilities
+     * @param array<string, array<\Magebit\UcpSpec\MutableApi\Schemas\CapabilityBaseInterface>>|null $capabilities
      * @return self
      */
     public function setCapabilities(?array $capabilities): self;
@@ -73,7 +73,7 @@ interface UcpBaseInterface
     /**
      * Payment handler registry keyed by reverse-domain name.
      *
-     * @param array<string, array>|null $paymentHandlers
+     * @param array<string, array<\Magebit\UcpSpec\MutableApi\Schemas\PaymentHandlerBaseInterface>>|null $paymentHandlers
      * @return self
      */
     public function setPaymentHandlers(?array $paymentHandlers): self;

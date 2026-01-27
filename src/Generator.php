@@ -15,6 +15,7 @@ class Generator
 {
     private SchemaParser $parser;
     private TypeMapper $typeMapper;
+    private PhpDocGenerator $phpDocGenerator;
     private InterfaceBuilder $builder;
     private string $outputDir;
     private array $processedFiles = [];
@@ -29,7 +30,8 @@ class Generator
     {
         $this->parser = new SchemaParser($specDir);
         $this->typeMapper = new TypeMapper($this->parser);
-        $this->builder = new InterfaceBuilder($this->parser, $this->typeMapper);
+        $this->phpDocGenerator = new PhpDocGenerator($this->parser, $this->typeMapper);
+        $this->builder = new InterfaceBuilder($this->parser, $this->typeMapper, $this->phpDocGenerator);
         $this->outputDir = rtrim($outputDir, '/');
     }
 
@@ -68,7 +70,7 @@ class Generator
 
         // Reset for MutableApi generation
         $this->processedFiles = [];
-        $this->builder = new InterfaceBuilder($this->parser, $this->typeMapper);
+        $this->builder = new InterfaceBuilder($this->parser, $this->typeMapper, $this->phpDocGenerator);
 
         // Generate MutableApi namespace (mutable - getters and setters)
         echo "\n=== Generating MutableApi namespace (mutable) ===\n";
