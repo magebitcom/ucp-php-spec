@@ -20,6 +20,16 @@ class DtoBuilder
 {
     public const BASE_CLASS = 'Magebit\\UcpSpec\\Runtime\\SpecObject';
 
+    /**
+     * Runtime accessor per scalar type, as required and nullable variants.
+     */
+    private const SCALAR_ACCESSORS = [
+        'string' => ['requireString', 'stringOrNull'],
+        'int' => ['requireInt', 'intOrNull'],
+        'float' => ['requireFloat', 'floatOrNull'],
+        'bool' => ['requireBool', 'boolOrNull'],
+    ];
+
     private SchemaParser $parser;
     private TypeMapper $typeMapper;
     private PhpDocGenerator $phpDocGenerator;
@@ -187,7 +197,11 @@ class DtoBuilder
                 $propertyName
             );
 
-            $this->addGetter($class, $propertyName, $baseType, $nullable, $docType);
+            $itemType = $baseType === 'array'
+                ? $this->typeMapper->getArrayItemType($property, $currentFile, $className . 'Interface', $propertyName)
+                : null;
+
+            $this->addGetter($class, $propertyName, $baseType, $nullable, $docType, $itemType);
             $this->addSetter($class, $propertyName, $baseType, $nullable, $docType);
 
             if ($this->isJsonObject($property, $baseType)) {
@@ -209,6 +223,7 @@ class DtoBuilder
      * @param string $baseType Mapped PHP type
      * @param bool $nullable Whether the property may be absent
      * @param string $docType PHPDoc type
+     * @param string|null $itemType Element type, when the property is an array
      * @return void
      */
     private function addGetter(
@@ -216,7 +231,8 @@ class DtoBuilder
         string $propertyName,
         string $baseType,
         bool $nullable,
-        string $docType
+        string $docType,
+        ?string $itemType
     ): void {
         $method = $class->addMethod('get' . $this->typeMapper->toPascalCase($propertyName))->setPublic();
 
@@ -225,11 +241,54 @@ class DtoBuilder
         }
 
         $method->addComment('@return ' . $docType);
+        $method->setBody('return $this->' . $this->getterCall($propertyName, $baseType, $nullable, $itemType) . ';');
+    }
 
-        // A required list that is merely absent reads better as empty than as a type error.
-        $accessor = $baseType === 'array' && !$nullable ? 'getArray' : 'get';
+    /**
+     * Narrowing happens in the runtime base, so each getter names the accessor that matches its own
+     * declared type instead of restating the check.
+     *
+     * @param string $propertyName Name of the property
+     * @param string $baseType Mapped PHP type
+     * @param bool $nullable Whether the property may be absent
+     * @param string|null $itemType Element type, when the property is an array
+     * @return string Accessor call, without the leading `$this->`
+     */
+    private function getterCall(string $propertyName, string $baseType, bool $nullable, ?string $itemType): string
+    {
+        $key = 'self::' . $this->keyConstant($propertyName);
 
-        $method->setBody('return $this->' . $accessor . '(self::' . $this->keyConstant($propertyName) . ');');
+        if (isset(self::SCALAR_ACCESSORS[$baseType])) {
+            return self::SCALAR_ACCESSORS[$baseType][$nullable ? 1 : 0] . '(' . $key . ')';
+        }
+
+        if ($this->isInterfaceType($baseType)) {
+            $accessor = $nullable ? 'instanceOrNull' : 'requireInstance';
+
+            return $accessor . '(' . $key . ', ' . $baseType . '::class)';
+        }
+
+        if ($baseType === 'array' && $itemType !== null && $this->isInterfaceType($itemType)) {
+            $accessor = $nullable ? 'instanceListOrNull' : 'instanceList';
+
+            return $accessor . '(' . $key . ', ' . $itemType . '::class)';
+        }
+
+        if ($baseType === 'array') {
+            return ($nullable ? 'arrayOrNull' : 'getArray') . '(' . $key . ')';
+        }
+
+        // Unions and mixed have no single narrowing to apply.
+        return 'get(' . $key . ')';
+    }
+
+    /**
+     * @param string $type Mapped PHP type
+     * @return bool True when the type names a generated interface rather than a value
+     */
+    private function isInterfaceType(string $type): bool
+    {
+        return strpos($type, '\\') === 0 && !str_contains($type, '|');
     }
 
     /**

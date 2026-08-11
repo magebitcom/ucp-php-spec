@@ -26,7 +26,7 @@ class Ap2MandateCompleteRequestCheckout extends SpecObject implements Ap2Mandate
      */
     public function getPayment(): PaymentInterface
     {
-        return $this->get(self::KEY_PAYMENT);
+        return $this->requireInstance(self::KEY_PAYMENT, \Magebit\UcpSpec\Api\Shopping\PaymentInterface::class);
     }
 
     /**
@@ -43,7 +43,7 @@ class Ap2MandateCompleteRequestCheckout extends SpecObject implements Ap2Mandate
      */
     public function getAp2(): array|null
     {
-        return $this->get(self::KEY_AP2);
+        return $this->arrayOrNull(self::KEY_AP2);
     }
 
     /**

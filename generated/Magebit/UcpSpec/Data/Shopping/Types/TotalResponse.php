@@ -22,7 +22,7 @@ class TotalResponse extends SpecObject implements TotalResponseInterface
      */
     public function getType(): string
     {
-        return $this->get(self::KEY_TYPE);
+        return $this->requireString(self::KEY_TYPE);
     }
 
     /**
@@ -39,7 +39,7 @@ class TotalResponse extends SpecObject implements TotalResponseInterface
      */
     public function getDisplayText(): string|null
     {
-        return $this->get(self::KEY_DISPLAY_TEXT);
+        return $this->stringOrNull(self::KEY_DISPLAY_TEXT);
     }
 
     /**
@@ -56,7 +56,7 @@ class TotalResponse extends SpecObject implements TotalResponseInterface
      */
     public function getAmount(): int
     {
-        return $this->get(self::KEY_AMOUNT);
+        return $this->requireInt(self::KEY_AMOUNT);
     }
 
     /**

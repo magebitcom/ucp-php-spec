@@ -31,7 +31,7 @@ class UcpBusinessSchema extends SpecObject implements UcpBusinessSchemaInterface
      */
     public function getVersion(): string
     {
-        return $this->get(self::KEY_VERSION);
+        return $this->requireString(self::KEY_VERSION);
     }
 
     /**
@@ -65,7 +65,7 @@ class UcpBusinessSchema extends SpecObject implements UcpBusinessSchemaInterface
      */
     public function getCapabilities(): array|null
     {
-        return $this->get(self::KEY_CAPABILITIES);
+        return $this->arrayOrNull(self::KEY_CAPABILITIES);
     }
 
     /**

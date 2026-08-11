@@ -30,7 +30,7 @@ class FulfillmentUpdateRequestCheckout extends SpecObject implements Fulfillment
      */
     public function getId(): string
     {
-        return $this->get(self::KEY_ID);
+        return $this->requireString(self::KEY_ID);
     }
 
     /**
@@ -47,7 +47,7 @@ class FulfillmentUpdateRequestCheckout extends SpecObject implements Fulfillment
      */
     public function getLineItems(): array
     {
-        return $this->getArray(self::KEY_LINE_ITEMS);
+        return $this->instanceList(self::KEY_LINE_ITEMS, \Magebit\UcpSpec\Api\Shopping\Types\LineItemUpdateRequestInterface::class);
     }
 
     /**
@@ -64,7 +64,7 @@ class FulfillmentUpdateRequestCheckout extends SpecObject implements Fulfillment
      */
     public function getBuyer(): BuyerInterface|null
     {
-        return $this->get(self::KEY_BUYER);
+        return $this->instanceOrNull(self::KEY_BUYER, \Magebit\UcpSpec\Api\Shopping\Types\BuyerInterface::class);
     }
 
     /**
@@ -81,7 +81,7 @@ class FulfillmentUpdateRequestCheckout extends SpecObject implements Fulfillment
      */
     public function getContext(): ContextInterface|null
     {
-        return $this->get(self::KEY_CONTEXT);
+        return $this->instanceOrNull(self::KEY_CONTEXT, \Magebit\UcpSpec\Api\Shopping\Types\ContextInterface::class);
     }
 
     /**
@@ -98,7 +98,7 @@ class FulfillmentUpdateRequestCheckout extends SpecObject implements Fulfillment
      */
     public function getPayment(): PaymentInterface|null
     {
-        return $this->get(self::KEY_PAYMENT);
+        return $this->instanceOrNull(self::KEY_PAYMENT, \Magebit\UcpSpec\Api\Shopping\PaymentInterface::class);
     }
 
     /**
@@ -115,7 +115,7 @@ class FulfillmentUpdateRequestCheckout extends SpecObject implements Fulfillment
      */
     public function getFulfillment(): FulfillmentRequestInterface|null
     {
-        return $this->get(self::KEY_FULFILLMENT);
+        return $this->instanceOrNull(self::KEY_FULFILLMENT, \Magebit\UcpSpec\Api\Shopping\Types\FulfillmentRequestInterface::class);
     }
 
     /**

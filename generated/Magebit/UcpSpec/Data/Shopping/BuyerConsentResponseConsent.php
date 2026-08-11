@@ -25,7 +25,7 @@ class BuyerConsentResponseConsent extends SpecObject implements BuyerConsentResp
      */
     public function getAnalytics(): bool|null
     {
-        return $this->get(self::KEY_ANALYTICS);
+        return $this->boolOrNull(self::KEY_ANALYTICS);
     }
 
     /**
@@ -42,7 +42,7 @@ class BuyerConsentResponseConsent extends SpecObject implements BuyerConsentResp
      */
     public function getPreferences(): bool|null
     {
-        return $this->get(self::KEY_PREFERENCES);
+        return $this->boolOrNull(self::KEY_PREFERENCES);
     }
 
     /**
@@ -59,7 +59,7 @@ class BuyerConsentResponseConsent extends SpecObject implements BuyerConsentResp
      */
     public function getMarketing(): bool|null
     {
-        return $this->get(self::KEY_MARKETING);
+        return $this->boolOrNull(self::KEY_MARKETING);
     }
 
     /**
@@ -76,7 +76,7 @@ class BuyerConsentResponseConsent extends SpecObject implements BuyerConsentResp
      */
     public function getSaleOfData(): bool|null
     {
-        return $this->get(self::KEY_SALE_OF_DATA);
+        return $this->boolOrNull(self::KEY_SALE_OF_DATA);
     }
 
     /**

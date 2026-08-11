@@ -25,7 +25,7 @@ class OrderConfirmation extends SpecObject implements OrderConfirmationInterface
      */
     public function getId(): string
     {
-        return $this->get(self::KEY_ID);
+        return $this->requireString(self::KEY_ID);
     }
 
     /**
@@ -42,7 +42,7 @@ class OrderConfirmation extends SpecObject implements OrderConfirmationInterface
      */
     public function getPermalinkUrl(): string
     {
-        return $this->get(self::KEY_PERMALINK_URL);
+        return $this->requireString(self::KEY_PERMALINK_URL);
     }
 
     /**

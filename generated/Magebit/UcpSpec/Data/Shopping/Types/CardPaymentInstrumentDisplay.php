@@ -25,7 +25,7 @@ class CardPaymentInstrumentDisplay extends SpecObject implements CardPaymentInst
      */
     public function getBrand(): string|null
     {
-        return $this->get(self::KEY_BRAND);
+        return $this->stringOrNull(self::KEY_BRAND);
     }
 
     /**
@@ -42,7 +42,7 @@ class CardPaymentInstrumentDisplay extends SpecObject implements CardPaymentInst
      */
     public function getLastDigits(): string|null
     {
-        return $this->get(self::KEY_LAST_DIGITS);
+        return $this->stringOrNull(self::KEY_LAST_DIGITS);
     }
 
     /**
@@ -59,7 +59,7 @@ class CardPaymentInstrumentDisplay extends SpecObject implements CardPaymentInst
      */
     public function getExpiryMonth(): int|null
     {
-        return $this->get(self::KEY_EXPIRY_MONTH);
+        return $this->intOrNull(self::KEY_EXPIRY_MONTH);
     }
 
     /**
@@ -76,7 +76,7 @@ class CardPaymentInstrumentDisplay extends SpecObject implements CardPaymentInst
      */
     public function getExpiryYear(): int|null
     {
-        return $this->get(self::KEY_EXPIRY_YEAR);
+        return $this->intOrNull(self::KEY_EXPIRY_YEAR);
     }
 
     /**
@@ -93,7 +93,7 @@ class CardPaymentInstrumentDisplay extends SpecObject implements CardPaymentInst
      */
     public function getDescription(): string|null
     {
-        return $this->get(self::KEY_DESCRIPTION);
+        return $this->stringOrNull(self::KEY_DESCRIPTION);
     }
 
     /**
@@ -110,7 +110,7 @@ class CardPaymentInstrumentDisplay extends SpecObject implements CardPaymentInst
      */
     public function getCardArt(): string|null
     {
-        return $this->get(self::KEY_CARD_ART);
+        return $this->stringOrNull(self::KEY_CARD_ART);
     }
 
     /**

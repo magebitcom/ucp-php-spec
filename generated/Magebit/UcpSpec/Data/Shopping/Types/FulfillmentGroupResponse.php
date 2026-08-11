@@ -26,7 +26,7 @@ class FulfillmentGroupResponse extends SpecObject implements FulfillmentGroupRes
      */
     public function getId(): string
     {
-        return $this->get(self::KEY_ID);
+        return $this->requireString(self::KEY_ID);
     }
 
     /**
@@ -60,7 +60,7 @@ class FulfillmentGroupResponse extends SpecObject implements FulfillmentGroupRes
      */
     public function getOptions(): array|null
     {
-        return $this->get(self::KEY_OPTIONS);
+        return $this->instanceListOrNull(self::KEY_OPTIONS, \Magebit\UcpSpec\Api\Shopping\Types\FulfillmentOptionResponseInterface::class);
     }
 
     /**

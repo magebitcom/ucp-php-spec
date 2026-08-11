@@ -25,7 +25,7 @@ class AccountInfo extends SpecObject implements AccountInfoInterface
      */
     public function getPaymentAccountReference(): string|null
     {
-        return $this->get(self::KEY_PAYMENT_ACCOUNT_REFERENCE);
+        return $this->stringOrNull(self::KEY_PAYMENT_ACCOUNT_REFERENCE);
     }
 
     /**

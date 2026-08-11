@@ -27,7 +27,7 @@ class LineItemResponse extends SpecObject implements LineItemResponseInterface
      */
     public function getId(): string
     {
-        return $this->get(self::KEY_ID);
+        return $this->requireString(self::KEY_ID);
     }
 
     /**
@@ -44,7 +44,7 @@ class LineItemResponse extends SpecObject implements LineItemResponseInterface
      */
     public function getItem(): ItemResponseInterface
     {
-        return $this->get(self::KEY_ITEM);
+        return $this->requireInstance(self::KEY_ITEM, \Magebit\UcpSpec\Api\Shopping\Types\ItemResponseInterface::class);
     }
 
     /**
@@ -61,7 +61,7 @@ class LineItemResponse extends SpecObject implements LineItemResponseInterface
      */
     public function getQuantity(): int
     {
-        return $this->get(self::KEY_QUANTITY);
+        return $this->requireInt(self::KEY_QUANTITY);
     }
 
     /**
@@ -78,7 +78,7 @@ class LineItemResponse extends SpecObject implements LineItemResponseInterface
      */
     public function getTotals(): array
     {
-        return $this->getArray(self::KEY_TOTALS);
+        return $this->instanceList(self::KEY_TOTALS, \Magebit\UcpSpec\Api\Shopping\Types\TotalResponseInterface::class);
     }
 
     /**
@@ -95,7 +95,7 @@ class LineItemResponse extends SpecObject implements LineItemResponseInterface
      */
     public function getParentId(): string|null
     {
-        return $this->get(self::KEY_PARENT_ID);
+        return $this->stringOrNull(self::KEY_PARENT_ID);
     }
 
     /**

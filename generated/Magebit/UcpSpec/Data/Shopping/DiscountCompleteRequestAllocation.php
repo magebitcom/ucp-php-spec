@@ -25,7 +25,7 @@ class DiscountCompleteRequestAllocation extends SpecObject implements DiscountCo
      */
     public function getPath(): string
     {
-        return $this->get(self::KEY_PATH);
+        return $this->requireString(self::KEY_PATH);
     }
 
     /**
@@ -42,7 +42,7 @@ class DiscountCompleteRequestAllocation extends SpecObject implements DiscountCo
      */
     public function getAmount(): int
     {
-        return $this->get(self::KEY_AMOUNT);
+        return $this->requireInt(self::KEY_AMOUNT);
     }
 
     /**

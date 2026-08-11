@@ -27,7 +27,7 @@ class ProfileSchemaBusinessProfile extends SpecObject implements ProfileSchemaBu
      */
     public function getUcp(): UcpBusinessSchemaInterface
     {
-        return $this->get(self::KEY_UCP);
+        return $this->requireInstance(self::KEY_UCP, \Magebit\UcpSpec\Api\UcpBusinessSchemaInterface::class);
     }
 
     /**
@@ -44,7 +44,7 @@ class ProfileSchemaBusinessProfile extends SpecObject implements ProfileSchemaBu
      */
     public function getSigningKeys(): array|null
     {
-        return $this->get(self::KEY_SIGNING_KEYS);
+        return $this->instanceListOrNull(self::KEY_SIGNING_KEYS, \Magebit\UcpSpec\Api\Discovery\ProfileSchemaSigningKeyInterface::class);
     }
 
     /**

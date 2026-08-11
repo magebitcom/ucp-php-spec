@@ -28,7 +28,7 @@ class CapabilityPlatformSchema extends SpecObject implements CapabilityPlatformS
      */
     public function getVersion(): string
     {
-        return $this->get(self::KEY_VERSION);
+        return $this->requireString(self::KEY_VERSION);
     }
 
     /**
@@ -45,7 +45,7 @@ class CapabilityPlatformSchema extends SpecObject implements CapabilityPlatformS
      */
     public function getSpec(): string
     {
-        return $this->get(self::KEY_SPEC);
+        return $this->requireString(self::KEY_SPEC);
     }
 
     /**
@@ -62,7 +62,7 @@ class CapabilityPlatformSchema extends SpecObject implements CapabilityPlatformS
      */
     public function getSchema(): string
     {
-        return $this->get(self::KEY_SCHEMA);
+        return $this->requireString(self::KEY_SCHEMA);
     }
 
     /**
@@ -79,7 +79,7 @@ class CapabilityPlatformSchema extends SpecObject implements CapabilityPlatformS
      */
     public function getId(): string|null
     {
-        return $this->get(self::KEY_ID);
+        return $this->stringOrNull(self::KEY_ID);
     }
 
     /**
@@ -96,7 +96,7 @@ class CapabilityPlatformSchema extends SpecObject implements CapabilityPlatformS
      */
     public function getConfig(): array|null
     {
-        return $this->get(self::KEY_CONFIG);
+        return $this->arrayOrNull(self::KEY_CONFIG);
     }
 
     /**
@@ -113,7 +113,7 @@ class CapabilityPlatformSchema extends SpecObject implements CapabilityPlatformS
      */
     public function getExtends(): string|null
     {
-        return $this->get(self::KEY_EXTENDS);
+        return $this->stringOrNull(self::KEY_EXTENDS);
     }
 
     /**

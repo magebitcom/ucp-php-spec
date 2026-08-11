@@ -27,7 +27,7 @@ class Expectation extends SpecObject implements ExpectationInterface
      */
     public function getId(): string
     {
-        return $this->get(self::KEY_ID);
+        return $this->requireString(self::KEY_ID);
     }
 
     /**
@@ -44,7 +44,7 @@ class Expectation extends SpecObject implements ExpectationInterface
      */
     public function getLineItems(): array
     {
-        return $this->getArray(self::KEY_LINE_ITEMS);
+        return $this->instanceList(self::KEY_LINE_ITEMS, \Magebit\UcpSpec\Api\Shopping\Types\ExpectationLineItemsItemInterface::class);
     }
 
     /**
@@ -61,7 +61,7 @@ class Expectation extends SpecObject implements ExpectationInterface
      */
     public function getMethodType(): string
     {
-        return $this->get(self::KEY_METHOD_TYPE);
+        return $this->requireString(self::KEY_METHOD_TYPE);
     }
 
     /**
@@ -78,7 +78,7 @@ class Expectation extends SpecObject implements ExpectationInterface
      */
     public function getDestination(): PostalAddressInterface
     {
-        return $this->get(self::KEY_DESTINATION);
+        return $this->requireInstance(self::KEY_DESTINATION, \Magebit\UcpSpec\Api\Shopping\Types\PostalAddressInterface::class);
     }
 
     /**
@@ -95,7 +95,7 @@ class Expectation extends SpecObject implements ExpectationInterface
      */
     public function getDescription(): string|null
     {
-        return $this->get(self::KEY_DESCRIPTION);
+        return $this->stringOrNull(self::KEY_DESCRIPTION);
     }
 
     /**
@@ -112,7 +112,7 @@ class Expectation extends SpecObject implements ExpectationInterface
      */
     public function getFulfillableOn(): string|null
     {
-        return $this->get(self::KEY_FULFILLABLE_ON);
+        return $this->stringOrNull(self::KEY_FULFILLABLE_ON);
     }
 
     /**

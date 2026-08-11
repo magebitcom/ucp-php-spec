@@ -25,7 +25,7 @@ class DiscountCreateRequestAllocation extends SpecObject implements DiscountCrea
      */
     public function getPath(): string
     {
-        return $this->get(self::KEY_PATH);
+        return $this->requireString(self::KEY_PATH);
     }
 
     /**
@@ -42,7 +42,7 @@ class DiscountCreateRequestAllocation extends SpecObject implements DiscountCrea
      */
     public function getAmount(): int
     {
-        return $this->get(self::KEY_AMOUNT);
+        return $this->requireInt(self::KEY_AMOUNT);
     }
 
     /**

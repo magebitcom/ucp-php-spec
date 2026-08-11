@@ -63,15 +63,33 @@ class SpecObjectTest extends TestCase
     }
 
     /**
-     * A required field that was never set is a programming error, not a silent empty string.
+     * A required field that was never set is a programming error, not a silent empty string, and the
+     * message has to name the field so the caller knows which one.
      *
      * @return void
      */
     public function testUnsetRequiredFieldFailsOnRead(): void
     {
-        $this->expectException(\TypeError::class);
+        $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('LineItemResponse::id expects string, got null');
 
         (new LineItemResponse())->getId();
+    }
+
+    /**
+     * An element of the wrong type is caught where it is read, not left to surface as a type error
+     * somewhere further along.
+     *
+     * @return void
+     */
+    public function testWrongElementTypeInAListIsRejected(): void
+    {
+        $lineItem = (new LineItemResponse())->setTotals([(new ItemResponse())->setId('not_a_total')]);
+
+        $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('totals[0]');
+
+        $lineItem->getTotals();
     }
 
     /**

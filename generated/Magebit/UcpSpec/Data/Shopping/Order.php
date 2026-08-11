@@ -30,7 +30,7 @@ class Order extends SpecObject implements OrderInterface
      */
     public function getUcp(): UcpResponseOrderSchemaInterface
     {
-        return $this->get(self::KEY_UCP);
+        return $this->requireInstance(self::KEY_UCP, \Magebit\UcpSpec\Api\UcpResponseOrderSchemaInterface::class);
     }
 
     /**
@@ -47,7 +47,7 @@ class Order extends SpecObject implements OrderInterface
      */
     public function getId(): string
     {
-        return $this->get(self::KEY_ID);
+        return $this->requireString(self::KEY_ID);
     }
 
     /**
@@ -64,7 +64,7 @@ class Order extends SpecObject implements OrderInterface
      */
     public function getCheckoutId(): string
     {
-        return $this->get(self::KEY_CHECKOUT_ID);
+        return $this->requireString(self::KEY_CHECKOUT_ID);
     }
 
     /**
@@ -81,7 +81,7 @@ class Order extends SpecObject implements OrderInterface
      */
     public function getPermalinkUrl(): string
     {
-        return $this->get(self::KEY_PERMALINK_URL);
+        return $this->requireString(self::KEY_PERMALINK_URL);
     }
 
     /**
@@ -98,7 +98,7 @@ class Order extends SpecObject implements OrderInterface
      */
     public function getLineItems(): array
     {
-        return $this->getArray(self::KEY_LINE_ITEMS);
+        return $this->instanceList(self::KEY_LINE_ITEMS, \Magebit\UcpSpec\Api\Shopping\Types\OrderLineItemInterface::class);
     }
 
     /**
@@ -115,7 +115,7 @@ class Order extends SpecObject implements OrderInterface
      */
     public function getFulfillment(): OrderFulfillmentInterface
     {
-        return $this->get(self::KEY_FULFILLMENT);
+        return $this->requireInstance(self::KEY_FULFILLMENT, \Magebit\UcpSpec\Api\Shopping\OrderFulfillmentInterface::class);
     }
 
     /**
@@ -132,7 +132,7 @@ class Order extends SpecObject implements OrderInterface
      */
     public function getAdjustments(): array|null
     {
-        return $this->get(self::KEY_ADJUSTMENTS);
+        return $this->instanceListOrNull(self::KEY_ADJUSTMENTS, \Magebit\UcpSpec\Api\Shopping\Types\AdjustmentInterface::class);
     }
 
     /**
@@ -149,7 +149,7 @@ class Order extends SpecObject implements OrderInterface
      */
     public function getTotals(): array
     {
-        return $this->getArray(self::KEY_TOTALS);
+        return $this->instanceList(self::KEY_TOTALS, \Magebit\UcpSpec\Api\Shopping\Types\TotalResponseInterface::class);
     }
 
     /**

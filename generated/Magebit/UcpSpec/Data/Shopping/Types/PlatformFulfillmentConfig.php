@@ -25,7 +25,7 @@ class PlatformFulfillmentConfig extends SpecObject implements PlatformFulfillmen
      */
     public function getSupportsMultiGroup(): bool|null
     {
-        return $this->get(self::KEY_SUPPORTS_MULTI_GROUP);
+        return $this->boolOrNull(self::KEY_SUPPORTS_MULTI_GROUP);
     }
 
     /**

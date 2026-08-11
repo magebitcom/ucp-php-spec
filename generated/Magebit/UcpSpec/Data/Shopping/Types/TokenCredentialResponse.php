@@ -25,7 +25,7 @@ class TokenCredentialResponse extends SpecObject implements TokenCredentialRespo
      */
     public function getType(): string
     {
-        return $this->get(self::KEY_TYPE);
+        return $this->requireString(self::KEY_TYPE);
     }
 
     /**

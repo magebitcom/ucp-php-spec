@@ -22,7 +22,7 @@ class Link extends SpecObject implements LinkInterface
      */
     public function getType(): string
     {
-        return $this->get(self::KEY_TYPE);
+        return $this->requireString(self::KEY_TYPE);
     }
 
     /**
@@ -39,7 +39,7 @@ class Link extends SpecObject implements LinkInterface
      */
     public function getUrl(): string
     {
-        return $this->get(self::KEY_URL);
+        return $this->requireString(self::KEY_URL);
     }
 
     /**
@@ -56,7 +56,7 @@ class Link extends SpecObject implements LinkInterface
      */
     public function getTitle(): string|null
     {
-        return $this->get(self::KEY_TITLE);
+        return $this->stringOrNull(self::KEY_TITLE);
     }
 
     /**

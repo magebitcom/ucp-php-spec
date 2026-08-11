@@ -25,7 +25,7 @@ class ProfileSchemaSigningKey extends SpecObject implements ProfileSchemaSigning
      */
     public function getKid(): string
     {
-        return $this->get(self::KEY_KID);
+        return $this->requireString(self::KEY_KID);
     }
 
     /**
@@ -42,7 +42,7 @@ class ProfileSchemaSigningKey extends SpecObject implements ProfileSchemaSigning
      */
     public function getKty(): string
     {
-        return $this->get(self::KEY_KTY);
+        return $this->requireString(self::KEY_KTY);
     }
 
     /**
@@ -59,7 +59,7 @@ class ProfileSchemaSigningKey extends SpecObject implements ProfileSchemaSigning
      */
     public function getCrv(): string|null
     {
-        return $this->get(self::KEY_CRV);
+        return $this->stringOrNull(self::KEY_CRV);
     }
 
     /**
@@ -76,7 +76,7 @@ class ProfileSchemaSigningKey extends SpecObject implements ProfileSchemaSigning
      */
     public function getX(): string|null
     {
-        return $this->get(self::KEY_X);
+        return $this->stringOrNull(self::KEY_X);
     }
 
     /**
@@ -93,7 +93,7 @@ class ProfileSchemaSigningKey extends SpecObject implements ProfileSchemaSigning
      */
     public function getY(): string|null
     {
-        return $this->get(self::KEY_Y);
+        return $this->stringOrNull(self::KEY_Y);
     }
 
     /**
@@ -110,7 +110,7 @@ class ProfileSchemaSigningKey extends SpecObject implements ProfileSchemaSigning
      */
     public function getN(): string|null
     {
-        return $this->get(self::KEY_N);
+        return $this->stringOrNull(self::KEY_N);
     }
 
     /**
@@ -127,7 +127,7 @@ class ProfileSchemaSigningKey extends SpecObject implements ProfileSchemaSigning
      */
     public function getE(): string|null
     {
-        return $this->get(self::KEY_E);
+        return $this->stringOrNull(self::KEY_E);
     }
 
     /**
@@ -144,7 +144,7 @@ class ProfileSchemaSigningKey extends SpecObject implements ProfileSchemaSigning
      */
     public function getUse(): string|null
     {
-        return $this->get(self::KEY_USE);
+        return $this->stringOrNull(self::KEY_USE);
     }
 
     /**
@@ -161,7 +161,7 @@ class ProfileSchemaSigningKey extends SpecObject implements ProfileSchemaSigning
      */
     public function getAlg(): string|null
     {
-        return $this->get(self::KEY_ALG);
+        return $this->stringOrNull(self::KEY_ALG);
     }
 
     /**

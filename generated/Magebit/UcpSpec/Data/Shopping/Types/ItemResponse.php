@@ -22,7 +22,7 @@ class ItemResponse extends SpecObject implements ItemResponseInterface
      */
     public function getId(): string
     {
-        return $this->get(self::KEY_ID);
+        return $this->requireString(self::KEY_ID);
     }
 
     /**
@@ -39,7 +39,7 @@ class ItemResponse extends SpecObject implements ItemResponseInterface
      */
     public function getTitle(): string
     {
-        return $this->get(self::KEY_TITLE);
+        return $this->requireString(self::KEY_TITLE);
     }
 
     /**
@@ -56,7 +56,7 @@ class ItemResponse extends SpecObject implements ItemResponseInterface
      */
     public function getPrice(): int
     {
-        return $this->get(self::KEY_PRICE);
+        return $this->requireInt(self::KEY_PRICE);
     }
 
     /**
@@ -73,7 +73,7 @@ class ItemResponse extends SpecObject implements ItemResponseInterface
      */
     public function getImageUrl(): string|null
     {
-        return $this->get(self::KEY_IMAGE_URL);
+        return $this->stringOrNull(self::KEY_IMAGE_URL);
     }
 
     /**

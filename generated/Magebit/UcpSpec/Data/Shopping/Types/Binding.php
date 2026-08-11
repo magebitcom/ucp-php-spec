@@ -26,7 +26,7 @@ class Binding extends SpecObject implements BindingInterface
      */
     public function getCheckoutId(): string
     {
-        return $this->get(self::KEY_CHECKOUT_ID);
+        return $this->requireString(self::KEY_CHECKOUT_ID);
     }
 
     /**
@@ -43,7 +43,7 @@ class Binding extends SpecObject implements BindingInterface
      */
     public function getIdentity(): PaymentIdentityInterface|null
     {
-        return $this->get(self::KEY_IDENTITY);
+        return $this->instanceOrNull(self::KEY_IDENTITY, \Magebit\UcpSpec\Api\Shopping\Types\PaymentIdentityInterface::class);
     }
 
     /**

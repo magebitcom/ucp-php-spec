@@ -26,7 +26,7 @@ class DiscountResponseDiscountsObject extends SpecObject implements DiscountResp
      */
     public function getCodes(): array|null
     {
-        return $this->get(self::KEY_CODES);
+        return $this->arrayOrNull(self::KEY_CODES);
     }
 
     /**
@@ -43,7 +43,7 @@ class DiscountResponseDiscountsObject extends SpecObject implements DiscountResp
      */
     public function getApplied(): array|null
     {
-        return $this->get(self::KEY_APPLIED);
+        return $this->instanceListOrNull(self::KEY_APPLIED, \Magebit\UcpSpec\Api\Shopping\DiscountResponseAppliedDiscountInterface::class);
     }
 
     /**

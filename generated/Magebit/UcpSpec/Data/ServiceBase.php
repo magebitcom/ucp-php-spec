@@ -25,7 +25,7 @@ class ServiceBase extends SpecObject implements ServiceBaseInterface
      */
     public function getVersion(): string
     {
-        return $this->get(self::KEY_VERSION);
+        return $this->requireString(self::KEY_VERSION);
     }
 
     /**
@@ -42,7 +42,7 @@ class ServiceBase extends SpecObject implements ServiceBaseInterface
      */
     public function getSpec(): string|null
     {
-        return $this->get(self::KEY_SPEC);
+        return $this->stringOrNull(self::KEY_SPEC);
     }
 
     /**
@@ -59,7 +59,7 @@ class ServiceBase extends SpecObject implements ServiceBaseInterface
      */
     public function getSchema(): string|null
     {
-        return $this->get(self::KEY_SCHEMA);
+        return $this->stringOrNull(self::KEY_SCHEMA);
     }
 
     /**
@@ -76,7 +76,7 @@ class ServiceBase extends SpecObject implements ServiceBaseInterface
      */
     public function getId(): string|null
     {
-        return $this->get(self::KEY_ID);
+        return $this->stringOrNull(self::KEY_ID);
     }
 
     /**
@@ -93,7 +93,7 @@ class ServiceBase extends SpecObject implements ServiceBaseInterface
      */
     public function getConfig(): array|null
     {
-        return $this->get(self::KEY_CONFIG);
+        return $this->arrayOrNull(self::KEY_CONFIG);
     }
 
     /**
@@ -110,7 +110,7 @@ class ServiceBase extends SpecObject implements ServiceBaseInterface
      */
     public function getTransport(): string
     {
-        return $this->get(self::KEY_TRANSPORT);
+        return $this->requireString(self::KEY_TRANSPORT);
     }
 
     /**
@@ -127,7 +127,7 @@ class ServiceBase extends SpecObject implements ServiceBaseInterface
      */
     public function getEndpoint(): string|null
     {
-        return $this->get(self::KEY_ENDPOINT);
+        return $this->stringOrNull(self::KEY_ENDPOINT);
     }
 
     /**

@@ -174,7 +174,7 @@ class GeneratorTest extends TestCase
             'class FulfillmentMethodResponse extends SpecObject implements FulfillmentMethodResponseInterface',
             $contents
         );
-        $this->assertStringContainsString('return $this->get(self::KEY_ID);', $contents);
+        $this->assertStringContainsString('return $this->stringOrNull(self::KEY_ID);', $contents);
     }
 
     /**

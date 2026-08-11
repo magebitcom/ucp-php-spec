@@ -25,7 +25,7 @@ class Ap2MandateResponseAp2WithCheckoutMandate extends SpecObject implements Ap2
      */
     public function getCheckoutMandate(): string|null
     {
-        return $this->get(self::KEY_CHECKOUT_MANDATE);
+        return $this->stringOrNull(self::KEY_CHECKOUT_MANDATE);
     }
 
     /**

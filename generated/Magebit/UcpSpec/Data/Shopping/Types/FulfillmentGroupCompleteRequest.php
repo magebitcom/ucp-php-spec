@@ -25,7 +25,7 @@ class FulfillmentGroupCompleteRequest extends SpecObject implements FulfillmentG
      */
     public function getId(): string
     {
-        return $this->get(self::KEY_ID);
+        return $this->requireString(self::KEY_ID);
     }
 
     /**

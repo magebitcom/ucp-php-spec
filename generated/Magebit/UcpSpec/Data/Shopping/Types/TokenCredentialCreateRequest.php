@@ -25,7 +25,7 @@ class TokenCredentialCreateRequest extends SpecObject implements TokenCredential
      */
     public function getType(): string
     {
-        return $this->get(self::KEY_TYPE);
+        return $this->requireString(self::KEY_TYPE);
     }
 
     /**
@@ -42,7 +42,7 @@ class TokenCredentialCreateRequest extends SpecObject implements TokenCredential
      */
     public function getToken(): string
     {
-        return $this->get(self::KEY_TOKEN);
+        return $this->requireString(self::KEY_TOKEN);
     }
 
     /**

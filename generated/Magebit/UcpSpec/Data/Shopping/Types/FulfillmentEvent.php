@@ -26,7 +26,7 @@ class FulfillmentEvent extends SpecObject implements FulfillmentEventInterface
      */
     public function getId(): string
     {
-        return $this->get(self::KEY_ID);
+        return $this->requireString(self::KEY_ID);
     }
 
     /**
@@ -43,7 +43,7 @@ class FulfillmentEvent extends SpecObject implements FulfillmentEventInterface
      */
     public function getOccurredAt(): string
     {
-        return $this->get(self::KEY_OCCURRED_AT);
+        return $this->requireString(self::KEY_OCCURRED_AT);
     }
 
     /**
@@ -60,7 +60,7 @@ class FulfillmentEvent extends SpecObject implements FulfillmentEventInterface
      */
     public function getType(): string
     {
-        return $this->get(self::KEY_TYPE);
+        return $this->requireString(self::KEY_TYPE);
     }
 
     /**
@@ -77,7 +77,7 @@ class FulfillmentEvent extends SpecObject implements FulfillmentEventInterface
      */
     public function getLineItems(): array
     {
-        return $this->getArray(self::KEY_LINE_ITEMS);
+        return $this->instanceList(self::KEY_LINE_ITEMS, \Magebit\UcpSpec\Api\Shopping\Types\FulfillmentEventLineItemsItemInterface::class);
     }
 
     /**
@@ -94,7 +94,7 @@ class FulfillmentEvent extends SpecObject implements FulfillmentEventInterface
      */
     public function getTrackingNumber(): string|null
     {
-        return $this->get(self::KEY_TRACKING_NUMBER);
+        return $this->stringOrNull(self::KEY_TRACKING_NUMBER);
     }
 
     /**
@@ -111,7 +111,7 @@ class FulfillmentEvent extends SpecObject implements FulfillmentEventInterface
      */
     public function getTrackingUrl(): string|null
     {
-        return $this->get(self::KEY_TRACKING_URL);
+        return $this->stringOrNull(self::KEY_TRACKING_URL);
     }
 
     /**
@@ -128,7 +128,7 @@ class FulfillmentEvent extends SpecObject implements FulfillmentEventInterface
      */
     public function getCarrier(): string|null
     {
-        return $this->get(self::KEY_CARRIER);
+        return $this->stringOrNull(self::KEY_CARRIER);
     }
 
     /**
@@ -145,7 +145,7 @@ class FulfillmentEvent extends SpecObject implements FulfillmentEventInterface
      */
     public function getDescription(): string|null
     {
-        return $this->get(self::KEY_DESCRIPTION);
+        return $this->stringOrNull(self::KEY_DESCRIPTION);
     }
 
     /**

@@ -25,7 +25,7 @@ class Message extends SpecObject implements MessageInterface
      */
     public function getType(): string
     {
-        return $this->get(self::KEY_TYPE);
+        return $this->requireString(self::KEY_TYPE);
     }
 
     /**
@@ -42,7 +42,7 @@ class Message extends SpecObject implements MessageInterface
      */
     public function getCode(): string
     {
-        return $this->get(self::KEY_CODE);
+        return $this->requireString(self::KEY_CODE);
     }
 
     /**
@@ -59,7 +59,7 @@ class Message extends SpecObject implements MessageInterface
      */
     public function getPath(): string|null
     {
-        return $this->get(self::KEY_PATH);
+        return $this->stringOrNull(self::KEY_PATH);
     }
 
     /**
@@ -76,7 +76,7 @@ class Message extends SpecObject implements MessageInterface
      */
     public function getContentType(): string|null
     {
-        return $this->get(self::KEY_CONTENT_TYPE);
+        return $this->stringOrNull(self::KEY_CONTENT_TYPE);
     }
 
     /**
@@ -93,7 +93,7 @@ class Message extends SpecObject implements MessageInterface
      */
     public function getContent(): string
     {
-        return $this->get(self::KEY_CONTENT);
+        return $this->requireString(self::KEY_CONTENT);
     }
 
     /**
@@ -110,7 +110,7 @@ class Message extends SpecObject implements MessageInterface
      */
     public function getSeverity(): string
     {
-        return $this->get(self::KEY_SEVERITY);
+        return $this->requireString(self::KEY_SEVERITY);
     }
 
     /**

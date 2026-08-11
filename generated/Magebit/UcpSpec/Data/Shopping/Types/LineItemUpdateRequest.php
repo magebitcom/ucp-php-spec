@@ -26,7 +26,7 @@ class LineItemUpdateRequest extends SpecObject implements LineItemUpdateRequestI
      */
     public function getId(): string|null
     {
-        return $this->get(self::KEY_ID);
+        return $this->stringOrNull(self::KEY_ID);
     }
 
     /**
@@ -43,7 +43,7 @@ class LineItemUpdateRequest extends SpecObject implements LineItemUpdateRequestI
      */
     public function getItem(): ItemUpdateRequestInterface
     {
-        return $this->get(self::KEY_ITEM);
+        return $this->requireInstance(self::KEY_ITEM, \Magebit\UcpSpec\Api\Shopping\Types\ItemUpdateRequestInterface::class);
     }
 
     /**
@@ -60,7 +60,7 @@ class LineItemUpdateRequest extends SpecObject implements LineItemUpdateRequestI
      */
     public function getQuantity(): int
     {
-        return $this->get(self::KEY_QUANTITY);
+        return $this->requireInt(self::KEY_QUANTITY);
     }
 
     /**
@@ -77,7 +77,7 @@ class LineItemUpdateRequest extends SpecObject implements LineItemUpdateRequestI
      */
     public function getParentId(): string|null
     {
-        return $this->get(self::KEY_PARENT_ID);
+        return $this->stringOrNull(self::KEY_PARENT_ID);
     }
 
     /**

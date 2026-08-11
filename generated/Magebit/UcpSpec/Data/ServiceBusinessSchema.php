@@ -28,7 +28,7 @@ class ServiceBusinessSchema extends SpecObject implements ServiceBusinessSchemaI
      */
     public function getVersion(): string
     {
-        return $this->get(self::KEY_VERSION);
+        return $this->requireString(self::KEY_VERSION);
     }
 
     /**
@@ -45,7 +45,7 @@ class ServiceBusinessSchema extends SpecObject implements ServiceBusinessSchemaI
      */
     public function getSpec(): string|null
     {
-        return $this->get(self::KEY_SPEC);
+        return $this->stringOrNull(self::KEY_SPEC);
     }
 
     /**
@@ -62,7 +62,7 @@ class ServiceBusinessSchema extends SpecObject implements ServiceBusinessSchemaI
      */
     public function getSchema(): string|null
     {
-        return $this->get(self::KEY_SCHEMA);
+        return $this->stringOrNull(self::KEY_SCHEMA);
     }
 
     /**
@@ -79,7 +79,7 @@ class ServiceBusinessSchema extends SpecObject implements ServiceBusinessSchemaI
      */
     public function getId(): string|null
     {
-        return $this->get(self::KEY_ID);
+        return $this->stringOrNull(self::KEY_ID);
     }
 
     /**
@@ -96,7 +96,7 @@ class ServiceBusinessSchema extends SpecObject implements ServiceBusinessSchemaI
      */
     public function getConfig(): array|null
     {
-        return $this->get(self::KEY_CONFIG);
+        return $this->arrayOrNull(self::KEY_CONFIG);
     }
 
     /**
@@ -113,7 +113,7 @@ class ServiceBusinessSchema extends SpecObject implements ServiceBusinessSchemaI
      */
     public function getTransport(): string
     {
-        return $this->get(self::KEY_TRANSPORT);
+        return $this->requireString(self::KEY_TRANSPORT);
     }
 
     /**
@@ -130,7 +130,7 @@ class ServiceBusinessSchema extends SpecObject implements ServiceBusinessSchemaI
      */
     public function getEndpoint(): string|null
     {
-        return $this->get(self::KEY_ENDPOINT);
+        return $this->stringOrNull(self::KEY_ENDPOINT);
     }
 
     /**

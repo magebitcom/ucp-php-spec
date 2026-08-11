@@ -25,7 +25,7 @@ class Ap2MandateResponseAp2WithMerchantAuthorization extends SpecObject implemen
      */
     public function getMerchantAuthorization(): string|null
     {
-        return $this->get(self::KEY_MERCHANT_AUTHORIZATION);
+        return $this->stringOrNull(self::KEY_MERCHANT_AUTHORIZATION);
     }
 
     /**

@@ -28,7 +28,7 @@ class CardPaymentInstrument extends SpecObject implements CardPaymentInstrumentI
      */
     public function getId(): string
     {
-        return $this->get(self::KEY_ID);
+        return $this->requireString(self::KEY_ID);
     }
 
     /**
@@ -45,7 +45,7 @@ class CardPaymentInstrument extends SpecObject implements CardPaymentInstrumentI
      */
     public function getHandlerId(): string
     {
-        return $this->get(self::KEY_HANDLER_ID);
+        return $this->requireString(self::KEY_HANDLER_ID);
     }
 
     /**
@@ -62,7 +62,7 @@ class CardPaymentInstrument extends SpecObject implements CardPaymentInstrumentI
      */
     public function getType(): string
     {
-        return $this->get(self::KEY_TYPE);
+        return $this->requireString(self::KEY_TYPE);
     }
 
     /**
@@ -79,7 +79,7 @@ class CardPaymentInstrument extends SpecObject implements CardPaymentInstrumentI
      */
     public function getBillingAddress(): PostalAddressInterface|null
     {
-        return $this->get(self::KEY_BILLING_ADDRESS);
+        return $this->instanceOrNull(self::KEY_BILLING_ADDRESS, \Magebit\UcpSpec\Api\Shopping\Types\PostalAddressInterface::class);
     }
 
     /**
@@ -96,7 +96,7 @@ class CardPaymentInstrument extends SpecObject implements CardPaymentInstrumentI
      */
     public function getCredential(): PaymentCredentialInterface|null
     {
-        return $this->get(self::KEY_CREDENTIAL);
+        return $this->instanceOrNull(self::KEY_CREDENTIAL, \Magebit\UcpSpec\Api\Shopping\Types\PaymentCredentialInterface::class);
     }
 
     /**
@@ -113,7 +113,7 @@ class CardPaymentInstrument extends SpecObject implements CardPaymentInstrumentI
      */
     public function getDisplay(): CardPaymentInstrumentDisplayInterface|null
     {
-        return $this->get(self::KEY_DISPLAY);
+        return $this->instanceOrNull(self::KEY_DISPLAY, \Magebit\UcpSpec\Api\Shopping\Types\CardPaymentInstrumentDisplayInterface::class);
     }
 
     /**

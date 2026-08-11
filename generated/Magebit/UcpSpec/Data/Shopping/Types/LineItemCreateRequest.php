@@ -26,7 +26,7 @@ class LineItemCreateRequest extends SpecObject implements LineItemCreateRequestI
      */
     public function getItem(): ItemCreateRequestInterface
     {
-        return $this->get(self::KEY_ITEM);
+        return $this->requireInstance(self::KEY_ITEM, \Magebit\UcpSpec\Api\Shopping\Types\ItemCreateRequestInterface::class);
     }
 
     /**
@@ -43,7 +43,7 @@ class LineItemCreateRequest extends SpecObject implements LineItemCreateRequestI
      */
     public function getQuantity(): int
     {
-        return $this->get(self::KEY_QUANTITY);
+        return $this->requireInt(self::KEY_QUANTITY);
     }
 
     /**

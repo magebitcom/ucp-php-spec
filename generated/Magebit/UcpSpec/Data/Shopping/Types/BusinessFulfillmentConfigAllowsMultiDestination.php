@@ -25,7 +25,7 @@ class BusinessFulfillmentConfigAllowsMultiDestination extends SpecObject impleme
      */
     public function getShipping(): bool|null
     {
-        return $this->get(self::KEY_SHIPPING);
+        return $this->boolOrNull(self::KEY_SHIPPING);
     }
 
     /**
@@ -42,7 +42,7 @@ class BusinessFulfillmentConfigAllowsMultiDestination extends SpecObject impleme
      */
     public function getPickup(): bool|null
     {
-        return $this->get(self::KEY_PICKUP);
+        return $this->boolOrNull(self::KEY_PICKUP);
     }
 
     /**

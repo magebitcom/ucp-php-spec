@@ -28,7 +28,7 @@ class PaymentHandlerPlatformSchema extends SpecObject implements PaymentHandlerP
      */
     public function getVersion(): string
     {
-        return $this->get(self::KEY_VERSION);
+        return $this->requireString(self::KEY_VERSION);
     }
 
     /**
@@ -45,7 +45,7 @@ class PaymentHandlerPlatformSchema extends SpecObject implements PaymentHandlerP
      */
     public function getSpec(): string
     {
-        return $this->get(self::KEY_SPEC);
+        return $this->requireString(self::KEY_SPEC);
     }
 
     /**
@@ -62,7 +62,7 @@ class PaymentHandlerPlatformSchema extends SpecObject implements PaymentHandlerP
      */
     public function getSchema(): string
     {
-        return $this->get(self::KEY_SCHEMA);
+        return $this->requireString(self::KEY_SCHEMA);
     }
 
     /**
@@ -79,7 +79,7 @@ class PaymentHandlerPlatformSchema extends SpecObject implements PaymentHandlerP
      */
     public function getId(): string
     {
-        return $this->get(self::KEY_ID);
+        return $this->requireString(self::KEY_ID);
     }
 
     /**
@@ -96,7 +96,7 @@ class PaymentHandlerPlatformSchema extends SpecObject implements PaymentHandlerP
      */
     public function getConfig(): array|null
     {
-        return $this->get(self::KEY_CONFIG);
+        return $this->arrayOrNull(self::KEY_CONFIG);
     }
 
     /**

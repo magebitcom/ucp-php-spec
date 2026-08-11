@@ -26,7 +26,7 @@ class BusinessFulfillmentConfig extends SpecObject implements BusinessFulfillmen
      */
     public function getAllowsMultiDestination(): BusinessFulfillmentConfigAllowsMultiDestinationInterface|null
     {
-        return $this->get(self::KEY_ALLOWS_MULTI_DESTINATION);
+        return $this->instanceOrNull(self::KEY_ALLOWS_MULTI_DESTINATION, \Magebit\UcpSpec\Api\Shopping\Types\BusinessFulfillmentConfigAllowsMultiDestinationInterface::class);
     }
 
     /**
@@ -44,7 +44,7 @@ class BusinessFulfillmentConfig extends SpecObject implements BusinessFulfillmen
      */
     public function getAllowsMethodCombinations(): array|null
     {
-        return $this->get(self::KEY_ALLOWS_METHOD_COMBINATIONS);
+        return $this->arrayOrNull(self::KEY_ALLOWS_METHOD_COMBINATIONS);
     }
 
     /**

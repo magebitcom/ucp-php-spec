@@ -22,7 +22,7 @@ class FulfillmentEventLineItemsItem extends SpecObject implements FulfillmentEve
      */
     public function getId(): string
     {
-        return $this->get(self::KEY_ID);
+        return $this->requireString(self::KEY_ID);
     }
 
     /**
@@ -39,7 +39,7 @@ class FulfillmentEventLineItemsItem extends SpecObject implements FulfillmentEve
      */
     public function getQuantity(): int
     {
-        return $this->get(self::KEY_QUANTITY);
+        return $this->requireInt(self::KEY_QUANTITY);
     }
 
     /**

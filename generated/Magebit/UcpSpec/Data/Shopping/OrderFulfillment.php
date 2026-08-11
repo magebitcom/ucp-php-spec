@@ -27,7 +27,7 @@ class OrderFulfillment extends SpecObject implements OrderFulfillmentInterface
      */
     public function getExpectations(): array|null
     {
-        return $this->get(self::KEY_EXPECTATIONS);
+        return $this->instanceListOrNull(self::KEY_EXPECTATIONS, \Magebit\UcpSpec\Api\Shopping\Types\ExpectationInterface::class);
     }
 
     /**
@@ -44,7 +44,7 @@ class OrderFulfillment extends SpecObject implements OrderFulfillmentInterface
      */
     public function getEvents(): array|null
     {
-        return $this->get(self::KEY_EVENTS);
+        return $this->instanceListOrNull(self::KEY_EVENTS, \Magebit\UcpSpec\Api\Shopping\Types\FulfillmentEventInterface::class);
     }
 
     /**

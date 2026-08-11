@@ -26,7 +26,7 @@ class FulfillmentCompleteRequestCheckout extends SpecObject implements Fulfillme
      */
     public function getPayment(): PaymentInterface
     {
-        return $this->get(self::KEY_PAYMENT);
+        return $this->requireInstance(self::KEY_PAYMENT, \Magebit\UcpSpec\Api\Shopping\PaymentInterface::class);
     }
 
     /**

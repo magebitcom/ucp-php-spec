@@ -25,7 +25,7 @@ class OrderLineItem extends SpecObject implements OrderLineItemInterface
      */
     public function getId(): string
     {
-        return $this->get(self::KEY_ID);
+        return $this->requireString(self::KEY_ID);
     }
 
     /**
@@ -42,7 +42,7 @@ class OrderLineItem extends SpecObject implements OrderLineItemInterface
      */
     public function getItem(): ItemResponseInterface
     {
-        return $this->get(self::KEY_ITEM);
+        return $this->requireInstance(self::KEY_ITEM, \Magebit\UcpSpec\Api\Shopping\Types\ItemResponseInterface::class);
     }
 
     /**
@@ -59,7 +59,7 @@ class OrderLineItem extends SpecObject implements OrderLineItemInterface
      */
     public function getQuantity(): OrderLineItemQuantityInterface
     {
-        return $this->get(self::KEY_QUANTITY);
+        return $this->requireInstance(self::KEY_QUANTITY, \Magebit\UcpSpec\Api\Shopping\Types\OrderLineItemQuantityInterface::class);
     }
 
     /**
@@ -76,7 +76,7 @@ class OrderLineItem extends SpecObject implements OrderLineItemInterface
      */
     public function getTotals(): array
     {
-        return $this->getArray(self::KEY_TOTALS);
+        return $this->instanceList(self::KEY_TOTALS, \Magebit\UcpSpec\Api\Shopping\Types\TotalResponseInterface::class);
     }
 
     /**
@@ -93,7 +93,7 @@ class OrderLineItem extends SpecObject implements OrderLineItemInterface
      */
     public function getStatus(): string
     {
-        return $this->get(self::KEY_STATUS);
+        return $this->requireString(self::KEY_STATUS);
     }
 
     /**
@@ -110,7 +110,7 @@ class OrderLineItem extends SpecObject implements OrderLineItemInterface
      */
     public function getParentId(): string|null
     {
-        return $this->get(self::KEY_PARENT_ID);
+        return $this->stringOrNull(self::KEY_PARENT_ID);
     }
 
     /**

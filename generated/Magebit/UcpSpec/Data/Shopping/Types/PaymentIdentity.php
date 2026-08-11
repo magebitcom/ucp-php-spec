@@ -25,7 +25,7 @@ class PaymentIdentity extends SpecObject implements PaymentIdentityInterface
      */
     public function getAccessToken(): string
     {
-        return $this->get(self::KEY_ACCESS_TOKEN);
+        return $this->requireString(self::KEY_ACCESS_TOKEN);
     }
 
     /**

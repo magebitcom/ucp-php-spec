@@ -25,7 +25,7 @@ class CardCredential extends SpecObject implements CardCredentialInterface
      */
     public function getType(): string
     {
-        return $this->get(self::KEY_TYPE);
+        return $this->requireString(self::KEY_TYPE);
     }
 
     /**
@@ -42,7 +42,7 @@ class CardCredential extends SpecObject implements CardCredentialInterface
      */
     public function getCardNumberType(): string
     {
-        return $this->get(self::KEY_CARD_NUMBER_TYPE);
+        return $this->requireString(self::KEY_CARD_NUMBER_TYPE);
     }
 
     /**
@@ -59,7 +59,7 @@ class CardCredential extends SpecObject implements CardCredentialInterface
      */
     public function getNumber(): string|null
     {
-        return $this->get(self::KEY_NUMBER);
+        return $this->stringOrNull(self::KEY_NUMBER);
     }
 
     /**
@@ -76,7 +76,7 @@ class CardCredential extends SpecObject implements CardCredentialInterface
      */
     public function getExpiryMonth(): int|null
     {
-        return $this->get(self::KEY_EXPIRY_MONTH);
+        return $this->intOrNull(self::KEY_EXPIRY_MONTH);
     }
 
     /**
@@ -93,7 +93,7 @@ class CardCredential extends SpecObject implements CardCredentialInterface
      */
     public function getExpiryYear(): int|null
     {
-        return $this->get(self::KEY_EXPIRY_YEAR);
+        return $this->intOrNull(self::KEY_EXPIRY_YEAR);
     }
 
     /**
@@ -110,7 +110,7 @@ class CardCredential extends SpecObject implements CardCredentialInterface
      */
     public function getName(): string|null
     {
-        return $this->get(self::KEY_NAME);
+        return $this->stringOrNull(self::KEY_NAME);
     }
 
     /**
@@ -127,7 +127,7 @@ class CardCredential extends SpecObject implements CardCredentialInterface
      */
     public function getCvc(): string|null
     {
-        return $this->get(self::KEY_CVC);
+        return $this->stringOrNull(self::KEY_CVC);
     }
 
     /**
@@ -144,7 +144,7 @@ class CardCredential extends SpecObject implements CardCredentialInterface
      */
     public function getCryptogram(): string|null
     {
-        return $this->get(self::KEY_CRYPTOGRAM);
+        return $this->stringOrNull(self::KEY_CRYPTOGRAM);
     }
 
     /**
@@ -161,7 +161,7 @@ class CardCredential extends SpecObject implements CardCredentialInterface
      */
     public function getEciValue(): string|null
     {
-        return $this->get(self::KEY_ECI_VALUE);
+        return $this->stringOrNull(self::KEY_ECI_VALUE);
     }
 
     /**

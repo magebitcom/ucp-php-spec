@@ -26,7 +26,7 @@ class RetailLocationResponse extends SpecObject implements RetailLocationRespons
      */
     public function getId(): string
     {
-        return $this->get(self::KEY_ID);
+        return $this->requireString(self::KEY_ID);
     }
 
     /**
@@ -43,7 +43,7 @@ class RetailLocationResponse extends SpecObject implements RetailLocationRespons
      */
     public function getName(): string
     {
-        return $this->get(self::KEY_NAME);
+        return $this->requireString(self::KEY_NAME);
     }
 
     /**
@@ -60,7 +60,7 @@ class RetailLocationResponse extends SpecObject implements RetailLocationRespons
      */
     public function getAddress(): PostalAddressInterface|null
     {
-        return $this->get(self::KEY_ADDRESS);
+        return $this->instanceOrNull(self::KEY_ADDRESS, \Magebit\UcpSpec\Api\Shopping\Types\PostalAddressInterface::class);
     }
 
     /**

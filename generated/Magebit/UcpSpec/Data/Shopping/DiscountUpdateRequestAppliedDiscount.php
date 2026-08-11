@@ -26,7 +26,7 @@ class DiscountUpdateRequestAppliedDiscount extends SpecObject implements Discoun
      */
     public function getCode(): string|null
     {
-        return $this->get(self::KEY_CODE);
+        return $this->stringOrNull(self::KEY_CODE);
     }
 
     /**
@@ -43,7 +43,7 @@ class DiscountUpdateRequestAppliedDiscount extends SpecObject implements Discoun
      */
     public function getTitle(): string
     {
-        return $this->get(self::KEY_TITLE);
+        return $this->requireString(self::KEY_TITLE);
     }
 
     /**
@@ -60,7 +60,7 @@ class DiscountUpdateRequestAppliedDiscount extends SpecObject implements Discoun
      */
     public function getAmount(): int
     {
-        return $this->get(self::KEY_AMOUNT);
+        return $this->requireInt(self::KEY_AMOUNT);
     }
 
     /**
@@ -77,7 +77,7 @@ class DiscountUpdateRequestAppliedDiscount extends SpecObject implements Discoun
      */
     public function getAutomatic(): bool|null
     {
-        return $this->get(self::KEY_AUTOMATIC);
+        return $this->boolOrNull(self::KEY_AUTOMATIC);
     }
 
     /**
@@ -94,7 +94,7 @@ class DiscountUpdateRequestAppliedDiscount extends SpecObject implements Discoun
      */
     public function getMethod(): string|null
     {
-        return $this->get(self::KEY_METHOD);
+        return $this->stringOrNull(self::KEY_METHOD);
     }
 
     /**
@@ -111,7 +111,7 @@ class DiscountUpdateRequestAppliedDiscount extends SpecObject implements Discoun
      */
     public function getPriority(): int|null
     {
-        return $this->get(self::KEY_PRIORITY);
+        return $this->intOrNull(self::KEY_PRIORITY);
     }
 
     /**
@@ -128,7 +128,7 @@ class DiscountUpdateRequestAppliedDiscount extends SpecObject implements Discoun
      */
     public function getAllocations(): array|null
     {
-        return $this->get(self::KEY_ALLOCATIONS);
+        return $this->instanceListOrNull(self::KEY_ALLOCATIONS, \Magebit\UcpSpec\Api\Shopping\DiscountUpdateRequestAllocationInterface::class);
     }
 
     /**

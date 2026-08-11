@@ -29,7 +29,7 @@ class Ap2MandateUpdateRequestCheckout extends SpecObject implements Ap2MandateUp
      */
     public function getId(): string
     {
-        return $this->get(self::KEY_ID);
+        return $this->requireString(self::KEY_ID);
     }
 
     /**
@@ -46,7 +46,7 @@ class Ap2MandateUpdateRequestCheckout extends SpecObject implements Ap2MandateUp
      */
     public function getLineItems(): array
     {
-        return $this->getArray(self::KEY_LINE_ITEMS);
+        return $this->instanceList(self::KEY_LINE_ITEMS, \Magebit\UcpSpec\Api\Shopping\Types\LineItemUpdateRequestInterface::class);
     }
 
     /**
@@ -63,7 +63,7 @@ class Ap2MandateUpdateRequestCheckout extends SpecObject implements Ap2MandateUp
      */
     public function getBuyer(): BuyerInterface|null
     {
-        return $this->get(self::KEY_BUYER);
+        return $this->instanceOrNull(self::KEY_BUYER, \Magebit\UcpSpec\Api\Shopping\Types\BuyerInterface::class);
     }
 
     /**
@@ -80,7 +80,7 @@ class Ap2MandateUpdateRequestCheckout extends SpecObject implements Ap2MandateUp
      */
     public function getContext(): ContextInterface|null
     {
-        return $this->get(self::KEY_CONTEXT);
+        return $this->instanceOrNull(self::KEY_CONTEXT, \Magebit\UcpSpec\Api\Shopping\Types\ContextInterface::class);
     }
 
     /**
@@ -97,7 +97,7 @@ class Ap2MandateUpdateRequestCheckout extends SpecObject implements Ap2MandateUp
      */
     public function getPayment(): PaymentInterface|null
     {
-        return $this->get(self::KEY_PAYMENT);
+        return $this->instanceOrNull(self::KEY_PAYMENT, \Magebit\UcpSpec\Api\Shopping\PaymentInterface::class);
     }
 
     /**

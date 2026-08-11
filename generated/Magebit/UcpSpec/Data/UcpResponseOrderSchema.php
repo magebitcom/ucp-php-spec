@@ -31,7 +31,7 @@ class UcpResponseOrderSchema extends SpecObject implements UcpResponseOrderSchem
      */
     public function getVersion(): string
     {
-        return $this->get(self::KEY_VERSION);
+        return $this->requireString(self::KEY_VERSION);
     }
 
     /**
@@ -48,7 +48,7 @@ class UcpResponseOrderSchema extends SpecObject implements UcpResponseOrderSchem
      */
     public function getServices(): array|null
     {
-        return $this->get(self::KEY_SERVICES);
+        return $this->arrayOrNull(self::KEY_SERVICES);
     }
 
     /**
@@ -65,7 +65,7 @@ class UcpResponseOrderSchema extends SpecObject implements UcpResponseOrderSchem
      */
     public function getCapabilities(): array|null
     {
-        return $this->get(self::KEY_CAPABILITIES);
+        return $this->arrayOrNull(self::KEY_CAPABILITIES);
     }
 
     /**
@@ -82,7 +82,7 @@ class UcpResponseOrderSchema extends SpecObject implements UcpResponseOrderSchem
      */
     public function getPaymentHandlers(): array|null
     {
-        return $this->get(self::KEY_PAYMENT_HANDLERS);
+        return $this->arrayOrNull(self::KEY_PAYMENT_HANDLERS);
     }
 
     /**

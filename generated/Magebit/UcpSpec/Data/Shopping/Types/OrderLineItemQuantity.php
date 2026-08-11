@@ -25,7 +25,7 @@ class OrderLineItemQuantity extends SpecObject implements OrderLineItemQuantityI
      */
     public function getTotal(): int
     {
-        return $this->get(self::KEY_TOTAL);
+        return $this->requireInt(self::KEY_TOTAL);
     }
 
     /**
@@ -42,7 +42,7 @@ class OrderLineItemQuantity extends SpecObject implements OrderLineItemQuantityI
      */
     public function getFulfilled(): int
     {
-        return $this->get(self::KEY_FULFILLED);
+        return $this->requireInt(self::KEY_FULFILLED);
     }
 
     /**

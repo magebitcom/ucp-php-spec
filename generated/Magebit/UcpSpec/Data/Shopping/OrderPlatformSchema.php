@@ -25,7 +25,7 @@ class OrderPlatformSchema extends SpecObject implements OrderPlatformSchemaInter
      */
     public function getWebhookUrl(): string
     {
-        return $this->get(self::KEY_WEBHOOK_URL);
+        return $this->requireString(self::KEY_WEBHOOK_URL);
     }
 
     /**

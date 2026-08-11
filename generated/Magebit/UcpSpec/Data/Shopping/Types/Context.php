@@ -25,7 +25,7 @@ class Context extends SpecObject implements ContextInterface
      */
     public function getAddressCountry(): string|null
     {
-        return $this->get(self::KEY_ADDRESS_COUNTRY);
+        return $this->stringOrNull(self::KEY_ADDRESS_COUNTRY);
     }
 
     /**
@@ -42,7 +42,7 @@ class Context extends SpecObject implements ContextInterface
      */
     public function getAddressRegion(): string|null
     {
-        return $this->get(self::KEY_ADDRESS_REGION);
+        return $this->stringOrNull(self::KEY_ADDRESS_REGION);
     }
 
     /**
@@ -59,7 +59,7 @@ class Context extends SpecObject implements ContextInterface
      */
     public function getPostalCode(): string|null
     {
-        return $this->get(self::KEY_POSTAL_CODE);
+        return $this->stringOrNull(self::KEY_POSTAL_CODE);
     }
 
     /**

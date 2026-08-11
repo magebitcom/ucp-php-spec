@@ -26,7 +26,7 @@ class Payment extends SpecObject implements PaymentInterface
      */
     public function getInstruments(): array|null
     {
-        return $this->get(self::KEY_INSTRUMENTS);
+        return $this->instanceListOrNull(self::KEY_INSTRUMENTS, \Magebit\UcpSpec\Api\Shopping\Types\PaymentInstrumentSelectedPaymentInstrumentInterface::class);
     }
 
     /**

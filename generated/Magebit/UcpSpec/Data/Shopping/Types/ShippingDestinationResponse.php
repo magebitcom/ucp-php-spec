@@ -25,7 +25,7 @@ class ShippingDestinationResponse extends SpecObject implements ShippingDestinat
      */
     public function getExtendedAddress(): string|null
     {
-        return $this->get(self::KEY_EXTENDED_ADDRESS);
+        return $this->stringOrNull(self::KEY_EXTENDED_ADDRESS);
     }
 
     /**
@@ -42,7 +42,7 @@ class ShippingDestinationResponse extends SpecObject implements ShippingDestinat
      */
     public function getStreetAddress(): string|null
     {
-        return $this->get(self::KEY_STREET_ADDRESS);
+        return $this->stringOrNull(self::KEY_STREET_ADDRESS);
     }
 
     /**
@@ -59,7 +59,7 @@ class ShippingDestinationResponse extends SpecObject implements ShippingDestinat
      */
     public function getAddressLocality(): string|null
     {
-        return $this->get(self::KEY_ADDRESS_LOCALITY);
+        return $this->stringOrNull(self::KEY_ADDRESS_LOCALITY);
     }
 
     /**
@@ -76,7 +76,7 @@ class ShippingDestinationResponse extends SpecObject implements ShippingDestinat
      */
     public function getAddressRegion(): string|null
     {
-        return $this->get(self::KEY_ADDRESS_REGION);
+        return $this->stringOrNull(self::KEY_ADDRESS_REGION);
     }
 
     /**
@@ -93,7 +93,7 @@ class ShippingDestinationResponse extends SpecObject implements ShippingDestinat
      */
     public function getAddressCountry(): string|null
     {
-        return $this->get(self::KEY_ADDRESS_COUNTRY);
+        return $this->stringOrNull(self::KEY_ADDRESS_COUNTRY);
     }
 
     /**
@@ -110,7 +110,7 @@ class ShippingDestinationResponse extends SpecObject implements ShippingDestinat
      */
     public function getPostalCode(): string|null
     {
-        return $this->get(self::KEY_POSTAL_CODE);
+        return $this->stringOrNull(self::KEY_POSTAL_CODE);
     }
 
     /**
@@ -127,7 +127,7 @@ class ShippingDestinationResponse extends SpecObject implements ShippingDestinat
      */
     public function getFirstName(): string|null
     {
-        return $this->get(self::KEY_FIRST_NAME);
+        return $this->stringOrNull(self::KEY_FIRST_NAME);
     }
 
     /**
@@ -144,7 +144,7 @@ class ShippingDestinationResponse extends SpecObject implements ShippingDestinat
      */
     public function getLastName(): string|null
     {
-        return $this->get(self::KEY_LAST_NAME);
+        return $this->stringOrNull(self::KEY_LAST_NAME);
     }
 
     /**
@@ -161,7 +161,7 @@ class ShippingDestinationResponse extends SpecObject implements ShippingDestinat
      */
     public function getPhoneNumber(): string|null
     {
-        return $this->get(self::KEY_PHONE_NUMBER);
+        return $this->stringOrNull(self::KEY_PHONE_NUMBER);
     }
 
     /**
@@ -178,7 +178,7 @@ class ShippingDestinationResponse extends SpecObject implements ShippingDestinat
      */
     public function getId(): string
     {
-        return $this->get(self::KEY_ID);
+        return $this->requireString(self::KEY_ID);
     }
 
     /**

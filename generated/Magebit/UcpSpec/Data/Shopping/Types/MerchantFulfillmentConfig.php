@@ -26,7 +26,7 @@ class MerchantFulfillmentConfig extends SpecObject implements MerchantFulfillmen
      */
     public function getAllowsMultiDestination(): MerchantFulfillmentConfigAllowsMultiDestinationInterface|null
     {
-        return $this->get(self::KEY_ALLOWS_MULTI_DESTINATION);
+        return $this->instanceOrNull(self::KEY_ALLOWS_MULTI_DESTINATION, \Magebit\UcpSpec\Api\Shopping\Types\MerchantFulfillmentConfigAllowsMultiDestinationInterface::class);
     }
 
     /**
@@ -44,7 +44,7 @@ class MerchantFulfillmentConfig extends SpecObject implements MerchantFulfillmen
      */
     public function getAllowsMethodCombinations(): array|null
     {
-        return $this->get(self::KEY_ALLOWS_METHOD_COMBINATIONS);
+        return $this->arrayOrNull(self::KEY_ALLOWS_METHOD_COMBINATIONS);
     }
 
     /**

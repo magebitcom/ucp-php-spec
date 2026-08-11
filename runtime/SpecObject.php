@@ -10,6 +10,9 @@ namespace Magebit\UcpSpec\Runtime;
 
 /**
  * Base for the generated spec DTOs: an ordered key-value store that serialises back to spec JSON.
+ *
+ * The typed accessors exist so a generated getter can narrow `mixed` to its declared type in one
+ * place, rather than every DTO restating the same check.
  */
 abstract class SpecObject implements \JsonSerializable
 {
@@ -52,20 +55,6 @@ abstract class SpecObject implements \JsonSerializable
         $this->data[$key] = $value;
 
         return $this;
-    }
-
-    /**
-     * A required list is absent rather than empty far more often than it is genuinely missing,
-     * so it reads as `[]` instead of tripping the return type.
-     *
-     * @param string $key Spec field name
-     * @return array<mixed>
-     */
-    public function getArray(string $key): array
-    {
-        $value = $this->data[$key] ?? null;
-
-        return is_array($value) ? $value : [];
     }
 
     /**
@@ -112,5 +101,201 @@ abstract class SpecObject implements \JsonSerializable
         }
 
         return $data;
+    }
+
+    /**
+     * @param string $key Spec field name
+     * @return string
+     * @throws \UnexpectedValueException If the field is absent or of another type
+     */
+    protected function requireString(string $key): string
+    {
+        $value = $this->get($key);
+
+        return is_string($value) ? $value : throw $this->unexpected($key, 'string', $value);
+    }
+
+    /**
+     * @param string $key Spec field name
+     * @return string|null
+     */
+    protected function stringOrNull(string $key): ?string
+    {
+        $value = $this->get($key);
+
+        return is_string($value) ? $value : null;
+    }
+
+    /**
+     * @param string $key Spec field name
+     * @return int
+     * @throws \UnexpectedValueException If the field is absent or of another type
+     */
+    protected function requireInt(string $key): int
+    {
+        $value = $this->get($key);
+
+        return is_int($value) ? $value : throw $this->unexpected($key, 'int', $value);
+    }
+
+    /**
+     * @param string $key Spec field name
+     * @return int|null
+     */
+    protected function intOrNull(string $key): ?int
+    {
+        $value = $this->get($key);
+
+        return is_int($value) ? $value : null;
+    }
+
+    /**
+     * JSON numbers arrive as int when they have no fractional part, so both are accepted.
+     *
+     * @param string $key Spec field name
+     * @return float
+     * @throws \UnexpectedValueException If the field is absent or of another type
+     */
+    protected function requireFloat(string $key): float
+    {
+        $value = $this->get($key);
+
+        return is_int($value) || is_float($value)
+            ? (float)$value
+            : throw $this->unexpected($key, 'float', $value);
+    }
+
+    /**
+     * @param string $key Spec field name
+     * @return float|null
+     */
+    protected function floatOrNull(string $key): ?float
+    {
+        $value = $this->get($key);
+
+        return is_int($value) || is_float($value) ? (float)$value : null;
+    }
+
+    /**
+     * @param string $key Spec field name
+     * @return bool
+     * @throws \UnexpectedValueException If the field is absent or of another type
+     */
+    protected function requireBool(string $key): bool
+    {
+        $value = $this->get($key);
+
+        return is_bool($value) ? $value : throw $this->unexpected($key, 'bool', $value);
+    }
+
+    /**
+     * @param string $key Spec field name
+     * @return bool|null
+     */
+    protected function boolOrNull(string $key): ?bool
+    {
+        $value = $this->get($key);
+
+        return is_bool($value) ? $value : null;
+    }
+
+    /**
+     * A required list is absent rather than empty far more often than it is genuinely missing,
+     * so it reads as `[]` instead of raising.
+     *
+     * @param string $key Spec field name
+     * @return array<mixed>
+     */
+    protected function getArray(string $key): array
+    {
+        $value = $this->get($key);
+
+        return is_array($value) ? $value : [];
+    }
+
+    /**
+     * @param string $key Spec field name
+     * @return array<mixed>|null
+     */
+    protected function arrayOrNull(string $key): ?array
+    {
+        $value = $this->get($key);
+
+        return is_array($value) ? $value : null;
+    }
+
+    /**
+     * @template T of object
+     * @param string $key Spec field name
+     * @param class-string<T> $type Expected type
+     * @return T
+     * @throws \UnexpectedValueException If the field is absent or of another type
+     */
+    protected function requireInstance(string $key, string $type): object
+    {
+        $value = $this->get($key);
+
+        return $value instanceof $type ? $value : throw $this->unexpected($key, $type, $value);
+    }
+
+    /**
+     * @template T of object
+     * @param string $key Spec field name
+     * @param class-string<T> $type Expected type
+     * @return T|null
+     */
+    protected function instanceOrNull(string $key, string $type): ?object
+    {
+        $value = $this->get($key);
+
+        return $value instanceof $type ? $value : null;
+    }
+
+    /**
+     * @template T of object
+     * @param string $key Spec field name
+     * @param class-string<T> $type Expected element type
+     * @return list<T>
+     * @throws \UnexpectedValueException If any element is of another type
+     */
+    protected function instanceList(string $key, string $type): array
+    {
+        $values = [];
+
+        foreach ($this->getArray($key) as $index => $value) {
+            $values[] = $value instanceof $type
+                ? $value
+                : throw $this->unexpected($key . '[' . $index . ']', $type, $value);
+        }
+
+        return $values;
+    }
+
+    /**
+     * @template T of object
+     * @param string $key Spec field name
+     * @param class-string<T> $type Expected element type
+     * @return list<T>|null
+     */
+    protected function instanceListOrNull(string $key, string $type): ?array
+    {
+        return $this->get($key) === null ? null : $this->instanceList($key, $type);
+    }
+
+    /**
+     * @param string $key Spec field name
+     * @param string $expected Expected type name
+     * @param mixed $value Value that was found
+     * @return \UnexpectedValueException
+     */
+    private function unexpected(string $key, string $expected, mixed $value): \UnexpectedValueException
+    {
+        return new \UnexpectedValueException(sprintf(
+            '%s::%s expects %s, got %s',
+            static::class,
+            $key,
+            $expected,
+            get_debug_type($value)
+        ));
     }
 }

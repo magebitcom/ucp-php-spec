@@ -27,7 +27,7 @@ class FulfillmentMethodCompleteRequest extends SpecObject implements Fulfillment
      */
     public function getId(): string
     {
-        return $this->get(self::KEY_ID);
+        return $this->requireString(self::KEY_ID);
     }
 
     /**
@@ -44,7 +44,7 @@ class FulfillmentMethodCompleteRequest extends SpecObject implements Fulfillment
      */
     public function getType(): string
     {
-        return $this->get(self::KEY_TYPE);
+        return $this->requireString(self::KEY_TYPE);
     }
 
     /**
@@ -78,7 +78,7 @@ class FulfillmentMethodCompleteRequest extends SpecObject implements Fulfillment
      */
     public function getDestinations(): array|null
     {
-        return $this->get(self::KEY_DESTINATIONS);
+        return $this->instanceListOrNull(self::KEY_DESTINATIONS, \Magebit\UcpSpec\Api\Shopping\Types\FulfillmentDestinationRequestInterface::class);
     }
 
     /**
@@ -112,7 +112,7 @@ class FulfillmentMethodCompleteRequest extends SpecObject implements Fulfillment
      */
     public function getGroups(): array|null
     {
-        return $this->get(self::KEY_GROUPS);
+        return $this->instanceListOrNull(self::KEY_GROUPS, \Magebit\UcpSpec\Api\Shopping\Types\FulfillmentGroupCompleteRequestInterface::class);
     }
 
     /**

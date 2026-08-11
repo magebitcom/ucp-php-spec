@@ -22,7 +22,7 @@ class Buyer extends SpecObject implements BuyerInterface
      */
     public function getFirstName(): string|null
     {
-        return $this->get(self::KEY_FIRST_NAME);
+        return $this->stringOrNull(self::KEY_FIRST_NAME);
     }
 
     /**
@@ -39,7 +39,7 @@ class Buyer extends SpecObject implements BuyerInterface
      */
     public function getLastName(): string|null
     {
-        return $this->get(self::KEY_LAST_NAME);
+        return $this->stringOrNull(self::KEY_LAST_NAME);
     }
 
     /**
@@ -56,7 +56,7 @@ class Buyer extends SpecObject implements BuyerInterface
      */
     public function getEmail(): string|null
     {
-        return $this->get(self::KEY_EMAIL);
+        return $this->stringOrNull(self::KEY_EMAIL);
     }
 
     /**
@@ -73,7 +73,7 @@ class Buyer extends SpecObject implements BuyerInterface
      */
     public function getPhoneNumber(): string|null
     {
-        return $this->get(self::KEY_PHONE_NUMBER);
+        return $this->stringOrNull(self::KEY_PHONE_NUMBER);
     }
 
     /**

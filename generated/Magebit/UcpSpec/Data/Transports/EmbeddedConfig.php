@@ -25,7 +25,7 @@ class EmbeddedConfig extends SpecObject implements EmbeddedConfigInterface
      */
     public function getDelegate(): array|null
     {
-        return $this->get(self::KEY_DELEGATE);
+        return $this->arrayOrNull(self::KEY_DELEGATE);
     }
 
     /**

@@ -26,7 +26,7 @@ class FulfillmentRequest extends SpecObject implements FulfillmentRequestInterfa
      */
     public function getMethods(): array|null
     {
-        return $this->get(self::KEY_METHODS);
+        return $this->instanceListOrNull(self::KEY_METHODS, \Magebit\UcpSpec\Api\Shopping\Types\FulfillmentMethodCreateRequestInterface::class);
     }
 
     /**

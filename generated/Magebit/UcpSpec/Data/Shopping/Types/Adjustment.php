@@ -26,7 +26,7 @@ class Adjustment extends SpecObject implements AdjustmentInterface
      */
     public function getId(): string
     {
-        return $this->get(self::KEY_ID);
+        return $this->requireString(self::KEY_ID);
     }
 
     /**
@@ -43,7 +43,7 @@ class Adjustment extends SpecObject implements AdjustmentInterface
      */
     public function getType(): string
     {
-        return $this->get(self::KEY_TYPE);
+        return $this->requireString(self::KEY_TYPE);
     }
 
     /**
@@ -60,7 +60,7 @@ class Adjustment extends SpecObject implements AdjustmentInterface
      */
     public function getOccurredAt(): string
     {
-        return $this->get(self::KEY_OCCURRED_AT);
+        return $this->requireString(self::KEY_OCCURRED_AT);
     }
 
     /**
@@ -77,7 +77,7 @@ class Adjustment extends SpecObject implements AdjustmentInterface
      */
     public function getStatus(): string
     {
-        return $this->get(self::KEY_STATUS);
+        return $this->requireString(self::KEY_STATUS);
     }
 
     /**
@@ -94,7 +94,7 @@ class Adjustment extends SpecObject implements AdjustmentInterface
      */
     public function getLineItems(): array|null
     {
-        return $this->get(self::KEY_LINE_ITEMS);
+        return $this->instanceListOrNull(self::KEY_LINE_ITEMS, \Magebit\UcpSpec\Api\Shopping\Types\AdjustmentLineItemsItemInterface::class);
     }
 
     /**
@@ -111,7 +111,7 @@ class Adjustment extends SpecObject implements AdjustmentInterface
      */
     public function getAmount(): int|null
     {
-        return $this->get(self::KEY_AMOUNT);
+        return $this->intOrNull(self::KEY_AMOUNT);
     }
 
     /**
@@ -128,7 +128,7 @@ class Adjustment extends SpecObject implements AdjustmentInterface
      */
     public function getDescription(): string|null
     {
-        return $this->get(self::KEY_DESCRIPTION);
+        return $this->stringOrNull(self::KEY_DESCRIPTION);
     }
 
     /**

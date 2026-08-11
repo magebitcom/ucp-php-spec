@@ -33,7 +33,7 @@ class CheckoutResponse extends SpecObject implements CheckoutResponseInterface
      */
     public function getUcp(): UcpResponseCheckoutSchemaInterface
     {
-        return $this->get(self::KEY_UCP);
+        return $this->requireInstance(self::KEY_UCP, \Magebit\UcpSpec\Api\UcpResponseCheckoutSchemaInterface::class);
     }
 
     /**
@@ -50,7 +50,7 @@ class CheckoutResponse extends SpecObject implements CheckoutResponseInterface
      */
     public function getId(): string
     {
-        return $this->get(self::KEY_ID);
+        return $this->requireString(self::KEY_ID);
     }
 
     /**
@@ -67,7 +67,7 @@ class CheckoutResponse extends SpecObject implements CheckoutResponseInterface
      */
     public function getLineItems(): array
     {
-        return $this->getArray(self::KEY_LINE_ITEMS);
+        return $this->instanceList(self::KEY_LINE_ITEMS, \Magebit\UcpSpec\Api\Shopping\Types\LineItemResponseInterface::class);
     }
 
     /**
@@ -84,7 +84,7 @@ class CheckoutResponse extends SpecObject implements CheckoutResponseInterface
      */
     public function getBuyer(): BuyerInterface|null
     {
-        return $this->get(self::KEY_BUYER);
+        return $this->instanceOrNull(self::KEY_BUYER, \Magebit\UcpSpec\Api\Shopping\Types\BuyerInterface::class);
     }
 
     /**
@@ -101,7 +101,7 @@ class CheckoutResponse extends SpecObject implements CheckoutResponseInterface
      */
     public function getStatus(): string
     {
-        return $this->get(self::KEY_STATUS);
+        return $this->requireString(self::KEY_STATUS);
     }
 
     /**
@@ -118,7 +118,7 @@ class CheckoutResponse extends SpecObject implements CheckoutResponseInterface
      */
     public function getCurrency(): string
     {
-        return $this->get(self::KEY_CURRENCY);
+        return $this->requireString(self::KEY_CURRENCY);
     }
 
     /**
@@ -135,7 +135,7 @@ class CheckoutResponse extends SpecObject implements CheckoutResponseInterface
      */
     public function getTotals(): array
     {
-        return $this->getArray(self::KEY_TOTALS);
+        return $this->instanceList(self::KEY_TOTALS, \Magebit\UcpSpec\Api\Shopping\Types\TotalResponseInterface::class);
     }
 
     /**
@@ -152,7 +152,7 @@ class CheckoutResponse extends SpecObject implements CheckoutResponseInterface
      */
     public function getMessages(): array|null
     {
-        return $this->get(self::KEY_MESSAGES);
+        return $this->instanceListOrNull(self::KEY_MESSAGES, \Magebit\UcpSpec\Api\Shopping\Types\MessageInterface::class);
     }
 
     /**
@@ -169,7 +169,7 @@ class CheckoutResponse extends SpecObject implements CheckoutResponseInterface
      */
     public function getLinks(): array
     {
-        return $this->getArray(self::KEY_LINKS);
+        return $this->instanceList(self::KEY_LINKS, \Magebit\UcpSpec\Api\Shopping\Types\LinkInterface::class);
     }
 
     /**
@@ -186,7 +186,7 @@ class CheckoutResponse extends SpecObject implements CheckoutResponseInterface
      */
     public function getExpiresAt(): string|null
     {
-        return $this->get(self::KEY_EXPIRES_AT);
+        return $this->stringOrNull(self::KEY_EXPIRES_AT);
     }
 
     /**
@@ -203,7 +203,7 @@ class CheckoutResponse extends SpecObject implements CheckoutResponseInterface
      */
     public function getContinueUrl(): string|null
     {
-        return $this->get(self::KEY_CONTINUE_URL);
+        return $this->stringOrNull(self::KEY_CONTINUE_URL);
     }
 
     /**
@@ -220,7 +220,7 @@ class CheckoutResponse extends SpecObject implements CheckoutResponseInterface
      */
     public function getPayment(): PaymentInterface|null
     {
-        return $this->get(self::KEY_PAYMENT);
+        return $this->instanceOrNull(self::KEY_PAYMENT, \Magebit\UcpSpec\Api\Shopping\PaymentInterface::class);
     }
 
     /**
@@ -237,7 +237,7 @@ class CheckoutResponse extends SpecObject implements CheckoutResponseInterface
      */
     public function getOrder(): OrderConfirmationInterface|null
     {
-        return $this->get(self::KEY_ORDER);
+        return $this->instanceOrNull(self::KEY_ORDER, \Magebit\UcpSpec\Api\Shopping\Types\OrderConfirmationInterface::class);
     }
 
     /**

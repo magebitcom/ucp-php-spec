@@ -26,7 +26,7 @@ class FulfillmentOptionResponse extends SpecObject implements FulfillmentOptionR
      */
     public function getId(): string
     {
-        return $this->get(self::KEY_ID);
+        return $this->requireString(self::KEY_ID);
     }
 
     /**
@@ -43,7 +43,7 @@ class FulfillmentOptionResponse extends SpecObject implements FulfillmentOptionR
      */
     public function getTitle(): string
     {
-        return $this->get(self::KEY_TITLE);
+        return $this->requireString(self::KEY_TITLE);
     }
 
     /**
@@ -60,7 +60,7 @@ class FulfillmentOptionResponse extends SpecObject implements FulfillmentOptionR
      */
     public function getDescription(): string|null
     {
-        return $this->get(self::KEY_DESCRIPTION);
+        return $this->stringOrNull(self::KEY_DESCRIPTION);
     }
 
     /**
@@ -77,7 +77,7 @@ class FulfillmentOptionResponse extends SpecObject implements FulfillmentOptionR
      */
     public function getCarrier(): string|null
     {
-        return $this->get(self::KEY_CARRIER);
+        return $this->stringOrNull(self::KEY_CARRIER);
     }
 
     /**
@@ -94,7 +94,7 @@ class FulfillmentOptionResponse extends SpecObject implements FulfillmentOptionR
      */
     public function getEarliestFulfillmentTime(): string|null
     {
-        return $this->get(self::KEY_EARLIEST_FULFILLMENT_TIME);
+        return $this->stringOrNull(self::KEY_EARLIEST_FULFILLMENT_TIME);
     }
 
     /**
@@ -111,7 +111,7 @@ class FulfillmentOptionResponse extends SpecObject implements FulfillmentOptionR
      */
     public function getLatestFulfillmentTime(): string|null
     {
-        return $this->get(self::KEY_LATEST_FULFILLMENT_TIME);
+        return $this->stringOrNull(self::KEY_LATEST_FULFILLMENT_TIME);
     }
 
     /**
@@ -128,7 +128,7 @@ class FulfillmentOptionResponse extends SpecObject implements FulfillmentOptionR
      */
     public function getTotals(): array
     {
-        return $this->getArray(self::KEY_TOTALS);
+        return $this->instanceList(self::KEY_TOTALS, \Magebit\UcpSpec\Api\Shopping\Types\TotalResponseInterface::class);
     }
 
     /**

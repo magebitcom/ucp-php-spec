@@ -27,7 +27,7 @@ class FulfillmentResponse extends SpecObject implements FulfillmentResponseInter
      */
     public function getMethods(): array|null
     {
-        return $this->get(self::KEY_METHODS);
+        return $this->instanceListOrNull(self::KEY_METHODS, \Magebit\UcpSpec\Api\Shopping\Types\FulfillmentMethodResponseInterface::class);
     }
 
     /**
@@ -44,7 +44,7 @@ class FulfillmentResponse extends SpecObject implements FulfillmentResponseInter
      */
     public function getAvailableMethods(): array|null
     {
-        return $this->get(self::KEY_AVAILABLE_METHODS);
+        return $this->instanceListOrNull(self::KEY_AVAILABLE_METHODS, \Magebit\UcpSpec\Api\Shopping\Types\FulfillmentAvailableMethodResponseInterface::class);
     }
 
     /**

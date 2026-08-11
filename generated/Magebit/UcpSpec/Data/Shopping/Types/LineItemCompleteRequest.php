@@ -26,7 +26,7 @@ class LineItemCompleteRequest extends SpecObject implements LineItemCompleteRequ
      */
     public function getId(): string
     {
-        return $this->get(self::KEY_ID);
+        return $this->requireString(self::KEY_ID);
     }
 
     /**
@@ -43,7 +43,7 @@ class LineItemCompleteRequest extends SpecObject implements LineItemCompleteRequ
      */
     public function getItem(): ItemCompleteRequestInterface
     {
-        return $this->get(self::KEY_ITEM);
+        return $this->requireInstance(self::KEY_ITEM, \Magebit\UcpSpec\Api\Shopping\Types\ItemCompleteRequestInterface::class);
     }
 
     /**
@@ -60,7 +60,7 @@ class LineItemCompleteRequest extends SpecObject implements LineItemCompleteRequ
      */
     public function getQuantity(): int
     {
-        return $this->get(self::KEY_QUANTITY);
+        return $this->requireInt(self::KEY_QUANTITY);
     }
 
     /**
@@ -77,7 +77,7 @@ class LineItemCompleteRequest extends SpecObject implements LineItemCompleteRequ
      */
     public function getParentId(): string|null
     {
-        return $this->get(self::KEY_PARENT_ID);
+        return $this->stringOrNull(self::KEY_PARENT_ID);
     }
 
     /**

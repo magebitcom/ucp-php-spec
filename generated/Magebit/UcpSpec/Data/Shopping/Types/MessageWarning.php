@@ -22,7 +22,7 @@ class MessageWarning extends SpecObject implements MessageWarningInterface
      */
     public function getType(): string
     {
-        return $this->get(self::KEY_TYPE);
+        return $this->requireString(self::KEY_TYPE);
     }
 
     /**
@@ -39,7 +39,7 @@ class MessageWarning extends SpecObject implements MessageWarningInterface
      */
     public function getPath(): string|null
     {
-        return $this->get(self::KEY_PATH);
+        return $this->stringOrNull(self::KEY_PATH);
     }
 
     /**
@@ -56,7 +56,7 @@ class MessageWarning extends SpecObject implements MessageWarningInterface
      */
     public function getCode(): string
     {
-        return $this->get(self::KEY_CODE);
+        return $this->requireString(self::KEY_CODE);
     }
 
     /**
@@ -73,7 +73,7 @@ class MessageWarning extends SpecObject implements MessageWarningInterface
      */
     public function getContent(): string
     {
-        return $this->get(self::KEY_CONTENT);
+        return $this->requireString(self::KEY_CONTENT);
     }
 
     /**
@@ -90,7 +90,7 @@ class MessageWarning extends SpecObject implements MessageWarningInterface
      */
     public function getContentType(): string|null
     {
-        return $this->get(self::KEY_CONTENT_TYPE);
+        return $this->stringOrNull(self::KEY_CONTENT_TYPE);
     }
 
     /**

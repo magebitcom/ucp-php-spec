@@ -22,7 +22,7 @@ class ItemUpdateRequest extends SpecObject implements ItemUpdateRequestInterface
      */
     public function getId(): string
     {
-        return $this->get(self::KEY_ID);
+        return $this->requireString(self::KEY_ID);
     }
 
     /**

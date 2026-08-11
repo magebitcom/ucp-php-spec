@@ -27,7 +27,7 @@ class ProfileSchemaBase extends SpecObject implements ProfileSchemaBaseInterface
      */
     public function getUcp(): UcpBaseInterface
     {
-        return $this->get(self::KEY_UCP);
+        return $this->requireInstance(self::KEY_UCP, \Magebit\UcpSpec\Api\UcpBaseInterface::class);
     }
 
     /**
@@ -44,7 +44,7 @@ class ProfileSchemaBase extends SpecObject implements ProfileSchemaBaseInterface
      */
     public function getSigningKeys(): array|null
     {
-        return $this->get(self::KEY_SIGNING_KEYS);
+        return $this->instanceListOrNull(self::KEY_SIGNING_KEYS, \Magebit\UcpSpec\Api\Discovery\ProfileSchemaSigningKeyInterface::class);
     }
 
     /**

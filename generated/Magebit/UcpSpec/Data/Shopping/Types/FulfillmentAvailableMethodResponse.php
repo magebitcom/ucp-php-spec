@@ -25,7 +25,7 @@ class FulfillmentAvailableMethodResponse extends SpecObject implements Fulfillme
      */
     public function getType(): string
     {
-        return $this->get(self::KEY_TYPE);
+        return $this->requireString(self::KEY_TYPE);
     }
 
     /**
@@ -76,7 +76,7 @@ class FulfillmentAvailableMethodResponse extends SpecObject implements Fulfillme
      */
     public function getDescription(): string|null
     {
-        return $this->get(self::KEY_DESCRIPTION);
+        return $this->stringOrNull(self::KEY_DESCRIPTION);
     }
 
     /**
