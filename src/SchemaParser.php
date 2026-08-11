@@ -73,9 +73,10 @@ class SchemaParser
             return $this->resolveJsonPointer($ref, $currentFile);
         }
 
-        // External reference (e.g., ../ucp.json#/$defs/version)
-        [$filePath, $pointer] = explode('#', $ref, 2);
-        $pointer = '#' . ($pointer ?? '');
+        // External reference (e.g., ../ucp.json#/$defs/version); the pointer part is optional.
+        $parts = explode('#', $ref, 2);
+        $filePath = $parts[0];
+        $pointer = '#' . ($parts[1] ?? '');
 
         // Resolve relative file path
         $currentDir = dirname($currentFile);
@@ -203,7 +204,84 @@ class SchemaParser
             }
         }
 
+        // Filesystem iteration order is not stable across machines; sort so output is reproducible.
+        sort($files, SORT_STRING);
+
         return $files;
+    }
+
+    /**
+     * Follow a $ref (including chained bare-$ref aliases) to the schema it ultimately points at.
+     *
+     * @param string $ref Reference string
+     * @param string $currentFile File the reference appears in
+     * @return array{schema: array, file: string} Resolved schema and the file that owns it
+     * @throws \RuntimeException If the reference cannot be resolved
+     */
+    public function resolveRefTarget(string $ref, string $currentFile): array
+    {
+        $seen = [];
+
+        while (true) {
+            $key = $currentFile . '|' . $ref;
+
+            if (isset($seen[$key])) {
+                throw new \RuntimeException("Circular reference: {$ref} in {$currentFile}");
+            }
+
+            $seen[$key] = true;
+            $schema = $this->resolveRef($ref, $currentFile);
+            $currentFile = $this->resolveRefFile($ref, $currentFile);
+
+            if (!$this->isRefAlias($schema)) {
+                return ['schema' => $schema, 'file' => $currentFile];
+            }
+
+            $ref = $schema['$ref'];
+        }
+    }
+
+    /**
+     * A schema that is nothing but a $ref (plus annotations) is an alias for its target.
+     *
+     * @param array $schema Schema fragment
+     * @return bool True if the schema only aliases another schema
+     */
+    public function isRefAlias(array $schema): bool
+    {
+        if (!isset($schema['$ref'])) {
+            return false;
+        }
+
+        return !isset($schema['properties'])
+            && !isset($schema['allOf'])
+            && !isset($schema['oneOf'])
+            && !isset($schema['anyOf'])
+            && !isset($schema['type']);
+    }
+
+    /**
+     * Determine which file a $ref points into
+     *
+     * @param string $ref Reference string
+     * @param string $currentFile File the reference appears in
+     * @return string Absolute path of the target file
+     * @throws \RuntimeException If the target file cannot be located
+     */
+    private function resolveRefFile(string $ref, string $currentFile): string
+    {
+        if (strpos($ref, '#') === 0) {
+            return $currentFile;
+        }
+
+        [$filePath] = explode('#', $ref, 2);
+        $targetFile = realpath(dirname($currentFile) . '/' . $filePath);
+
+        if (!$targetFile) {
+            throw new \RuntimeException("Cannot resolve reference: {$ref} from {$currentFile}");
+        }
+
+        return $targetFile;
     }
 
     /**

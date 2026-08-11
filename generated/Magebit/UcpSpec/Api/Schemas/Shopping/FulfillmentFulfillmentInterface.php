@@ -12,6 +12,9 @@ declare(strict_types=1);
 
 namespace Magebit\UcpSpec\Api\Schemas\Shopping;
 
+use Magebit\UcpSpec\Api\Schemas\Shopping\Types\FulfillmentAvailableMethodResponseInterface;
+use Magebit\UcpSpec\Api\Schemas\Shopping\Types\FulfillmentMethodResponseInterface;
+
 /**
  * Container for fulfillment methods and availability.
  *

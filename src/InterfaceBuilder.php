@@ -23,6 +23,7 @@ class InterfaceBuilder
     private PhpDocGenerator $phpDocGenerator;
     private PsrPrinter $printer;
     private array $generatedInterfaces = [];
+    private array $collisions = [];
     private bool $generateSetters = false;
     private string $namespaceBase = 'Api';
 
@@ -147,7 +148,7 @@ class InterfaceBuilder
      * @param string $currentFile Current file path for resolving references
      * @return array Merged schema with properties
      */
-    private function resolveCompositeSchema(array $schema, string $currentFile): array
+    public function resolveCompositeSchema(array $schema, string $currentFile): array
     {
         $merged = $schema;
 
@@ -515,6 +516,8 @@ class InterfaceBuilder
      */
     public function saveInterface(PhpFile $file, string $outputDir, string $namespace, string $interfaceName): string
     {
+        $interfaceName = $this->normalizeInterfaceName($interfaceName);
+
         // Convert namespace to directory structure
         $namespacePath = str_replace('\\', '/', $namespace);
         $directory = $outputDir . '/' . $namespacePath;
@@ -593,29 +596,66 @@ class InterfaceBuilder
     }
 
     /**
-     * Check if interface was already generated
+     * Check if this exact interface was already generated from the same source schema.
+     *
+     * A same-name hit from a *different* source is a name collision, not a duplicate, so it is
+     * reported and still written (last write wins) rather than silently dropped.
      *
      * @param string $namespace Namespace of the interface
-     * @param string $interfaceName Interface name
-     * @return bool True if already generated
+     * @param string $interfaceName Interface name (with or without the Interface suffix)
+     * @param string $sourceFile Schema file the interface body comes from
+     * @return bool True if already generated from the same source
      */
-    public function isGenerated(string $namespace, string $interfaceName): bool
+    public function isGenerated(string $namespace, string $interfaceName, string $sourceFile = ''): bool
     {
-        $key = $namespace . '\\' . $interfaceName;
-        return isset($this->generatedInterfaces[$key]);
+        $key = $this->dedupKey($namespace, $interfaceName);
+
+        if (!isset($this->generatedInterfaces[$key])) {
+            return false;
+        }
+
+        if ($this->generatedInterfaces[$key] !== $sourceFile) {
+            $this->collisions[$key][] = $sourceFile;
+            return false;
+        }
+
+        return true;
     }
 
     /**
      * Mark interface as generated
      *
      * @param string $namespace Namespace of the interface
-     * @param string $interfaceName Interface name
+     * @param string $interfaceName Interface name (with or without the Interface suffix)
+     * @param string $sourceFile Schema file the interface body comes from
      * @return void
      */
-    public function markGenerated(string $namespace, string $interfaceName): void
+    public function markGenerated(string $namespace, string $interfaceName, string $sourceFile = ''): void
     {
-        $key = $namespace . '\\' . $interfaceName;
-        $this->generatedInterfaces[$key] = true;
+        $this->generatedInterfaces[$this->dedupKey($namespace, $interfaceName)] = $sourceFile;
+    }
+
+    /**
+     * Build the dedup key, normalising the Interface suffix so callers cannot disagree
+     *
+     * @param string $namespace Namespace of the interface
+     * @param string $interfaceName Interface name
+     * @return string Fully qualified, suffix-normalised key
+     */
+    public function dedupKey(string $namespace, string $interfaceName): string
+    {
+        return trim($namespace, '\\') . '\\' . $this->normalizeInterfaceName($interfaceName);
+    }
+
+    /**
+     * Append the Interface suffix unless it is already there
+     *
+     * @param string $interfaceName Interface name
+     * @return string Suffixed interface name
+     */
+    private function normalizeInterfaceName(string $interfaceName): string
+    {
+        return str_ends_with($interfaceName, 'Interface') ? $interfaceName : $interfaceName . 'Interface';
     }
 
     /**
@@ -626,5 +666,15 @@ class InterfaceBuilder
     public function getGeneratedInterfaces(): array
     {
         return array_keys($this->generatedInterfaces);
+    }
+
+    /**
+     * Get interface names that were produced from more than one schema source
+     *
+     * @return array<string, string[]> Map of FQN to the extra source files that reused it
+     */
+    public function getCollisions(): array
+    {
+        return $this->collisions;
     }
 }
