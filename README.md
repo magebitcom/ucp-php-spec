@@ -252,8 +252,7 @@ MIT License - see [LICENSE.md](LICENSE.md) for details.
 
 ---
 
-![magebit (1)](https://github.com/user-attachments/assets/cdc904ce-e839-40a0-a86f-792f7ab7961f)
+![Magebit](https://github.com/user-attachments/assets/cdc904ce-e839-40a0-a86f-792f7ab7961f)
 
-*Have questions or need help? Contact us at info@magebit.com*
-
-[https://magebit.com](https://magebit.com)
+Magebit - Full-service e-commerce agency
+[magebit.com](https://magebit.com)
