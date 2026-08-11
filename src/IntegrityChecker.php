@@ -22,10 +22,11 @@ class IntegrityChecker
      * Scan a generated tree and return the references that resolve to nothing.
      *
      * @param string $generatedDir Directory containing the generated PHP files
+     * @param string|null $runtimeDir Directory of hand-written classes the generated code may extend
      * @return array<string, string[]> Map of dangling FQN to the files referencing it
-     * @throws \RuntimeException If the directory does not exist
+     * @throws \RuntimeException If either directory does not exist
      */
-    public function findDanglingReferences(string $generatedDir): array
+    public function findDanglingReferences(string $generatedDir, ?string $runtimeDir = null): array
     {
         if (!is_dir($generatedDir)) {
             throw new \RuntimeException("Generated directory not found: {$generatedDir}");
@@ -36,6 +37,18 @@ class IntegrityChecker
 
         foreach ($this->findPhpFiles($generatedDir) as $file) {
             $this->scanFile($file, $generatedDir);
+        }
+
+        // The runtime base is hand-written, so it is declared outside the generated tree. It is
+        // scanned rather than exempted, so deleting it still fails the gate.
+        if ($runtimeDir !== null) {
+            if (!is_dir($runtimeDir)) {
+                throw new \RuntimeException("Runtime directory not found: {$runtimeDir}");
+            }
+
+            foreach ($this->findPhpFiles($runtimeDir) as $file) {
+                $this->scanFile($file, $runtimeDir);
+            }
         }
 
         $dangling = [];
@@ -88,7 +101,7 @@ class IntegrityChecker
             $namespace = trim($m[1]);
         }
 
-        if (preg_match('/^(?:interface|class|enum|trait)\s+(\w+)/m', $source, $m)) {
+        if (preg_match('/^(?:(?:abstract|final|readonly)\s+)*(?:interface|class|enum|trait)\s+(\w+)/m', $source, $m)) {
             $this->declared[$this->join($namespace, $m[1])] = true;
         }
 

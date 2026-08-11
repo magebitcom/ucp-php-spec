@@ -13,30 +13,47 @@ namespace Magebit\UcpSpecGenerator;
  */
 class SchemaParser
 {
+    public const ROOT_NAMESPACE = 'Magebit\\UcpSpec';
+    public const API_NAMESPACE = self::ROOT_NAMESPACE . '\\Api';
+    public const DATA_NAMESPACE = self::ROOT_NAMESPACE . '\\Data';
+
+    /**
+     * Directory names that say nothing once the type already lives under the Api namespace.
+     */
+    private const IGNORED_PATH_SEGMENTS = ['schemas'];
+
+    /**
+     * UCP writes the operation variant into the file name; it is what separates the four
+     * otherwise identical `checkout` definitions the extension schemas each declare.
+     */
+    private const VARIANTS = [
+        'create_req' => 'CreateRequest',
+        'update_req' => 'UpdateRequest',
+        'complete_req' => 'CompleteRequest',
+        'resp' => 'Response',
+        'req' => 'Request',
+    ];
+
     private array $loadedSchemas = [];
     private string $baseDir;
 
     /**
-     * Constructor
-     *
      * @param string $baseDir Base directory for schema files
      */
     public function __construct(string $baseDir)
     {
-        $this->baseDir = rtrim($baseDir, '/');
+        $this->baseDir = rtrim((string)(realpath($baseDir) ?: $baseDir), '/');
     }
 
     /**
-     * Load a schema file and resolve all references
-     *
      * @param string $filePath Path to the schema file
      * @return array The loaded schema
-     * @throws \RuntimeException If file not found or invalid JSON
+     * @throws \RuntimeException If the file is missing or not valid JSON
      */
     public function loadSchema(string $filePath): array
     {
         $absolutePath = $this->resolveFilePath($filePath);
-        
+
         if (isset($this->loadedSchemas[$absolutePath])) {
             return $this->loadedSchemas[$absolutePath];
         }
@@ -45,11 +62,14 @@ class SchemaParser
             throw new \RuntimeException("Schema file not found: {$absolutePath}");
         }
 
-        $content = file_get_contents($absolutePath);
-        $schema = json_decode($content, true);
+        $schema = json_decode((string)file_get_contents($absolutePath), true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
             throw new \RuntimeException("Invalid JSON in {$absolutePath}: " . json_last_error_msg());
+        }
+
+        if (!is_array($schema)) {
+            throw new \RuntimeException("Schema is not an object: {$absolutePath}");
         }
 
         $this->loadedSchemas[$absolutePath] = $schema;
@@ -58,165 +78,29 @@ class SchemaParser
     }
 
     /**
-     * Resolve a $ref reference
-     *
-     * @param string $ref The reference string (e.g., "#/$defs/version" or "../ucp.json#/$defs/version")
-     * @param string $currentFile Current file path for resolving relative references
-     * @return array The resolved schema
-     * @throws \RuntimeException If reference cannot be resolved
+     * @param string $ref Reference string, e.g. "#/$defs/Item" or "schema.cart.json#/$defs/Cart"
+     * @param string $currentFile File the reference appears in
+     * @return array The resolved schema fragment
+     * @throws \RuntimeException If the reference cannot be resolved
      */
     public function resolveRef(string $ref, string $currentFile): array
     {
-        // Split reference into file path and JSON pointer
         if (strpos($ref, '#') === 0) {
-            // Internal reference (e.g., #/$defs/version)
             return $this->resolveJsonPointer($ref, $currentFile);
         }
 
-        // External reference (e.g., ../ucp.json#/$defs/version); the pointer part is optional.
-        $parts = explode('#', $ref, 2);
-        $filePath = $parts[0];
-        $pointer = '#' . ($parts[1] ?? '');
+        $pointer = explode('#', $ref, 2)[1] ?? '';
 
-        // Resolve relative file path
-        $currentDir = dirname($currentFile);
-        $targetFile = realpath($currentDir . '/' . $filePath);
-
-        if (!$targetFile) {
-            throw new \RuntimeException("Cannot resolve reference: {$ref} from {$currentFile}");
-        }
-
-        return $this->resolveJsonPointer($pointer, $targetFile);
+        return $this->resolveJsonPointer('#' . $pointer, $this->resolveRefFile($ref, $currentFile));
     }
 
     /**
-     * Resolve a JSON pointer within a schema
-     *
-     * @param string $pointer JSON pointer (e.g., "#/$defs/version")
-     * @param string $filePath File path containing the schema
-     * @return array The resolved schema fragment
-     * @throws \RuntimeException If pointer cannot be resolved
-     */
-    private function resolveJsonPointer(string $pointer, string $filePath): array
-    {
-        $schema = $this->loadSchema($filePath);
-
-        if ($pointer === '#' || $pointer === '') {
-            return $schema;
-        }
-
-        // Remove leading #/
-        $pointer = ltrim($pointer, '#/');
-        $parts = explode('/', $pointer);
-
-        $current = $schema;
-        foreach ($parts as $part) {
-            // Decode JSON pointer escapes
-            $part = str_replace(['~1', '~0'], ['/', '~'], $part);
-
-            if (!isset($current[$part])) {
-                throw new \RuntimeException("Cannot resolve pointer {$pointer} in {$filePath}");
-            }
-
-            $current = $current[$part];
-        }
-
-        return $current;
-    }
-
-    /**
-     * Get all schema definitions from a file
-     *
-     * @param string $filePath Path to the schema file
-     * @return array Array of definitions from $defs or definitions key
-     */
-    public function getDefinitions(string $filePath): array
-    {
-        $schema = $this->loadSchema($filePath);
-        return $schema['$defs'] ?? $schema['definitions'] ?? [];
-    }
-
-    /**
-     * Check if schema has a root object definition
-     *
-     * @param string $filePath Path to the schema file
-     * @return bool True if schema has type: "object" or composite types (oneOf/anyOf/allOf)
-     */
-    public function hasRootObject(string $filePath): bool
-    {
-        $schema = $this->loadSchema($filePath);
-        
-        // Check for explicit object type
-        if (isset($schema['type']) && $schema['type'] === 'object') {
-            return true;
-        }
-        
-        // Check for composite types (oneOf/anyOf/allOf) - these should generate interfaces
-        if (isset($schema['oneOf']) || isset($schema['anyOf']) || isset($schema['allOf'])) {
-            return true;
-        }
-        
-        return false;
-    }
-
-    /**
-     * Get the root schema object
-     *
-     * @param string $filePath Path to the schema file
-     * @return array The root schema
-     */
-    public function getRootSchema(string $filePath): array
-    {
-        return $this->loadSchema($filePath);
-    }
-
-    /**
-     * Resolve file path to absolute path
-     *
-     * @param string $filePath Relative or absolute file path
-     * @return string Absolute file path
-     */
-    private function resolveFilePath(string $filePath): string
-    {
-        if (strpos($filePath, '/') === 0) {
-            return $filePath;
-        }
-
-        return $this->baseDir . '/' . $filePath;
-    }
-
-    /**
-     * Find all JSON schema files in a directory
-     *
-     * @param string $directory Directory to search
-     * @return array Array of file paths
-     */
-    public function findSchemaFiles(string $directory): array
-    {
-        $files = [];
-        $iterator = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($directory, \RecursiveDirectoryIterator::SKIP_DOTS)
-        );
-
-        foreach ($iterator as $file) {
-            if ($file->isFile() && $file->getExtension() === 'json') {
-                $files[] = $file->getPathname();
-            }
-        }
-
-        // Filesystem iteration order is not stable across machines; sort so output is reproducible.
-        sort($files, SORT_STRING);
-
-        return $files;
-    }
-
-    /**
-     * Follow a $ref (including chained bare-$ref aliases) to the schema it ultimately points at.
+     * Follow a $ref, including chained bare-$ref aliases, to the schema it ultimately points at.
      *
      * @param string $ref Reference string
      * @param string $currentFile File the reference appears in
      * @return array{schema: array, file: string} Resolved schema and the file that owns it
-     * @throws \RuntimeException If the reference cannot be resolved
+     * @throws \RuntimeException If the reference cannot be resolved or loops
      */
     public function resolveRefTarget(string $ref, string $currentFile): array
     {
@@ -245,7 +129,7 @@ class SchemaParser
      * A schema that is nothing but a $ref (plus annotations) is an alias for its target.
      *
      * @param array $schema Schema fragment
-     * @return bool True if the schema only aliases another schema
+     * @return bool
      */
     public function isRefAlias(array $schema): bool
     {
@@ -261,8 +145,248 @@ class SchemaParser
     }
 
     /**
-     * Determine which file a $ref points into
+     * @param string $filePath Path to the schema file
+     * @return array Definitions from $defs or definitions
+     */
+    public function getDefinitions(string $filePath): array
+    {
+        $schema = $this->loadSchema($filePath);
+
+        return $schema['$defs'] ?? $schema['definitions'] ?? [];
+    }
+
+    /**
+     * Most UCP files declare exactly one type at the root; the extension schemas declare a family
+     * of `$defs` instead and have no root of their own.
      *
+     * @param string $filePath Path to the schema file
+     * @return bool
+     */
+    public function hasRootObject(string $filePath): bool
+    {
+        $schema = $this->loadSchema($filePath);
+
+        if (($schema['type'] ?? null) === 'object') {
+            return true;
+        }
+
+        return isset($schema['oneOf']) || isset($schema['anyOf']) || isset($schema['allOf']);
+    }
+
+    /**
+     * @param string $filePath Path to the schema file
+     * @return array
+     */
+    public function getRootSchema(string $filePath): array
+    {
+        return $this->loadSchema($filePath);
+    }
+
+    /**
+     * @param string $directory Directory to search
+     * @return string[] Absolute file paths, sorted for reproducible output
+     */
+    public function findSchemaFiles(string $directory): array
+    {
+        $files = [];
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($directory, \RecursiveDirectoryIterator::SKIP_DOTS)
+        );
+
+        foreach ($iterator as $file) {
+            // Normalised here so paths from iteration and from $ref resolution compare equal.
+            if ($file->isFile() && $file->getExtension() === 'json') {
+                $files[] = (string)realpath($file->getPathname());
+            }
+        }
+
+        sort($files, SORT_STRING);
+
+        return $files;
+    }
+
+    /**
+     * The file name carries both the concept and the operation variant, which together are unique
+     * across the spec — so it, not the schema title, is what every generated name is built from.
+     *
+     * @param string $filePath Path to the schema file
+     * @return string Type prefix in PascalCase, e.g. "CheckoutResponse"
+     */
+    public function getTypePrefix(string $filePath): string
+    {
+        [$concept, $variant] = $this->splitVariant(basename($filePath, '.json'));
+
+        return $this->toPascalCase($concept) . $variant;
+    }
+
+    /**
+     * @param string $filePath Path to the schema file
+     * @return string Concept in PascalCase, without the variant, e.g. "Checkout"
+     */
+    public function getConceptName(string $filePath): string
+    {
+        return $this->toPascalCase($this->splitVariant(basename($filePath, '.json'))[0]);
+    }
+
+    /**
+     * Namespaces mirror the spec's own directory layout, which is what keeps the two `fulfillment_resp`
+     * files — one under `shopping/`, one under `shopping/types/` — from naming the same type twice.
+     *
+     * @param string $filePath Path to the schema file
+     * @return string Fully qualified namespace, e.g. "Magebit\UcpSpec\Api\Shopping\Types"
+     */
+    public function getNamespaceFromPath(string $filePath): string
+    {
+        return $this->namespaceFor(self::API_NAMESPACE, $filePath);
+    }
+
+    /**
+     * @param string $filePath Path to the schema file
+     * @return string Fully qualified DTO namespace, e.g. "Magebit\UcpSpec\Data\Shopping\Types"
+     */
+    public function getDataNamespaceFromPath(string $filePath): string
+    {
+        return $this->namespaceFor(self::DATA_NAMESPACE, $filePath);
+    }
+
+    /**
+     * @param string $defName Definition name as written in $defs
+     * @param string $filePath Path to the schema file
+     * @return string Type name without the Interface suffix
+     */
+    public function definitionTypeName(string $defName, string $filePath): string
+    {
+        $prefix = $this->getTypePrefix($filePath);
+        $name = $this->toPascalCase($defName);
+
+        // A definition named after its own file adds nothing: `fulfillment_resp.json#/$defs/fulfillment`
+        // is the fulfillment response, not a `FulfillmentResponseFulfillment`.
+        return $name === $this->getConceptName($filePath) ? $prefix : $prefix . $name;
+    }
+
+    /**
+     * @param array $schema The schema array
+     * @param string $filePath Path to the schema file
+     * @return string
+     */
+    public function getInterfaceName(array $schema, string $filePath): string
+    {
+        return $this->getTypePrefix($filePath);
+    }
+
+    /**
+     * @param string $name Raw name
+     * @return string
+     */
+    public function toPascalCase(string $name): string
+    {
+        $name = (string)preg_replace('/[^A-Za-z0-9]+/', ' ', $name);
+
+        return str_replace(' ', '', ucwords($name));
+    }
+
+    /**
+     * @param string $root Root namespace to hang the path under
+     * @param string $filePath Path to the schema file
+     * @return string
+     */
+    private function namespaceFor(string $root, string $filePath): string
+    {
+        $parts = [$root];
+
+        foreach (explode('/', dirname($this->relativePath($filePath))) as $segment) {
+            if ($segment === '' || $segment === '.' || in_array($segment, self::IGNORED_PATH_SEGMENTS, true)) {
+                continue;
+            }
+
+            $parts[] = $this->toPascalCase($segment);
+        }
+
+        return implode('\\', $parts);
+    }
+
+    /**
+     * @param string $filePath Absolute or relative path to a schema file
+     * @return string Path relative to the spec directory
+     */
+    private function relativePath(string $filePath): string
+    {
+        $absolute = (string)(realpath($this->resolveFilePath($filePath)) ?: $filePath);
+
+        if (strpos($absolute, $this->baseDir . '/') === 0) {
+            return substr($absolute, strlen($this->baseDir) + 1);
+        }
+
+        return basename($absolute);
+    }
+
+    /**
+     * @param string $base File name without its extension
+     * @return array{0: string, 1: string} Concept and the PascalCase variant, which may be empty
+     */
+    private function splitVariant(string $base): array
+    {
+        if (str_contains($base, '.')) {
+            [$concept, $suffix] = explode('.', $base, 2);
+
+            return isset(self::VARIANTS[$suffix]) ? [$concept, self::VARIANTS[$suffix]] : [$base, ''];
+        }
+
+        // Only `_resp`/`_req` are variants; `message_error` and `embedded_config` are whole concepts.
+        if (preg_match('/^(.+)_(resp|req)$/', $base, $matches) === 1) {
+            return [$matches[1], self::VARIANTS[$matches[2]]];
+        }
+
+        return [$base, ''];
+    }
+
+    /**
+     * @param string $filePath Relative or absolute file path
+     * @return string
+     */
+    private function resolveFilePath(string $filePath): string
+    {
+        if (strpos($filePath, '/') === 0) {
+            return $filePath;
+        }
+
+        return $this->baseDir . '/' . $filePath;
+    }
+
+    /**
+     * @param string $pointer JSON pointer, e.g. "#/$defs/Item"
+     * @param string $filePath File containing the schema
+     * @return array
+     * @throws \RuntimeException If the pointer cannot be resolved
+     */
+    private function resolveJsonPointer(string $pointer, string $filePath): array
+    {
+        $schema = $this->loadSchema($filePath);
+
+        if ($pointer === '#' || $pointer === '') {
+            return $schema;
+        }
+
+        $current = $schema;
+
+        foreach (explode('/', ltrim($pointer, '#/')) as $part) {
+            $part = str_replace(['~1', '~0'], ['/', '~'], $part);
+
+            if (!is_array($current) || !isset($current[$part])) {
+                throw new \RuntimeException("Cannot resolve pointer {$pointer} in {$filePath}");
+            }
+
+            $current = $current[$part];
+        }
+
+        if (!is_array($current)) {
+            throw new \RuntimeException("Pointer {$pointer} in {$filePath} does not resolve to a schema");
+        }
+
+        return $current;
+    }
+
+    /**
      * @param string $ref Reference string
      * @param string $currentFile File the reference appears in
      * @return string Absolute path of the target file
@@ -275,77 +399,14 @@ class SchemaParser
         }
 
         [$filePath] = explode('#', $ref, 2);
-        $targetFile = realpath(dirname($currentFile) . '/' . $filePath);
+        $targetFile = realpath(
+            strpos($filePath, '/') === 0 ? $filePath : dirname($currentFile) . '/' . $filePath
+        );
 
-        if (!$targetFile) {
+        if ($targetFile === false) {
             throw new \RuntimeException("Cannot resolve reference: {$ref} from {$currentFile}");
         }
 
         return $targetFile;
-    }
-
-    /**
-     * Extract interface name from schema title or filename
-     *
-     * @param array $schema The schema array
-     * @param string $filePath Path to the schema file
-     * @return string Sanitized interface name
-     */
-    public function getInterfaceName(array $schema, string $filePath): string
-    {
-        // Use title if available
-        if (isset($schema['title'])) {
-            return $this->sanitizeInterfaceName($schema['title']);
-        }
-
-        // Use filename
-        $filename = basename($filePath, '.json');
-        return $this->sanitizeInterfaceName($filename);
-    }
-
-    /**
-     * Sanitize a string to be a valid PHP interface name
-     *
-     * @param string $name Raw name to sanitize
-     * @return string Valid PHP interface name in PascalCase
-     */
-    private function sanitizeInterfaceName(string $name): string
-    {
-        // Remove common suffixes
-        $name = preg_replace('/\.(create_req|update_req|resp)$/', '', $name);
-        
-        // Convert to PascalCase
-        $name = str_replace(['-', '_', '.', ' '], ' ', $name);
-        $name = ucwords($name);
-        $name = str_replace(' ', '', $name);
-
-        return $name;
-    }
-
-    /**
-     * Get namespace from file path
-     *
-     * @param string $filePath Path to the schema file
-     * @param string $namespaceBase Base namespace to use ('Api' or 'MutableApi')
-     * @return string Fully qualified namespace (e.g., "Magebit\UcpSpec\Shopping")
-     */
-    public function getNamespaceFromPath(string $filePath, string $namespaceBase = 'Api'): string
-    {
-        // Remove base directory and file name
-        $relativePath = str_replace($this->baseDir . '/', '', $filePath);
-        $relativePath = dirname($relativePath);
-
-        // Remove 'spec/schemas/' prefix if present
-        $relativePath = preg_replace('#^spec/schemas/?#', '', $relativePath);
-
-        if ($relativePath === '.' || $relativePath === '') {
-            return 'Magebit\\UcpSpec\\' . $namespaceBase;
-        }
-
-        // Convert path to namespace
-        $parts = explode('/', $relativePath);
-        $parts = array_map('ucfirst', $parts);
-        
-        return 'Magebit\\UcpSpec\\' . $namespaceBase . '\\' . implode('\\', $parts);
     }
 }

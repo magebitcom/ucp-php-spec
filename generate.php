@@ -17,6 +17,7 @@ use Magebit\UcpSpecGenerator\ManifestWriter;
 const ROOT_DIR = __DIR__;
 const SPEC_DIR = __DIR__ . '/spec';
 const OUTPUT_DIR = __DIR__ . '/generated';
+const RUNTIME_DIR = __DIR__ . '/runtime';
 
 $options = getopt('', ['clean', 'check', 'help']);
 
@@ -58,7 +59,7 @@ function runGeneration(string $outputDir, string $manifestDir, bool $clean): arr
 
     $failures = $generator->getErrors();
 
-    $dangling = (new IntegrityChecker())->findDanglingReferences($outputDir);
+    $dangling = (new IntegrityChecker())->findDanglingReferences($outputDir, RUNTIME_DIR);
 
     foreach ($dangling as $fqn => $sources) {
         $failures[] = "Referenced but never generated: {$fqn} (from " . implode(', ', $sources) . ')';

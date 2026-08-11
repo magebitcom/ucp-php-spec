@@ -6,7 +6,8 @@
     "autoload": {
         "psr-4": {
             "Magebit\\UcpSpec\\Api\\": "generated/Magebit/UcpSpec/Api/",
-            "Magebit\\UcpSpec\\MutableApi\\": "generated/Magebit/UcpSpec/MutableApi/"
+            "Magebit\\UcpSpec\\Data\\": "generated/Magebit/UcpSpec/Data/",
+            "Magebit\\UcpSpec\\Runtime\\": "runtime/"
         }
     },
     "autoload-dev": {

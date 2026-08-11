@@ -9,8 +9,8 @@ declare(strict_types=1);
 namespace Magebit\UcpSpecGenerator;
 
 use Nette\PhpGenerator\InterfaceType;
-use Nette\PhpGenerator\Method;
 use Nette\PhpGenerator\PhpFile;
+use Nette\PhpGenerator\PhpNamespace;
 use Nette\PhpGenerator\PsrPrinter;
 
 /**
@@ -24,12 +24,9 @@ class InterfaceBuilder
     private PsrPrinter $printer;
     private array $generatedInterfaces = [];
     private array $collisions = [];
-    private bool $generateSetters = false;
-    private string $namespaceBase = 'Api';
+    private array $constantWarnings = [];
 
     /**
-     * Constructor
-     *
      * @param SchemaParser $parser Schema parser instance
      * @param TypeMapper $typeMapper Type mapper instance
      * @param PhpDocGenerator $phpDocGenerator PHPDoc generator instance
@@ -43,35 +40,11 @@ class InterfaceBuilder
     }
 
     /**
-     * Set whether to generate setter methods
-     *
-     * @param bool $generateSetters True to generate setters
-     * @return void
-     */
-    public function setGenerateSetters(bool $generateSetters): void
-    {
-        $this->generateSetters = $generateSetters;
-    }
-
-    /**
-     * Set namespace base
-     *
-     * @param string $namespaceBase Namespace base ('Api' or 'MutableApi')
-     * @return void
-     */
-    public function setNamespaceBase(string $namespaceBase): void
-    {
-        $this->namespaceBase = $namespaceBase;
-    }
-
-    /**
-     * Build interface from schema
-     *
      * @param string $interfaceName Name of the interface to generate
      * @param array $schema Schema definition
      * @param string $namespace Namespace for the interface
-     * @param string $currentFile Current file path for resolving references
-     * @return PhpFile Generated PHP file
+     * @param string $currentFile File the schema lives in
+     * @return PhpFile
      */
     public function buildInterface(
         string $interfaceName,
@@ -79,11 +52,6 @@ class InterfaceBuilder
         string $namespace,
         string $currentFile
     ): PhpFile {
-        // Append "Interface" suffix if not already present
-        if (!str_ends_with($interfaceName, 'Interface')) {
-            $interfaceName .= 'Interface';
-        }
-        
         $file = new PhpFile();
         $file->setStrictTypes();
         $file->addComment('This file is auto-generated. Do not edit manually.');
@@ -93,406 +61,33 @@ class InterfaceBuilder
         $file->addComment('@license   MIT');
 
         $ns = $file->addNamespace($namespace);
-        $interface = $ns->addInterface($interfaceName);
+        $interface = $ns->addInterface($this->normalizeInterfaceName($interfaceName));
 
-        // Add interface description
         if (isset($schema['description'])) {
-            $interface->addComment($schema['description']);
+            $interface->addComment((string)$schema['description']);
         }
 
-        // Add title as comment if different from interface name
-        if (isset($schema['title']) && $schema['title'] !== $interfaceName) {
+        if (isset($schema['title']) && $schema['title'] !== $interface->getName()) {
             $interface->addComment('');
             $interface->addComment('Schema: ' . $schema['title']);
         }
 
-        // Resolve allOf/oneOf/anyOf to get merged properties
-        $mergedSchema = $this->resolveCompositeSchema($schema, $currentFile);
+        $merged = $this->resolveCompositeSchema($schema, $currentFile);
 
-        // Add properties as getter methods
-        if (isset($mergedSchema['properties'])) {
-            $this->addProperties($interface, $mergedSchema, $currentFile, $ns);
+        if (isset($merged['properties'])) {
+            $this->addProperties($interface, $merged, $currentFile, $ns);
         }
 
         return $file;
     }
 
     /**
-     * Deep merge two property definitions, preserving nested structures
-     *
-     * @param array $base Base property definition
-     * @param array $override Override property definition
-     * @return array Merged property definition
-     */
-    private function deepMergeProperties(array $base, array $override): array
-    {
-        $result = $base;
-        
-        foreach ($override as $key => $value) {
-            if (is_array($value) && isset($result[$key]) && is_array($result[$key])) {
-                // Recursively merge nested arrays
-                $result[$key] = $this->deepMergeProperties($result[$key], $value);
-            } else {
-                // Override scalar values or new keys
-                $result[$key] = $value;
-            }
-        }
-        
-        return $result;
-    }
-
-    /**
-     * Resolve composite schemas (allOf/oneOf/anyOf) to get merged properties
-     *
-     * @param array $schema Schema definition
-     * @param string $currentFile Current file path for resolving references
-     * @return array Merged schema with properties
-     */
-    public function resolveCompositeSchema(array $schema, string $currentFile): array
-    {
-        $merged = $schema;
-
-        // Handle allOf - merge all schemas
-        if (isset($schema['allOf'])) {
-            foreach ($schema['allOf'] as $subSchema) {
-                // Resolve $ref if present
-                if (isset($subSchema['$ref'])) {
-                    $resolved = $this->parser->resolveRef($subSchema['$ref'], $currentFile);
-                    $subSchema = $this->resolveCompositeSchema($resolved, $currentFile);
-                }
-
-                // Merge properties (deep merge to preserve type and other fields)
-                if (isset($subSchema['properties'])) {
-                    if (!isset($merged['properties'])) {
-                        $merged['properties'] = [];
-                    }
-                    foreach ($subSchema['properties'] as $propName => $propValue) {
-                        if (isset($merged['properties'][$propName])) {
-                            // Deep merge property definitions
-                            $baseProp = $merged['properties'][$propName];
-                            $merged['properties'][$propName] = $this->deepMergeProperties($baseProp, $propValue);
-                        } else {
-                            $merged['properties'][$propName] = $propValue;
-                        }
-                    }
-                }
-
-                // Merge required
-                if (isset($subSchema['required'])) {
-                    if (!isset($merged['required'])) {
-                        $merged['required'] = [];
-                    }
-                    $merged['required'] = array_merge($merged['required'], $subSchema['required']);
-                }
-            }
-        }
-
-        // Handle oneOf/anyOf - just use the first one for now (could be improved)
-        if (isset($schema['oneOf']) && !isset($merged['properties'])) {
-            $first = $schema['oneOf'][0];
-            if (isset($first['$ref'])) {
-                $resolved = $this->parser->resolveRef($first['$ref'], $currentFile);
-                $merged = array_merge($merged, $this->resolveCompositeSchema($resolved, $currentFile));
-            } elseif (isset($first['properties'])) {
-                $merged['properties'] = $first['properties'];
-            }
-        }
-
-        if (isset($schema['anyOf']) && !isset($merged['properties'])) {
-            $first = $schema['anyOf'][0];
-            if (isset($first['$ref'])) {
-                $resolved = $this->parser->resolveRef($first['$ref'], $currentFile);
-                $merged = array_merge($merged, $this->resolveCompositeSchema($resolved, $currentFile));
-            } elseif (isset($first['properties'])) {
-                $merged['properties'] = $first['properties'];
-            }
-        }
-
-        return $merged;
-    }
-
-    /**
-     * Add properties to interface as getter methods
-     *
-     * @param InterfaceType $interface Interface to add methods to
-     * @param array $schema Schema containing properties
-     * @param string $currentFile Current file path for resolving references
-     * @param \Nette\PhpGenerator\PhpNamespace $namespace Namespace for use statements
-     * @return void
-     */
-    private function addProperties(
-        InterfaceType $interface,
-        array $schema,
-        string $currentFile,
-        \Nette\PhpGenerator\PhpNamespace $namespace
-    ): void {
-        $properties = $schema['properties'] ?? [];
-        $required = $schema['required'] ?? [];
-
-        // First, add key constants for all properties
-        foreach ($properties as $propertyName => $property) {
-            $this->addKeyConstant($interface, $propertyName);
-        }
-
-        // Then add enum constants for all properties with enum values
-        foreach ($properties as $propertyName => $property) {
-            $this->addEnumConstants($interface, $propertyName, $property, $currentFile);
-        }
-
-        // Then add getter methods
-        foreach ($properties as $propertyName => $property) {
-            $this->addPropertyMethod($interface, $propertyName, $property, $required, $currentFile, $namespace);
-        }
-
-        // Add setter methods if enabled
-        if ($this->generateSetters) {
-            foreach ($properties as $propertyName => $property) {
-                $this->addSetterMethod($interface, $propertyName, $property, $required, $currentFile, $namespace);
-            }
-        }
-    }
-
-    /**
-     * Add key constant for a property
-     *
-     * @param InterfaceType $interface Interface to add constant to
-     * @param string $propertyName Name of the property
-     * @return void
-     */
-    private function addKeyConstant(
-        InterfaceType $interface,
-        string $propertyName
-    ): void {
-        // Convert property name to KEY_* format (UPPER_SNAKE_CASE)
-        $constantName = 'KEY_' . $this->toUpperSnakeCase($propertyName);
-        
-        // Value is the property name in snake_case
-        $constantValue = $this->toSnakeCase($propertyName);
-        
-        // Add the constant
-        $interface->addConstant($constantName, $constantValue)
-            ->setPublic();
-    }
-
-    /**
-     * Add enum constants for a property if it has enum values
-     *
-     * @param InterfaceType $interface Interface to add constants to
-     * @param string $propertyName Name of the property
-     * @param array $property Property schema definition
-     * @param string $currentFile Current file path for resolving references
-     * @return void
-     */
-    private function addEnumConstants(
-        InterfaceType $interface,
-        string $propertyName,
-        array $property,
-        string $currentFile
-    ): void {
-        // Resolve $ref if present
-        $resolvedProperty = $property;
-        if (isset($property['$ref'])) {
-            try {
-                $resolvedProperty = $this->parser->resolveRef($property['$ref'], $currentFile);
-            } catch (\Exception $e) {
-                // If resolution fails, use original property
-                return;
-            }
-        }
-
-        // Check if property has enum values
-        if (!isset($resolvedProperty['enum']) || !is_array($resolvedProperty['enum'])) {
-            return;
-        }
-
-        // Generate constant name prefix from property name
-        $prefix = strtoupper(preg_replace('/([a-z])([A-Z])/', '$1_$2', $propertyName));
-        $prefix = strtoupper(str_replace(['-', '.'], '_', $prefix));
-
-        // Add a constant for each enum value
-        foreach ($resolvedProperty['enum'] as $enumValue) {
-            // Generate constant name from enum value
-            $constantSuffix = strtoupper(str_replace(['-', '.', ' '], '_', $enumValue));
-            $constantName = $prefix . '_' . $constantSuffix;
-
-            // Add the constant
-            $interface->addConstant($constantName, $enumValue)
-                ->setPublic();
-        }
-    }
-
-    /**
-     * Add a single property as getter method
-     *
-     * @param InterfaceType $interface Interface to add method to
-     * @param string $propertyName Name of the property
-     * @param array $property Property schema definition
-     * @param array $required Array of required property names
-     * @param string $currentFile Current file path for resolving references
-     * @param \Nette\PhpGenerator\PhpNamespace $namespace Namespace for use statements
-     * @return void
-     */
-    private function addPropertyMethod(
-        InterfaceType $interface,
-        string $propertyName,
-        array $property,
-        array $required,
-        string $currentFile,
-        \Nette\PhpGenerator\PhpNamespace $namespace
-    ): void {
-        // Convert property name to getter method name
-        $methodName = 'get' . $this->toPascalCase($propertyName);
-
-        $method = $interface->addMethod($methodName);
-        $method->setPublic();
-
-        // Add description
-        if (isset($property['description'])) {
-            $method->addComment($property['description']);
-            $method->addComment('');
-        }
-
-        // Get parent interface name from the interface
-        $parentName = $interface->getName();
-
-        // Map type with context for inline objects
-        $phpType = $this->typeMapper->mapType($property, $currentFile, $parentName, $propertyName);
-        
-        // Handle nullable types
-        $isRequired = in_array($propertyName, $required);
-        
-        if (!$isRequired && $phpType !== 'mixed' && $phpType !== 'null') {
-            // Make optional properties nullable
-            if (strpos($phpType, '|') === false) {
-                $phpType .= '|null';
-            } elseif (strpos($phpType, 'null') === false) {
-                $phpType .= '|null';
-            }
-        }
-
-        // Add use statements for all referenced types
-        $this->phpDocGenerator->addUseStatementsForType($phpType, $namespace);
-
-        // Set return type - Nette will handle the resolution based on use statements
-        if ($phpType !== 'mixed') {
-            $method->setReturnType($phpType);
-        }
-
-        // Generate PHPDoc type with array item types
-        $commentType = $this->phpDocGenerator->generatePhpDocType($property, $phpType, $currentFile, $namespace, $parentName, $propertyName);
-        $method->addComment('@return ' . $commentType);
-    }
-
-    /**
-     * Add a single property as setter method
-     *
-     * @param InterfaceType $interface Interface to add method to
-     * @param string $propertyName Name of the property
-     * @param array $property Property schema definition
-     * @param array $required Array of required property names
-     * @param string $currentFile Current file path for resolving references
-     * @param \Nette\PhpGenerator\PhpNamespace $namespace Namespace for use statements
-     * @return void
-     */
-    private function addSetterMethod(
-        InterfaceType $interface,
-        string $propertyName,
-        array $property,
-        array $required,
-        string $currentFile,
-        \Nette\PhpGenerator\PhpNamespace $namespace
-    ): void {
-        // Convert property name to setter method name
-        $methodName = 'set' . $this->toPascalCase($propertyName);
-
-        $method = $interface->addMethod($methodName);
-        $method->setPublic();
-
-        // Add description
-        if (isset($property['description'])) {
-            $method->addComment($property['description']);
-            $method->addComment('');
-        }
-
-        // Get parent interface name from the interface
-        $parentName = $interface->getName();
-
-        // Map type with context for inline objects
-        $phpType = $this->typeMapper->mapType($property, $currentFile, $parentName, $propertyName);
-        
-        // Handle nullable types
-        $isRequired = in_array($propertyName, $required);
-        $isNullable = false;
-        
-        if (!$isRequired && $phpType !== 'mixed' && $phpType !== 'null') {
-            $isNullable = true;
-            // For PHPDoc, keep the union syntax
-            if (strpos($phpType, '|') === false) {
-                $phpType .= '|null';
-            } elseif (strpos($phpType, 'null') === false) {
-                $phpType .= '|null';
-            }
-        }
-
-        // Add use statements for all referenced types
-        $this->phpDocGenerator->addUseStatementsForType($phpType, $namespace);
-
-        // Generate PHPDoc type with array item types
-        $commentType = $this->phpDocGenerator->generatePhpDocType($property, $phpType, $currentFile, $namespace, $parentName, $propertyName);
-
-        // Convert property name to camelCase for parameter
-        $paramName = $this->typeMapper->toCamelCase($propertyName);
-        
-        // Add parameter with camelCase name
-        $param = $method->addParameter($paramName);
-        
-        // Set parameter type using ?Type syntax for nullable types
-        if ($phpType !== 'mixed') {
-            if ($isNullable) {
-                // Remove |null from the type string for parameter type hint
-                $paramType = str_replace(['|null', 'null|'], '', $phpType);
-                $param->setType($paramType);
-                $param->setNullable(true);
-            } else {
-                $param->setType($phpType);
-            }
-        }
-        
-        $method->addComment('@param ' . $commentType . ' $' . $paramName);
-
-        // Set return type to self for method chaining
-        $method->setReturnType('self');
-        $method->addComment('@return self');
-    }
-
-
-    /**
-     * Build interface for a $defs definition
-     *
-     * @param string $interfaceName Full interface name (may include file prefix)
-     * @param array $definition Definition schema
-     * @param string $namespace Namespace for the interface
-     * @param string $currentFile Current file path for resolving references
-     * @return PhpFile Generated PHP file
-     */
-    public function buildDefinitionInterface(
-        string $interfaceName,
-        array $definition,
-        string $namespace,
-        string $currentFile
-    ): PhpFile {
-        return $this->buildInterface($interfaceName, $definition, $namespace, $currentFile);
-    }
-
-    /**
-     * Build interface for inline object
-     *
      * @param string $parentName Parent interface name
      * @param string $propertyName Property name
      * @param array $property Property schema definition
      * @param string $namespace Namespace for the interface
-     * @param string $currentFile Current file path for resolving references
-     * @return PhpFile Generated PHP file
+     * @param string $currentFile File the property is declared in
+     * @return PhpFile
      */
     public function buildInlineObjectInterface(
         string $parentName,
@@ -501,110 +96,107 @@ class InterfaceBuilder
         string $namespace,
         string $currentFile
     ): PhpFile {
-        $interfaceName = $this->typeMapper->generateInlineInterfaceName($parentName, $propertyName);
-        return $this->buildInterface($interfaceName, $property, $namespace, $currentFile);
+        return $this->buildInterface(
+            $this->typeMapper->generateInlineInterfaceName($parentName, $propertyName),
+            $property,
+            $namespace,
+            $currentFile
+        );
     }
 
     /**
-     * Save interface to file
+     * Merge allOf branches into one property set, and fall back to the first oneOf/anyOf branch
+     * only when the schema declares no properties of its own.
      *
+     * @param array $schema Schema definition
+     * @param string $currentFile File the schema lives in
+     * @return array Merged schema
+     * @throws \RuntimeException If a composed $ref cannot be resolved
+     */
+    public function resolveCompositeSchema(array $schema, string $currentFile): array
+    {
+        $merged = $schema;
+
+        foreach ($schema['allOf'] ?? [] as $subSchema) {
+            if (isset($subSchema['$ref'])) {
+                $target = $this->parser->resolveRefTarget($subSchema['$ref'], $currentFile);
+                $subSchema = $this->rebaseRefs(
+                    $this->resolveCompositeSchema($target['schema'], $target['file']),
+                    $target['file'],
+                    $currentFile
+                );
+            }
+
+            foreach ($subSchema['properties'] ?? [] as $propName => $propValue) {
+                $merged['properties'][$propName] = isset($merged['properties'][$propName])
+                    ? $this->deepMerge($merged['properties'][$propName], $propValue)
+                    : $propValue;
+            }
+
+            if (isset($subSchema['required'])) {
+                $merged['required'] = array_merge($merged['required'] ?? [], $subSchema['required']);
+            }
+        }
+
+        foreach (['oneOf', 'anyOf'] as $keyword) {
+            if (!isset($schema[$keyword]) || isset($merged['properties'])) {
+                continue;
+            }
+
+            $first = $schema[$keyword][0] ?? [];
+
+            if (isset($first['$ref'])) {
+                $target = $this->parser->resolveRefTarget($first['$ref'], $currentFile);
+                $merged = array_merge($merged, $this->rebaseRefs(
+                    $this->resolveCompositeSchema($target['schema'], $target['file']),
+                    $target['file'],
+                    $currentFile
+                ));
+            } elseif (isset($first['properties'])) {
+                $merged['properties'] = $first['properties'];
+            }
+        }
+
+        if (isset($merged['required'])) {
+            $merged['required'] = array_values(array_unique($merged['required']));
+        }
+
+        return $merged;
+    }
+
+    /**
      * @param PhpFile $file PHP file to save
      * @param string $outputDir Output directory
      * @param string $namespace Namespace of the interface
      * @param string $interfaceName Interface name
      * @return string Path to the saved file
+     * @throws \RuntimeException If the file cannot be written
      */
     public function saveInterface(PhpFile $file, string $outputDir, string $namespace, string $interfaceName): string
     {
-        $interfaceName = $this->normalizeInterfaceName($interfaceName);
+        $directory = $outputDir . '/' . str_replace('\\', '/', $namespace);
 
-        // Convert namespace to directory structure
-        $namespacePath = str_replace('\\', '/', $namespace);
-        $directory = $outputDir . '/' . $namespacePath;
-
-        // Create directory if it doesn't exist
-        if (!is_dir($directory)) {
-            mkdir($directory, 0755, true);
+        if (!is_dir($directory) && !mkdir($directory, 0755, true) && !is_dir($directory)) {
+            throw new \RuntimeException("Cannot create directory: {$directory}");
         }
 
-        // Generate file path
-        $filePath = $directory . '/' . $interfaceName . '.php';
+        $filePath = $directory . '/' . $this->normalizeInterfaceName($interfaceName) . '.php';
 
-        // Write file
-        file_put_contents($filePath, $this->printer->printFile($file));
+        if (file_put_contents($filePath, $this->printer->printFile($file)) === false) {
+            throw new \RuntimeException("Cannot write interface: {$filePath}");
+        }
 
         return $filePath;
     }
 
     /**
-     * Convert snake_case to PascalCase
-     *
-     * @param string $name Name in snake_case
-     * @return string Name in PascalCase
-     */
-    private function toPascalCase(string $name): string
-    {
-        $name = str_replace(['-', '_', '.'], ' ', $name);
-        $name = ucwords($name);
-        return str_replace(' ', '', $name);
-    }
-
-    /**
-     * Convert any case to snake_case
-     *
-     * @param string $name Name in any case
-     * @return string Name in snake_case
-     */
-    private function toSnakeCase(string $name): string
-    {
-        // If already in snake_case or contains underscores, normalize it
-        if (strpos($name, '_') !== false || strpos($name, '-') !== false) {
-            $name = str_replace(['-', '.'], '_', $name);
-            return strtolower($name);
-        }
-        
-        // Convert camelCase/PascalCase to snake_case
-        $name = preg_replace('/([a-z])([A-Z])/', '$1_$2', $name);
-        return strtolower($name);
-    }
-
-    /**
-     * Convert any case to UPPER_SNAKE_CASE
-     *
-     * @param string $name Name in any case
-     * @return string Name in UPPER_SNAKE_CASE
-     */
-    private function toUpperSnakeCase(string $name): string
-    {
-        return strtoupper($this->toSnakeCase($name));
-    }
-
-    /**
-     * Sanitize interface name
-     *
-     * @param string $name Raw name to sanitize
-     * @return string Valid PHP interface name in PascalCase
-     */
-    private function sanitizeInterfaceName(string $name): string
-    {
-        // Remove common suffixes
-        $name = preg_replace('/\.(create_req|update_req|resp)$/', '', $name);
-        $name = preg_replace('/_(create_req|update_req|resp)$/', '', $name);
-        
-        // Convert to PascalCase
-        return $this->toPascalCase($name);
-    }
-
-    /**
-     * Check if this exact interface was already generated from the same source schema.
-     *
-     * A same-name hit from a *different* source is a name collision, not a duplicate, so it is
-     * reported and still written (last write wins) rather than silently dropped.
+     * A same-name hit from a different source is a name collision, not a duplicate, so it is
+     * reported and still written rather than silently dropped.
      *
      * @param string $namespace Namespace of the interface
-     * @param string $interfaceName Interface name (with or without the Interface suffix)
+     * @param string $interfaceName Interface name, with or without the Interface suffix
      * @param string $sourceFile Schema file the interface body comes from
-     * @return bool True if already generated from the same source
+     * @return bool
      */
     public function isGenerated(string $namespace, string $interfaceName, string $sourceFile = ''): bool
     {
@@ -623,10 +215,8 @@ class InterfaceBuilder
     }
 
     /**
-     * Mark interface as generated
-     *
      * @param string $namespace Namespace of the interface
-     * @param string $interfaceName Interface name (with or without the Interface suffix)
+     * @param string $interfaceName Interface name
      * @param string $sourceFile Schema file the interface body comes from
      * @return void
      */
@@ -636,8 +226,6 @@ class InterfaceBuilder
     }
 
     /**
-     * Build the dedup key, normalising the Interface suffix so callers cannot disagree
-     *
      * @param string $namespace Namespace of the interface
      * @param string $interfaceName Interface name
      * @return string Fully qualified, suffix-normalised key
@@ -648,20 +236,7 @@ class InterfaceBuilder
     }
 
     /**
-     * Append the Interface suffix unless it is already there
-     *
-     * @param string $interfaceName Interface name
-     * @return string Suffixed interface name
-     */
-    private function normalizeInterfaceName(string $interfaceName): string
-    {
-        return str_ends_with($interfaceName, 'Interface') ? $interfaceName : $interfaceName . 'Interface';
-    }
-
-    /**
-     * Get list of generated interfaces
-     *
-     * @return array Array of fully qualified interface names
+     * @return string[]
      */
     public function getGeneratedInterfaces(): array
     {
@@ -669,12 +244,270 @@ class InterfaceBuilder
     }
 
     /**
-     * Get interface names that were produced from more than one schema source
-     *
-     * @return array<string, string[]> Map of FQN to the extra source files that reused it
+     * @return array<string, string[]> Map of FQN to the extra sources that reused it
      */
     public function getCollisions(): array
     {
         return $this->collisions;
+    }
+
+    /**
+     * Constants dropped because the same name was produced twice in one interface
+     *
+     * @return string[]
+     */
+    public function getConstantWarnings(): array
+    {
+        return $this->constantWarnings;
+    }
+
+    /**
+     * @param string $interfaceName Interface name
+     * @return string
+     */
+    public function normalizeInterfaceName(string $interfaceName): string
+    {
+        return str_ends_with($interfaceName, 'Interface') ? $interfaceName : $interfaceName . 'Interface';
+    }
+
+    /**
+     * A bundle composed onto another bundle's schema carries that bundle's internal `#/$defs/...`
+     * references, which mean nothing once the properties are merged into a different document.
+     * Anchoring them to the file that wrote them keeps them resolvable afterwards.
+     *
+     * @param array $schema Schema fragment resolved from another file
+     * @param string $sourceFile File the fragment was written in
+     * @param string $targetFile File the fragment is being merged into
+     * @return array
+     */
+    private function rebaseRefs(array $schema, string $sourceFile, string $targetFile): array
+    {
+        if ($sourceFile === $targetFile) {
+            return $schema;
+        }
+
+        foreach ($schema as $key => $value) {
+            if ($key === '$ref' && is_string($value) && strpos($value, '#') === 0) {
+                $schema[$key] = $sourceFile . $value;
+                continue;
+            }
+
+            if (is_array($value)) {
+                $schema[$key] = $this->rebaseRefs($value, $sourceFile, $targetFile);
+            }
+        }
+
+        return $schema;
+    }
+
+    /**
+     * @param array $base Base definition
+     * @param array $override Definition taking precedence
+     * @return array
+     */
+    private function deepMerge(array $base, array $override): array
+    {
+        $result = $base;
+
+        foreach ($override as $key => $value) {
+            $result[$key] = is_array($value) && is_array($result[$key] ?? null)
+                ? $this->deepMerge($result[$key], $value)
+                : $value;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param InterfaceType $interface Interface to populate
+     * @param array $schema Schema containing properties
+     * @param string $currentFile File the schema lives in
+     * @param PhpNamespace $namespace Namespace collecting use statements
+     * @return void
+     */
+    private function addProperties(
+        InterfaceType $interface,
+        array $schema,
+        string $currentFile,
+        PhpNamespace $namespace
+    ): void {
+        $properties = $schema['properties'] ?? [];
+        $required = $schema['required'] ?? [];
+
+        foreach (array_keys($properties) as $propertyName) {
+            $this->addConstant($interface, 'KEY_' . $this->toUpperSnakeCase((string)$propertyName), $this->toSnakeCase((string)$propertyName));
+        }
+
+        foreach ($properties as $propertyName => $property) {
+            $this->addValueConstants($interface, (string)$propertyName, $property, $currentFile);
+        }
+
+        foreach ($properties as $propertyName => $property) {
+            $this->addAccessors($interface, (string)$propertyName, $property, $required, $currentFile, $namespace);
+        }
+    }
+
+    /**
+     * Emit one constant per enum member, and for a const the single value it pins.
+     *
+     * @param InterfaceType $interface Interface to populate
+     * @param string $propertyName Name of the property
+     * @param array $property Property schema definition
+     * @param string $currentFile File the property is declared in
+     * @return void
+     */
+    private function addValueConstants(
+        InterfaceType $interface,
+        string $propertyName,
+        array $property,
+        string $currentFile
+    ): void {
+        if (isset($property['$ref'])) {
+            try {
+                $property = $this->parser->resolveRefTarget($property['$ref'], $currentFile)['schema'];
+            } catch (\RuntimeException $e) {
+                return;
+            }
+        }
+
+        $values = $property['enum'] ?? null;
+
+        if ($values === null && array_key_exists('const', $property)) {
+            $values = [$property['const']];
+        }
+
+        if (!is_array($values)) {
+            return;
+        }
+
+        $prefix = $this->toUpperSnakeCase($propertyName);
+
+        foreach ($values as $value) {
+            if (!is_string($value)) {
+                continue;
+            }
+
+            $suffix = trim((string)preg_replace('/[^A-Za-z0-9]+/', '_', $value), '_');
+
+            if ($suffix === '') {
+                continue;
+            }
+
+            $this->addConstant($interface, $prefix . '_' . strtoupper($suffix), $value);
+        }
+    }
+
+    /**
+     * @param InterfaceType $interface Interface to populate
+     * @param string $name Constant name
+     * @param string $value Constant value
+     * @return void
+     */
+    private function addConstant(InterfaceType $interface, string $name, string $value): void
+    {
+        $existing = $interface->getConstants()[$name] ?? null;
+
+        if ($existing !== null) {
+            if ($existing->getValue() !== $value) {
+                $this->constantWarnings[] = "{$interface->getName()}::{$name} already set to "
+                    . var_export($existing->getValue(), true) . ", dropped " . var_export($value, true);
+            }
+
+            return;
+        }
+
+        $interface->addConstant($name, $value)->setPublic();
+    }
+
+    /**
+     * @param InterfaceType $interface Interface to populate
+     * @param string $propertyName Name of the property
+     * @param array $property Property schema definition
+     * @param string[] $required Required property names
+     * @param string $currentFile File the property is declared in
+     * @param PhpNamespace $namespace Namespace collecting use statements
+     * @return void
+     */
+    private function addAccessors(
+        InterfaceType $interface,
+        string $propertyName,
+        array $property,
+        array $required,
+        string $currentFile,
+        PhpNamespace $namespace
+    ): void {
+        $parentName = $interface->getName();
+        $baseType = $this->typeMapper->mapType($property, $currentFile, $parentName, $propertyName);
+        $nullable = $this->typeMapper->isNullable($propertyName, $baseType, $required);
+
+        $this->phpDocGenerator->addUseStatementsForType($baseType, $namespace);
+
+        $docType = $this->phpDocGenerator->generatePhpDocType(
+            $property,
+            $baseType,
+            $nullable,
+            $currentFile,
+            $namespace,
+            $parentName,
+            $propertyName
+        );
+
+        $signatureType = $nullable ? $baseType . '|null' : $baseType;
+        $description = $property['description'] ?? null;
+
+        $getter = $interface->addMethod('get' . $this->typeMapper->toPascalCase($propertyName))->setPublic();
+
+        if ($description !== null) {
+            $getter->addComment((string)$description);
+            $getter->addComment('');
+        }
+
+        if ($baseType !== 'mixed') {
+            $getter->setReturnType($signatureType);
+        }
+
+        $getter->addComment('@return ' . $docType);
+
+        $paramName = $this->typeMapper->toCamelCase($propertyName);
+        $setter = $interface->addMethod('set' . $this->typeMapper->toPascalCase($propertyName))->setPublic();
+
+        if ($description !== null) {
+            $setter->addComment((string)$description);
+            $setter->addComment('');
+        }
+
+        $param = $setter->addParameter($paramName);
+
+        if ($baseType !== 'mixed') {
+            // Nette turns a single nullable type into "?T" and a union into "A|B|null"; passing the
+            // union through setType keeps it from producing the invalid "?A|B".
+            $param->setType($signatureType);
+        }
+
+        $setter->setReturnType('self');
+        $setter->addComment('@param ' . $docType . ' $' . $paramName);
+        $setter->addComment('@return self');
+    }
+
+    /**
+     * @param string $name Name in any case
+     * @return string
+     */
+    private function toSnakeCase(string $name): string
+    {
+        if (str_contains($name, '_') || str_contains($name, '-')) {
+            return strtolower(str_replace(['-', '.'], '_', $name));
+        }
+
+        return strtolower((string)preg_replace('/([a-z0-9])([A-Z])/', '$1_$2', $name));
+    }
+
+    /**
+     * @param string $name Name in any case
+     * @return string
+     */
+    private function toUpperSnakeCase(string $name): string
+    {
+        return strtoupper($this->toSnakeCase($name));
     }
 }

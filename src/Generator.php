@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Magebit\UcpSpecGenerator;
 
 /**
- * Main generator class that orchestrates the generation process
+ * Orchestrates generation of the single mutable interface tree from the UCP schema bundles
  */
 class Generator
 {
@@ -17,114 +17,57 @@ class Generator
     private TypeMapper $typeMapper;
     private PhpDocGenerator $phpDocGenerator;
     private InterfaceBuilder $builder;
+    private DtoBuilder $dtoBuilder;
     private string $specDir;
     private string $outputDir;
-    private array $processedFiles = [];
     private array $errors = [];
-    private array $collisions = [];
     private array $schemaFiles = [];
 
     /**
-     * Constructor
-     *
-     * @param string $specDir Directory containing JSON Schema files
+     * @param string $specDir Directory containing the JSON Schema bundles
      * @param string $outputDir Directory for generated interfaces
      */
     public function __construct(string $specDir, string $outputDir)
     {
         $this->specDir = rtrim($specDir, '/');
-        $this->parser = new SchemaParser($specDir);
+        $this->outputDir = rtrim($outputDir, '/');
+        $this->parser = new SchemaParser($this->specDir);
         $this->typeMapper = new TypeMapper($this->parser);
         $this->phpDocGenerator = new PhpDocGenerator($this->parser, $this->typeMapper);
         $this->builder = new InterfaceBuilder($this->parser, $this->typeMapper, $this->phpDocGenerator);
-        $this->outputDir = rtrim($outputDir, '/');
+        $this->dtoBuilder = new DtoBuilder(
+            $this->parser,
+            $this->typeMapper,
+            $this->phpDocGenerator,
+            $this->builder
+        );
     }
 
     /**
-     * Generate all interfaces from spec directory
-     *
      * @return void
-     * @throws \RuntimeException If spec directory not found
+     * @throws \RuntimeException If the spec directory is missing
      */
     public function generate(): void
     {
-        echo "Starting interface generation...\n";
-
         if (!is_dir($this->specDir)) {
             throw new \RuntimeException("Spec directory not found: {$this->specDir}");
         }
 
         $this->errors = [];
-        $this->collisions = [];
-        $schemaFiles = $this->parser->findSchemaFiles($this->specDir);
-        $this->schemaFiles = $schemaFiles;
+        $this->schemaFiles = $this->parser->findSchemaFiles($this->specDir);
 
-        echo "Found " . count($schemaFiles) . " schema files\n";
+        echo 'Found ' . count($this->schemaFiles) . " schema bundles\n";
 
-        // Generate Api namespace (immutable - getters only)
-        echo "\n=== Generating Api namespace (immutable) ===\n";
-        $this->builder->setGenerateSetters(false);
-        $this->builder->setNamespaceBase('Api');
-        $this->typeMapper->setNamespaceBase('Api');
-        
-        foreach ($schemaFiles as $schemaFile) {
-            $this->processSchemaFile($schemaFile, 'Api');
-        }
-        
-        $apiCount = count($this->builder->getGeneratedInterfaces());
-        $this->collectCollisions();
-
-        // Reset for MutableApi generation
-        $this->processedFiles = [];
-        $this->builder = new InterfaceBuilder($this->parser, $this->typeMapper, $this->phpDocGenerator);
-
-        // Generate MutableApi namespace (mutable - getters and setters)
-        echo "\n=== Generating MutableApi namespace (mutable) ===\n";
-        $this->builder->setGenerateSetters(true);
-        $this->builder->setNamespaceBase('MutableApi');
-        $this->typeMapper->setNamespaceBase('MutableApi');
-        
-        foreach ($schemaFiles as $schemaFile) {
-            $this->processSchemaFile($schemaFile, 'MutableApi');
+        foreach ($this->schemaFiles as $schemaFile) {
+            $this->processBundle($schemaFile);
         }
 
-        $mutableApiCount = count($this->builder->getGeneratedInterfaces());
-        $this->collectCollisions();
-
-        echo "\n=== Generation complete! ===\n";
-        echo "Generated " . $apiCount . " Api interfaces (immutable)\n";
-        echo "Generated " . $mutableApiCount . " MutableApi interfaces (mutable)\n";
-        echo "Output directory: " . $this->outputDir . "\n";
+        echo "\nGenerated " . count($this->builder->getGeneratedInterfaces()) . ' interfaces and '
+            . count($this->dtoBuilder->getGeneratedDtos()) . " DTOs into {$this->outputDir}\n";
     }
 
     /**
-     * Record a non-fatal generation failure so the run can still be failed at the end
-     *
-     * @param string $message Error message
-     * @return void
-     */
-    private function recordError(string $message): void
-    {
-        $this->errors[] = $message;
-        echo "  Error: {$message}\n";
-    }
-
-    /**
-     * Merge the current builder's collisions into the run-wide list
-     *
-     * @return void
-     */
-    private function collectCollisions(): void
-    {
-        foreach ($this->builder->getCollisions() as $key => $sources) {
-            $this->collisions[$key] = array_merge($this->collisions[$key] ?? [], $sources);
-        }
-    }
-
-    /**
-     * Errors recorded during the last generate() run
-     *
-     * @return string[] Error messages
+     * @return string[]
      */
     public function getErrors(): array
     {
@@ -132,19 +75,23 @@ class Generator
     }
 
     /**
-     * Interface names produced from more than one schema source during the last run
-     *
-     * @return array<string, string[]> Map of FQN to the extra source files that reused it
+     * @return array<string, string[]> Map of FQN to the extra sources that reused it
      */
     public function getCollisions(): array
     {
-        return $this->collisions;
+        return $this->builder->getCollisions();
     }
 
     /**
-     * Schema files consumed by the last generate() run, in generation order
-     *
-     * @return string[] Absolute file paths
+     * @return string[]
+     */
+    public function getConstantWarnings(): array
+    {
+        return $this->builder->getConstantWarnings();
+    }
+
+    /**
+     * @return string[] Absolute paths, in generation order
      */
     public function getSchemaFiles(): array
     {
@@ -152,63 +99,142 @@ class Generator
     }
 
     /**
-     * Process a single schema file
-     *
-     * @param string $filePath Path to the schema file
-     * @param string $namespaceBase Namespace base ('Api' or 'MutableApi')
      * @return void
      */
-    private function processSchemaFile(string $filePath, string $namespaceBase = 'Api'): void
+    public function cleanOutputDirectory(): void
     {
-        // Skip if already processed
-        if (isset($this->processedFiles[$filePath])) {
+        if (!is_dir($this->outputDir)) {
             return;
         }
 
-        $this->processedFiles[$filePath] = true;
+        $this->removeDirectory($this->outputDir);
+        mkdir($this->outputDir, 0755, true);
+    }
 
-        echo "Processing: " . basename($filePath) . "\n";
+    /**
+     * @param string $filePath Path to a schema bundle
+     * @return void
+     */
+    private function processBundle(string $filePath): void
+    {
+        echo 'Processing: ' . basename($filePath) . "\n";
 
         try {
             $schema = $this->parser->loadSchema($filePath);
-
-            // Get namespace for this file
-            $namespace = $this->parser->getNamespaceFromPath($filePath, $namespaceBase);
-
-            // Generate interface for root schema if it's an object
-            if ($this->parser->hasRootObject($filePath)) {
-                $this->generateRootInterface($filePath, $schema, $namespace);
-            }
-
-            // Generate interfaces for all $defs
-            $definitions = $this->parser->getDefinitions($filePath);
-            foreach ($definitions as $defName => $definition) {
-                $this->generateDefinitionInterface($defName, $definition, $namespace, $filePath);
-            }
-
-            if ($this->parser->hasRootObject($filePath)) {
-                $rootName = $this->parser->getInterfaceName($schema, $filePath);
-                $this->processCompositeInlineObjects($schema, $rootName, $namespace, $filePath);
-            }
-
-        } catch (\Exception $e) {
+        } catch (\RuntimeException $e) {
             $this->recordError("{$filePath}: " . $e->getMessage());
+            return;
+        }
+
+        $namespace = $this->parser->getNamespaceFromPath($filePath);
+
+        if ($this->parser->hasRootObject($filePath)) {
+            $rootName = $this->parser->getInterfaceName($schema, $filePath);
+            $this->emit($rootName, $schema, $namespace, $filePath);
+        }
+
+        foreach ($this->parser->getDefinitions($filePath) as $defName => $definition) {
+            $this->processDefinition((string)$defName, $definition, $namespace, $filePath);
         }
     }
 
     /**
-     * Scan a schema's inline objects after allOf/oneOf/anyOf composition.
-     *
-     * Getters are emitted from the composed schema, so inline interfaces must be discovered
-     * from the same composed view or they end up referenced but never generated.
+     * @param string $defName Name of the definition
+     * @param array $definition Definition schema
+     * @param string $namespace Namespace for the interface
+     * @param string $currentFile File the definition lives in
+     * @return void
+     */
+    private function processDefinition(
+        string $defName,
+        array $definition,
+        string $namespace,
+        string $currentFile
+    ): void {
+        if ($this->parser->isRefAlias($definition)) {
+            try {
+                $target = $this->parser->resolveRefTarget($definition['$ref'], $currentFile);
+            } catch (\RuntimeException $e) {
+                $this->recordError("Cannot resolve alias {$defName} in {$currentFile}: " . $e->getMessage());
+                return;
+            }
+
+            $definition = $target['schema'];
+            $currentFile = $target['file'];
+
+            // An alias is just another spelling of the target, and TypeMapper names references to it
+            // after the target's file. Following suit here makes the emission deduplicate instead of
+            // producing an unreferenced twin under the declaring file's namespace.
+            $namespace = $this->parser->getNamespaceFromPath($currentFile);
+        }
+
+        // Must stay in step with TypeMapper: anything it types as a value must not get an interface,
+        // and anything it types as an interface must get one.
+        if (!$this->needsInterface($definition)) {
+            return;
+        }
+
+        $this->emit(
+            $this->typeMapper->definitionInterfaceName($defName, $currentFile),
+            $definition,
+            $namespace,
+            $currentFile
+        );
+    }
+
+    /**
+     * @param array $schema Schema fragment
+     * @return bool
+     */
+    private function needsInterface(array $schema): bool
+    {
+        if (isset($schema['properties']) && is_array($schema['properties']) && $schema['properties'] !== []) {
+            return true;
+        }
+
+        return isset($schema['allOf']) || isset($schema['oneOf']) || isset($schema['anyOf']);
+    }
+
+    /**
+     * @param string $interfaceName Interface name, with or without the suffix
+     * @param array $schema Schema to emit
+     * @param string $namespace Namespace for the interface
+     * @param string $currentFile File the schema lives in
+     * @return void
+     */
+    private function emit(string $interfaceName, array $schema, string $namespace, string $currentFile): void
+    {
+        if ($this->builder->isGenerated($namespace, $interfaceName, $currentFile)) {
+            return;
+        }
+
+        try {
+            $file = $this->builder->buildInterface($interfaceName, $schema, $namespace, $currentFile);
+            $this->builder->saveInterface($file, $this->outputDir, $namespace, $interfaceName);
+
+            $dto = $this->dtoBuilder->buildDto($interfaceName, $schema, $namespace, $currentFile);
+            $this->dtoBuilder->saveDto($dto, $this->outputDir, $namespace, $interfaceName);
+        } catch (\RuntimeException $e) {
+            $this->recordError("Cannot build {$namespace}\\{$interfaceName}: " . $e->getMessage());
+            return;
+        }
+
+        $this->builder->markGenerated($namespace, $interfaceName, $currentFile);
+
+        $this->processInlineObjects($schema, $this->builder->normalizeInterfaceName($interfaceName), $namespace, $currentFile);
+    }
+
+    /**
+     * Getters come from the composed schema, so inline interfaces have to be discovered from the
+     * same composed view or they end up referenced but never emitted.
      *
      * @param array $schema Schema definition
      * @param string $parentName Parent interface name
      * @param string $namespace Namespace for generated interfaces
-     * @param string $currentFile Current file path
+     * @param string $currentFile File the schema lives in
      * @return void
      */
-    private function processCompositeInlineObjects(
+    private function processInlineObjects(
         array $schema,
         string $parentName,
         string $namespace,
@@ -216,162 +242,23 @@ class Generator
     ): void {
         try {
             $merged = $this->builder->resolveCompositeSchema($schema, $currentFile);
-        } catch (\Exception $e) {
+        } catch (\RuntimeException $e) {
             $this->recordError("Cannot compose {$parentName} in {$currentFile}: " . $e->getMessage());
             return;
         }
 
-        if (isset($merged['properties'])) {
-            $this->processInlineObjects($merged['properties'], $parentName, $namespace, $currentFile);
-        }
-    }
-
-    /**
-     * Generate interface for root schema
-     *
-     * @param string $filePath Path to the schema file
-     * @param array $schema Schema definition
-     * @param string $namespace Namespace for the interface
-     * @return void
-     */
-    private function generateRootInterface(string $filePath, array $schema, string $namespace): void
-    {
-        $interfaceName = $this->parser->getInterfaceName($schema, $filePath);
-
-        if ($this->builder->isGenerated($namespace, $interfaceName, $filePath)) {
-            return;
-        }
-
-        echo "  Generating interface: {$interfaceName}\n";
-
-        $file = $this->builder->buildInterface($interfaceName, $schema, $namespace, $filePath);
-        $outputPath = $this->builder->saveInterface($file, $this->outputDir, $namespace, $interfaceName);
-
-        $this->builder->markGenerated($namespace, $interfaceName, $filePath);
-
-        echo "    Saved to: " . $this->getRelativePath($outputPath) . "\n";
-    }
-
-    /**
-     * Generate interface for a $defs definition
-     *
-     * @param string $defName Name of the definition
-     * @param array $definition Definition schema
-     * @param string $namespace Namespace for the interface
-     * @param string $currentFile Current file path
-     * @return void
-     */
-    private function generateDefinitionInterface(
-        string $defName,
-        array $definition,
-        string $namespace,
-        string $currentFile
-    ): void {
-        // A bare-$ref $def is an alias: TypeMapper still names an interface for it, so it must be
-        // emitted from the target's body, resolved against the target's own file.
-        $definitionFile = $currentFile;
-
-        if ($this->parser->isRefAlias($definition)) {
-            try {
-                $target = $this->parser->resolveRefTarget($definition['$ref'], $currentFile);
-            } catch (\Exception $e) {
-                $this->recordError("Cannot resolve alias {$defName} in {$currentFile}: " . $e->getMessage());
-                return;
+        foreach ($merged['properties'] ?? [] as $propertyName => $property) {
+            if (!is_array($property)) {
+                continue;
             }
 
-            $definition = $target['schema'];
-            $definitionFile = $target['file'];
-        }
-
-        // Skip if not an object and doesn't have complex type indicators
-        $hasComplexType = isset($definition['allOf']) ||
-                         isset($definition['oneOf']) ||
-                         isset($definition['anyOf']) ||
-                         isset($definition['properties']);
-
-        if (!$hasComplexType && (!isset($definition['type']) || $definition['type'] !== 'object')) {
-            return;
-        }
-
-        // Skip if it's just an object with additionalProperties (map/dictionary type)
-        if (isset($definition['type']) && 
-            $definition['type'] === 'object' && 
-            isset($definition['additionalProperties']) && 
-            !isset($definition['properties']) &&
-            !isset($definition['allOf']) &&
-            !isset($definition['oneOf']) &&
-            !isset($definition['anyOf'])) {
-            return;
-        }
-
-        // Determine if we should prefix with filename
-        // Only prefix if the file has no root schema (is a "definition library")
-        $hasRootSchema = $this->parser->hasRootObject($currentFile);
-
-        if ($hasRootSchema) {
-            // File has a root schema, so $defs are supplementary - don't prefix
-            $interfaceName = $this->sanitizeInterfaceName($defName);
-        } else {
-            // File is a definition library - prefix to avoid conflicts
-            $fileBaseName = basename($currentFile, '.json');
-            $fileBaseName = $this->sanitizeInterfaceName($fileBaseName);
-            $defInterfaceName = $this->sanitizeInterfaceName($defName);
-            $interfaceName = $fileBaseName . $defInterfaceName;
-        }
-
-        if ($this->builder->isGenerated($namespace, $interfaceName, $definitionFile)) {
-            return;
-        }
-
-        echo "  Generating definition interface: {$interfaceName}\n";
-
-        $file = $this->builder->buildDefinitionInterface($interfaceName, $definition, $namespace, $definitionFile);
-        $outputPath = $this->builder->saveInterface($file, $this->outputDir, $namespace, $interfaceName);
-
-        $this->builder->markGenerated($namespace, $interfaceName, $definitionFile);
-
-        echo "    Saved to: " . $this->getRelativePath($outputPath) . "\n";
-
-        $this->processCompositeInlineObjects($definition, $interfaceName, $namespace, $definitionFile);
-    }
-
-    /**
-     * Process inline objects in properties
-     *
-     * @param array $properties Properties array from schema
-     * @param string $parentName Parent interface name
-     * @param string $namespace Namespace for generated interfaces
-     * @param string $currentFile Current file path
-     * @return void
-     */
-    private function processInlineObjects(
-        array $properties,
-        string $parentName,
-        string $namespace,
-        string $currentFile
-    ): void {
-        foreach ($properties as $propertyName => $property) {
-            // Check if this is an inline object
             if ($this->typeMapper->isInlineObject($property)) {
-                $this->generateInlineObjectInterface(
-                    $parentName,
-                    $propertyName,
-                    $property,
-                    $namespace,
-                    $currentFile
-                );
+                $this->emitInlineObject($parentName, (string)$propertyName, $property, $namespace, $currentFile);
             }
 
-            // Recursively process nested objects
-            if (isset($property['properties'])) {
-                $inlineName = $this->typeMapper->generateInlineInterfaceName($parentName, $propertyName);
-                $this->processInlineObjects($property['properties'], $inlineName, $namespace, $currentFile);
-            }
-
-            // Process array items if they're inline objects
-            if (isset($property['items']) && $this->typeMapper->isInlineObject($property['items'])) {
-                $itemName = $parentName . ucfirst($propertyName) . 'Item';
-                $this->generateInlineObjectInterface(
+            if (isset($property['items']) && is_array($property['items'])
+                && $this->typeMapper->isInlineObject($property['items'])) {
+                $this->emitInlineObject(
                     $parentName,
                     $propertyName . '_item',
                     $property['items'],
@@ -383,16 +270,14 @@ class Generator
     }
 
     /**
-     * Generate interface for inline object
-     *
      * @param string $parentName Parent interface name
      * @param string $propertyName Property name
      * @param array $property Property schema definition
      * @param string $namespace Namespace for the interface
-     * @param string $currentFile Current file path
+     * @param string $currentFile File the property is declared in
      * @return void
      */
-    private function generateInlineObjectInterface(
+    private function emitInlineObject(
         string $parentName,
         string $propertyName,
         array $property,
@@ -405,79 +290,40 @@ class Generator
             return;
         }
 
-        echo "  Generating inline object interface: {$interfaceName}\n";
+        try {
+            $file = $this->builder->buildInlineObjectInterface(
+                $parentName,
+                $propertyName,
+                $property,
+                $namespace,
+                $currentFile
+            );
+            $this->builder->saveInterface($file, $this->outputDir, $namespace, $interfaceName);
 
-        $file = $this->builder->buildInlineObjectInterface(
-            $parentName,
-            $propertyName,
-            $property,
-            $namespace,
-            $currentFile
-        );
-        $outputPath = $this->builder->saveInterface($file, $this->outputDir, $namespace, $interfaceName);
-
-        $this->builder->markGenerated($namespace, $interfaceName, $currentFile);
-
-        echo "    Saved to: " . $this->getRelativePath($outputPath) . "\n";
-    }
-
-    /**
-     * Get relative path from output directory
-     *
-     * @param string $path Absolute path
-     * @return string Relative path from output directory
-     */
-    private function getRelativePath(string $path): string
-    {
-        $outputDir = realpath($this->outputDir);
-        $path = realpath($path);
-
-        if ($outputDir && $path && strpos($path, $outputDir) === 0) {
-            return substr($path, strlen($outputDir) + 1);
-        }
-
-        return $path;
-    }
-
-    /**
-     * Sanitize interface name
-     *
-     * @param string $name Raw name to sanitize
-     * @return string Valid PHP interface name in PascalCase
-     */
-    private function sanitizeInterfaceName(string $name): string
-    {
-        // Remove common suffixes
-        $name = preg_replace('/\.(create_req|update_req|resp)$/', '', $name);
-        $name = preg_replace('/_(create_req|update_req|resp)$/', '', $name);
-        
-        // Convert to PascalCase
-        $name = str_replace(['-', '_', '.', ' '], ' ', $name);
-        $name = ucwords($name);
-        return str_replace(' ', '', $name);
-    }
-
-    /**
-     * Clean output directory
-     *
-     * @return void
-     */
-    public function cleanOutputDirectory(): void
-    {
-        if (!is_dir($this->outputDir)) {
+            $dto = $this->dtoBuilder->buildDto($interfaceName, $property, $namespace, $currentFile);
+            $this->dtoBuilder->saveDto($dto, $this->outputDir, $namespace, $interfaceName);
+        } catch (\RuntimeException $e) {
+            $this->recordError("Cannot build {$namespace}\\{$interfaceName}: " . $e->getMessage());
             return;
         }
 
-        echo "Cleaning output directory...\n";
+        $this->builder->markGenerated($namespace, $interfaceName, $currentFile);
 
-        $this->removeDirectory($this->outputDir);
-        mkdir($this->outputDir, 0755, true);
+        $this->processInlineObjects($property, $interfaceName, $namespace, $currentFile);
     }
 
     /**
-     * Remove directory recursively
-     *
-     * @param string $dir Directory path to remove
+     * @param string $message Error message
+     * @return void
+     */
+    private function recordError(string $message): void
+    {
+        $this->errors[] = $message;
+        echo "  Error: {$message}\n";
+    }
+
+    /**
+     * @param string $dir Directory to remove
      * @return void
      */
     private function removeDirectory(string $dir): void
@@ -486,16 +332,9 @@ class Generator
             return;
         }
 
-        $files = array_diff(scandir($dir), ['.', '..']);
-        
-        foreach ($files as $file) {
-            $path = $dir . '/' . $file;
-            
-            if (is_dir($path)) {
-                $this->removeDirectory($path);
-            } else {
-                unlink($path);
-            }
+        foreach (array_diff(scandir($dir) ?: [], ['.', '..']) as $entry) {
+            $path = $dir . '/' . $entry;
+            is_dir($path) ? $this->removeDirectory($path) : unlink($path);
         }
 
         rmdir($dir);
