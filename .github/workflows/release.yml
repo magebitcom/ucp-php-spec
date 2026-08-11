@@ -1,0 +1,130 @@
+name: Release
+
+# Manual only. Releasing is a decision, not a consequence of pushing.
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version, without the leading v (e.g. 1.2.0)'
+        required: true
+        type: string
+      spec_target:
+        description: 'UCP spec release this targets (e.g. 2026-04-08). Leave blank to keep the current one.'
+        required: false
+        type: string
+      prerelease:
+        description: 'Mark as a pre-release'
+        required: false
+        type: boolean
+        default: false
+      dry_run:
+        description: 'Run every check but do not tag or publish'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate version input
+        run: |
+          VERSION='${{ inputs.version }}'
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
+            echo "::error::'$VERSION' is not semver MAJOR.MINOR.PATCH[-prerelease]."
+            exit 1
+          fi
+          if git rev-parse "v$VERSION" >/dev/null 2>&1; then
+            echo "::error::Tag v$VERSION already exists. Releases are immutable."
+            exit 1
+          fi
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          coverage: none
+
+      - name: Validate composer.json
+        run: composer validate --strict --no-check-publish
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress
+
+      - name: Unit tests
+        run: composer test
+
+      # The committed generated/ tree must match what generate.php produces from
+      # spec/. A release that fails this is shipping code nobody can reproduce.
+      - name: Generated code is not stale
+        run: composer check
+
+      - name: Spec target is consistent
+        run: |
+          MANIFEST=$(jq -r '.spec.target // "null"' spec.manifest.json)
+          DECLARED=$(jq -r '.extra.ucp."spec-target" // "null"' composer.json)
+          INPUT='${{ inputs.spec_target }}'
+
+          if [ -n "$INPUT" ] && [ "$INPUT" != "$DECLARED" ]; then
+            echo "::error::spec_target input '$INPUT' does not match composer.json extra.ucp.spec-target '$DECLARED'. Commit the change first."
+            exit 1
+          fi
+          if [ "$MANIFEST" != "$DECLARED" ]; then
+            echo "::error::spec.manifest.json target '$MANIFEST' disagrees with composer.json '$DECLARED'."
+            exit 1
+          fi
+          echo "SPEC_TARGET=$DECLARED" >> "$GITHUB_ENV"
+
+      # A major bump is mandatory when the spec target moves, and forbidden when
+      # it has not. This is the rule that keeps `^N.0` meaningful as "targets spec X".
+      - name: Major version matches spec target change
+        run: |
+          NEW_MAJOR="${VERSION%%.*}"
+          PREV_TAG=$(git tag --list 'v*' --sort=-v:refname | head -1)
+
+          if [ -z "$PREV_TAG" ]; then
+            echo "First release; skipping major-bump check."
+            exit 0
+          fi
+
+          PREV_MAJOR=$(echo "${PREV_TAG#v}" | cut -d. -f1)
+          PREV_TARGET=$(git show "$PREV_TAG:composer.json" | jq -r '.extra.ucp."spec-target" // "null"')
+
+          if [ "$PREV_TARGET" != "$SPEC_TARGET" ] && [ "$NEW_MAJOR" = "$PREV_MAJOR" ]; then
+            echo "::error::Spec target moved $PREV_TARGET -> $SPEC_TARGET but major stayed at $NEW_MAJOR."
+            exit 1
+          fi
+          if [ "$PREV_TARGET" = "$SPEC_TARGET" ] && [ "$NEW_MAJOR" != "$PREV_MAJOR" ]; then
+            echo "::warning::Major bumped to $NEW_MAJOR without a spec target change — only correct for a breaking codegen change."
+          fi
+
+      - name: Tag and release
+        if: ${{ !inputs.dry_run }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name  'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git tag -a "v$VERSION" -m "Release v$VERSION (UCP spec $SPEC_TARGET)"
+          git push origin "v$VERSION"
+
+          gh release create "v$VERSION" \
+            --title "v$VERSION" \
+            --generate-notes \
+            ${{ inputs.prerelease && '--prerelease' || '' }} \
+            --notes "**Targets UCP spec \`$SPEC_TARGET\`.**
+
+          Provenance of the vendored \`spec/\` snapshot is recorded in \`spec.manifest.json\`."
+
+      - name: Dry run summary
+        if: ${{ inputs.dry_run }}
+        run: |
+          echo "### Dry run passed" >> "$GITHUB_STEP_SUMMARY"
+          echo "Would tag \`v$VERSION\` targeting UCP spec \`$SPEC_TARGET\`." >> "$GITHUB_STEP_SUMMARY"

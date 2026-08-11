@@ -11,8 +11,14 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Magebit\\UcpSpecGenerator\\": "src/"
+            "Magebit\\UcpSpecGenerator\\": "src/",
+            "Magebit\\UcpSpecGenerator\\Test\\": "tests/"
         }
+    },
+    "scripts": {
+        "generate": "php generate.php --clean",
+        "check": "php generate.php --check",
+        "test": "phpunit"
     },
     "authors": [
         {
@@ -24,6 +30,12 @@
         "php": ">=8.1"
     },
     "require-dev": {
-        "nette/php-generator": "^4.2"
+        "nette/php-generator": "^4.2",
+        "phpunit/phpunit": "^10.5"
+    },
+    "extra": {
+        "ucp": {
+            "spec-target": "2026-04-08"
+        }
     }
 }

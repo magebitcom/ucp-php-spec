@@ -17,8 +17,12 @@ class Generator
     private TypeMapper $typeMapper;
     private PhpDocGenerator $phpDocGenerator;
     private InterfaceBuilder $builder;
+    private string $specDir;
     private string $outputDir;
     private array $processedFiles = [];
+    private array $errors = [];
+    private array $collisions = [];
+    private array $schemaFiles = [];
 
     /**
      * Constructor
@@ -28,6 +32,7 @@ class Generator
      */
     public function __construct(string $specDir, string $outputDir)
     {
+        $this->specDir = rtrim($specDir, '/');
         $this->parser = new SchemaParser($specDir);
         $this->typeMapper = new TypeMapper($this->parser);
         $this->phpDocGenerator = new PhpDocGenerator($this->parser, $this->typeMapper);
@@ -45,14 +50,14 @@ class Generator
     {
         echo "Starting interface generation...\n";
 
-        // For this project, scan the spec directory
-        $specDir = dirname(__DIR__) . '/spec';
-        
-        if (!is_dir($specDir)) {
-            throw new \RuntimeException("Spec directory not found: {$specDir}");
+        if (!is_dir($this->specDir)) {
+            throw new \RuntimeException("Spec directory not found: {$this->specDir}");
         }
 
-        $schemaFiles = $this->parser->findSchemaFiles($specDir);
+        $this->errors = [];
+        $this->collisions = [];
+        $schemaFiles = $this->parser->findSchemaFiles($this->specDir);
+        $this->schemaFiles = $schemaFiles;
 
         echo "Found " . count($schemaFiles) . " schema files\n";
 
@@ -67,6 +72,7 @@ class Generator
         }
         
         $apiCount = count($this->builder->getGeneratedInterfaces());
+        $this->collectCollisions();
 
         // Reset for MutableApi generation
         $this->processedFiles = [];
@@ -83,11 +89,66 @@ class Generator
         }
 
         $mutableApiCount = count($this->builder->getGeneratedInterfaces());
+        $this->collectCollisions();
 
         echo "\n=== Generation complete! ===\n";
         echo "Generated " . $apiCount . " Api interfaces (immutable)\n";
         echo "Generated " . $mutableApiCount . " MutableApi interfaces (mutable)\n";
         echo "Output directory: " . $this->outputDir . "\n";
+    }
+
+    /**
+     * Record a non-fatal generation failure so the run can still be failed at the end
+     *
+     * @param string $message Error message
+     * @return void
+     */
+    private function recordError(string $message): void
+    {
+        $this->errors[] = $message;
+        echo "  Error: {$message}\n";
+    }
+
+    /**
+     * Merge the current builder's collisions into the run-wide list
+     *
+     * @return void
+     */
+    private function collectCollisions(): void
+    {
+        foreach ($this->builder->getCollisions() as $key => $sources) {
+            $this->collisions[$key] = array_merge($this->collisions[$key] ?? [], $sources);
+        }
+    }
+
+    /**
+     * Errors recorded during the last generate() run
+     *
+     * @return string[] Error messages
+     */
+    public function getErrors(): array
+    {
+        return $this->errors;
+    }
+
+    /**
+     * Interface names produced from more than one schema source during the last run
+     *
+     * @return array<string, string[]> Map of FQN to the extra source files that reused it
+     */
+    public function getCollisions(): array
+    {
+        return $this->collisions;
+    }
+
+    /**
+     * Schema files consumed by the last generate() run, in generation order
+     *
+     * @return string[] Absolute file paths
+     */
+    public function getSchemaFiles(): array
+    {
+        return $this->schemaFiles;
     }
 
     /**
@@ -125,14 +186,43 @@ class Generator
                 $this->generateDefinitionInterface($defName, $definition, $namespace, $filePath);
             }
 
-            // Process inline objects in properties
-            if (isset($schema['properties'])) {
+            if ($this->parser->hasRootObject($filePath)) {
                 $rootName = $this->parser->getInterfaceName($schema, $filePath);
-                $this->processInlineObjects($schema['properties'], $rootName, $namespace, $filePath);
+                $this->processCompositeInlineObjects($schema, $rootName, $namespace, $filePath);
             }
 
         } catch (\Exception $e) {
-            echo "  Error: " . $e->getMessage() . "\n";
+            $this->recordError("{$filePath}: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Scan a schema's inline objects after allOf/oneOf/anyOf composition.
+     *
+     * Getters are emitted from the composed schema, so inline interfaces must be discovered
+     * from the same composed view or they end up referenced but never generated.
+     *
+     * @param array $schema Schema definition
+     * @param string $parentName Parent interface name
+     * @param string $namespace Namespace for generated interfaces
+     * @param string $currentFile Current file path
+     * @return void
+     */
+    private function processCompositeInlineObjects(
+        array $schema,
+        string $parentName,
+        string $namespace,
+        string $currentFile
+    ): void {
+        try {
+            $merged = $this->builder->resolveCompositeSchema($schema, $currentFile);
+        } catch (\Exception $e) {
+            $this->recordError("Cannot compose {$parentName} in {$currentFile}: " . $e->getMessage());
+            return;
+        }
+
+        if (isset($merged['properties'])) {
+            $this->processInlineObjects($merged['properties'], $parentName, $namespace, $currentFile);
         }
     }
 
@@ -148,24 +238,16 @@ class Generator
     {
         $interfaceName = $this->parser->getInterfaceName($schema, $filePath);
 
-        // Check if already generated
-        if ($this->builder->isGenerated($namespace, $interfaceName)) {
+        if ($this->builder->isGenerated($namespace, $interfaceName, $filePath)) {
             return;
         }
 
         echo "  Generating interface: {$interfaceName}\n";
 
         $file = $this->builder->buildInterface($interfaceName, $schema, $namespace, $filePath);
-        
-        // Append "Interface" suffix for filename
-        $fileInterfaceName = $interfaceName;
-        if (!str_ends_with($fileInterfaceName, 'Interface')) {
-            $fileInterfaceName .= 'Interface';
-        }
-        
-        $outputPath = $this->builder->saveInterface($file, $this->outputDir, $namespace, $fileInterfaceName);
-        
-        $this->builder->markGenerated($namespace, $fileInterfaceName);
+        $outputPath = $this->builder->saveInterface($file, $this->outputDir, $namespace, $interfaceName);
+
+        $this->builder->markGenerated($namespace, $interfaceName, $filePath);
 
         echo "    Saved to: " . $this->getRelativePath($outputPath) . "\n";
     }
@@ -185,16 +267,32 @@ class Generator
         string $namespace,
         string $currentFile
     ): void {
+        // A bare-$ref $def is an alias: TypeMapper still names an interface for it, so it must be
+        // emitted from the target's body, resolved against the target's own file.
+        $definitionFile = $currentFile;
+
+        if ($this->parser->isRefAlias($definition)) {
+            try {
+                $target = $this->parser->resolveRefTarget($definition['$ref'], $currentFile);
+            } catch (\Exception $e) {
+                $this->recordError("Cannot resolve alias {$defName} in {$currentFile}: " . $e->getMessage());
+                return;
+            }
+
+            $definition = $target['schema'];
+            $definitionFile = $target['file'];
+        }
+
         // Skip if not an object and doesn't have complex type indicators
-        $hasComplexType = isset($definition['allOf']) || 
-                         isset($definition['oneOf']) || 
+        $hasComplexType = isset($definition['allOf']) ||
+                         isset($definition['oneOf']) ||
                          isset($definition['anyOf']) ||
                          isset($definition['properties']);
-        
+
         if (!$hasComplexType && (!isset($definition['type']) || $definition['type'] !== 'object')) {
             return;
         }
-        
+
         // Skip if it's just an object with additionalProperties (map/dictionary type)
         if (isset($definition['type']) && 
             $definition['type'] === 'object' && 
@@ -208,9 +306,8 @@ class Generator
 
         // Determine if we should prefix with filename
         // Only prefix if the file has no root schema (is a "definition library")
-        $schema = $this->parser->loadSchema($currentFile);
         $hasRootSchema = $this->parser->hasRootObject($currentFile);
-        
+
         if ($hasRootSchema) {
             // File has a root schema, so $defs are supplementary - don't prefix
             $interfaceName = $this->sanitizeInterfaceName($defName);
@@ -222,31 +319,20 @@ class Generator
             $interfaceName = $fileBaseName . $defInterfaceName;
         }
 
-        // Check if already generated
-        if ($this->builder->isGenerated($namespace, $interfaceName)) {
+        if ($this->builder->isGenerated($namespace, $interfaceName, $definitionFile)) {
             return;
         }
 
         echo "  Generating definition interface: {$interfaceName}\n";
 
-        $file = $this->builder->buildDefinitionInterface($interfaceName, $definition, $namespace, $currentFile);
-        
-        // Append "Interface" suffix for filename
-        $fileInterfaceName = $interfaceName;
-        if (!str_ends_with($fileInterfaceName, 'Interface')) {
-            $fileInterfaceName .= 'Interface';
-        }
-        
-        $outputPath = $this->builder->saveInterface($file, $this->outputDir, $namespace, $fileInterfaceName);
-        
-        $this->builder->markGenerated($namespace, $fileInterfaceName);
+        $file = $this->builder->buildDefinitionInterface($interfaceName, $definition, $namespace, $definitionFile);
+        $outputPath = $this->builder->saveInterface($file, $this->outputDir, $namespace, $interfaceName);
+
+        $this->builder->markGenerated($namespace, $interfaceName, $definitionFile);
 
         echo "    Saved to: " . $this->getRelativePath($outputPath) . "\n";
 
-        // Process inline objects in definition properties
-        if (isset($definition['properties'])) {
-            $this->processInlineObjects($definition['properties'], $interfaceName, $namespace, $currentFile);
-        }
+        $this->processCompositeInlineObjects($definition, $interfaceName, $namespace, $definitionFile);
     }
 
     /**
@@ -315,8 +401,7 @@ class Generator
     ): void {
         $interfaceName = $this->typeMapper->generateInlineInterfaceName($parentName, $propertyName);
 
-        // Check if already generated
-        if ($this->builder->isGenerated($namespace, $interfaceName)) {
+        if ($this->builder->isGenerated($namespace, $interfaceName, $currentFile)) {
             return;
         }
 
@@ -330,8 +415,8 @@ class Generator
             $currentFile
         );
         $outputPath = $this->builder->saveInterface($file, $this->outputDir, $namespace, $interfaceName);
-        
-        $this->builder->markGenerated($namespace, $interfaceName);
+
+        $this->builder->markGenerated($namespace, $interfaceName, $currentFile);
 
         echo "    Saved to: " . $this->getRelativePath($outputPath) . "\n";
     }
