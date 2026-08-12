@@ -18,7 +18,6 @@ namespace Magebit\UcpSpec\Api\Shopping;
 interface DiscountCreateRequestDiscountsObjectInterface
 {
     public const KEY_CODES = 'codes';
-    public const KEY_APPLIED = 'applied';
 
     /**
      * Discount codes to apply. Case-insensitive. Replaces previously submitted codes. Send empty array to clear.
@@ -34,19 +33,4 @@ interface DiscountCreateRequestDiscountsObjectInterface
      * @return self
      */
     public function setCodes(array|null $codes): self;
-
-    /**
-     * Discounts successfully applied (code-based and automatic).
-     *
-     * @return \Magebit\UcpSpec\Api\Shopping\DiscountCreateRequestAppliedDiscountInterface[]|null
-     */
-    public function getApplied(): array|null;
-
-    /**
-     * Discounts successfully applied (code-based and automatic).
-     *
-     * @param \Magebit\UcpSpec\Api\Shopping\DiscountCreateRequestAppliedDiscountInterface[]|null $applied
-     * @return self
-     */
-    public function setApplied(array|null $applied): self;
 }

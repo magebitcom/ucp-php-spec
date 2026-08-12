@@ -2,7 +2,6 @@
   "openrpc": "1.3.2",
   "info": {
     "title": "UCP Shopping Service",
-    "version": "2026-01-11",
     "description": "Canonical MCP/JSON-RPC interface for UCP Shopping service. Schema references are logical pointers - actual payload shape is determined by negotiated capabilities.\n\n**Endpoint Resolution:** This spec defines methods only. The endpoint URL MUST be obtained from the merchant's discovery profile at `/.well-known/ucp` under `services[\"dev.ucp.shopping\"][transport=mcp].endpoint`. The server entry below is a placeholder for tooling compatibility."
   },
   "servers": [
@@ -20,20 +19,40 @@
   ],
   "components": {
     "schemas": {
+      "checkout_result": {
+        "oneOf": [
+          { "$ref": "../../schemas/shopping/checkout.json" },
+          { "$ref": "../../schemas/shopping/types/error_response.json" }
+        ]
+      },
+      "cart_result": {
+        "oneOf": [
+          { "$ref": "../../schemas/shopping/cart.json" },
+          { "$ref": "../../schemas/shopping/types/error_response.json" }
+        ]
+      },
+      "order_result": {
+        "oneOf": [
+          { "$ref": "../../schemas/shopping/order.json" },
+          { "$ref": "../../schemas/shopping/types/error_response.json" }
+        ]
+      },
+      "catalog_get_product_result": {
+        "oneOf": [
+          { "$ref": "../../schemas/shopping/catalog_lookup.json#/$defs/get_product_response" },
+          { "$ref": "../../schemas/shopping/types/error_response.json" }
+        ]
+      },
       "meta": {
         "type": "object",
         "description": "Request metadata.",
-        "required": [
-          "ucp-agent"
-        ],
+        "required": ["ucp-agent"],
         "additionalProperties": true,
         "properties": {
           "ucp-agent": {
             "type": "object",
             "description": "Platform agent identification. Maps to HTTP UCP-Agent header.",
-            "required": [
-              "profile"
-            ],
+            "required": ["profile"],
             "properties": {
               "profile": {
                 "type": "string",
@@ -55,27 +74,22 @@
     {
       "name": "create_checkout",
       "summary": "Create a checkout",
+      "description": "Create a new checkout session.",
       "params": [
         {
           "name": "meta",
           "required": true,
-          "schema": {
-            "$ref": "#/components/schemas/meta"
-          }
+          "schema": {"$ref": "#/components/schemas/meta"}
         },
         {
           "name": "checkout",
           "required": true,
-          "schema": {
-            "$ref": "../../schemas/shopping/checkout.create_req.json"
-          }
+          "schema": {"$ref": "../../schemas/shopping/checkout.json"}
         }
       ],
       "result": {
         "name": "checkout",
-        "schema": {
-          "$ref": "../../schemas/shopping/checkout_resp.json"
-        }
+        "schema": {"$ref": "#/components/schemas/checkout_result"}
       }
     },
     {
@@ -85,23 +99,17 @@
         {
           "name": "meta",
           "required": true,
-          "schema": {
-            "$ref": "#/components/schemas/meta"
-          }
+          "schema": {"$ref": "#/components/schemas/meta"}
         },
         {
           "name": "id",
           "required": true,
-          "schema": {
-            "type": "string"
-          }
+          "schema": {"type": "string"}
         }
       ],
       "result": {
         "name": "checkout",
-        "schema": {
-          "$ref": "../../schemas/shopping/checkout_resp.json"
-        }
+        "schema": {"$ref": "#/components/schemas/checkout_result"}
       }
     },
     {
@@ -111,30 +119,22 @@
         {
           "name": "meta",
           "required": true,
-          "schema": {
-            "$ref": "#/components/schemas/meta"
-          }
+          "schema": {"$ref": "#/components/schemas/meta"}
         },
         {
           "name": "id",
           "required": true,
-          "schema": {
-            "type": "string"
-          }
+          "schema": {"type": "string"}
         },
         {
           "name": "checkout",
           "required": true,
-          "schema": {
-            "$ref": "../../schemas/shopping/checkout.update_req.json"
-          }
+          "schema": {"$ref": "../../schemas/shopping/checkout.json"}
         }
       ],
       "result": {
         "name": "checkout",
-        "schema": {
-          "$ref": "../../schemas/shopping/checkout_resp.json"
-        }
+        "schema": {"$ref": "#/components/schemas/checkout_result"}
       }
     },
     {
@@ -146,46 +146,25 @@
           "required": true,
           "schema": {
             "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              },
-              {
-                "required": [
-                  "ucp-agent",
-                  "idempotency-key"
-                ]
-              }
+              {"$ref": "#/components/schemas/meta"},
+              {"required": ["ucp-agent", "idempotency-key"]}
             ]
           }
         },
         {
           "name": "id",
           "required": true,
-          "schema": {
-            "type": "string"
-          }
+          "schema": {"type": "string"}
         },
         {
           "name": "checkout",
           "required": true,
-          "schema": {
-            "$ref": "../../schemas/shopping/checkout.complete_req.json"
-          }
-        },
-        {
-          "name": "idempotency_key",
-          "required": true,
-          "schema": {
-            "type": "string",
-            "format": "uuid"
-          }
+          "schema": {"$ref": "../../schemas/shopping/checkout.json"}
         }
       ],
       "result": {
         "name": "checkout",
-        "schema": {
-          "$ref": "../../schemas/shopping/checkout_resp.json"
-        }
+        "schema": {"$ref": "#/components/schemas/checkout_result"}
       }
     },
     {
@@ -197,31 +176,195 @@
           "required": true,
           "schema": {
             "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              },
-              {
-                "required": [
-                  "ucp-agent",
-                  "idempotency-key"
-                ]
-              }
+              {"$ref": "#/components/schemas/meta"},
+              {"required": ["ucp-agent", "idempotency-key"]}
             ]
           }
         },
         {
           "name": "id",
           "required": true,
-          "schema": {
-            "type": "string"
-          }
+          "schema": {"type": "string"}
         }
       ],
       "result": {
         "name": "checkout",
-        "schema": {
-          "$ref": "../../schemas/shopping/checkout_resp.json"
+        "schema": {"$ref": "#/components/schemas/checkout_result"}
+      }
+    },
+    {
+      "name": "create_cart",
+      "summary": "Create a cart",
+      "description": "Create a new cart session.",
+      "params": [
+        {
+          "name": "meta",
+          "required": true,
+          "schema": {"$ref": "#/components/schemas/meta"}
+        },
+        {
+          "name": "cart",
+          "required": true,
+          "schema": {"$ref": "../../schemas/shopping/cart.json"}
         }
+      ],
+      "result": {
+        "name": "cart",
+        "schema": {"$ref": "#/components/schemas/cart_result"}
+      }
+    },
+    {
+      "name": "get_cart",
+      "summary": "Get cart",
+      "params": [
+        {
+          "name": "meta",
+          "required": true,
+          "schema": {"$ref": "#/components/schemas/meta"}
+        },
+        {
+          "name": "id",
+          "required": true,
+          "schema": {"type": "string"}
+        }
+      ],
+      "result": {
+        "name": "cart",
+        "schema": {"$ref": "#/components/schemas/cart_result"}
+      }
+    },
+    {
+      "name": "update_cart",
+      "summary": "Update cart",
+      "params": [
+        {
+          "name": "meta",
+          "required": true,
+          "schema": {"$ref": "#/components/schemas/meta"}
+        },
+        {
+          "name": "id",
+          "required": true,
+          "schema": {"type": "string"}
+        },
+        {
+          "name": "cart",
+          "required": true,
+          "schema": {"$ref": "../../schemas/shopping/cart.json"}
+        }
+      ],
+      "result": {
+        "name": "cart",
+        "schema": {"$ref": "#/components/schemas/cart_result"}
+      }
+    },
+    {
+      "name": "cancel_cart",
+      "summary": "Cancel cart",
+      "params": [
+        {
+          "name": "meta",
+          "required": true,
+          "schema": {
+            "allOf": [
+              {"$ref": "#/components/schemas/meta"},
+              {"required": ["ucp-agent", "idempotency-key"]}
+            ]
+          }
+        },
+        {
+          "name": "id",
+          "required": true,
+          "schema": {"type": "string"}
+        }
+      ],
+      "result": {
+        "name": "cart",
+        "schema": {"$ref": "#/components/schemas/cart_result"}
+      }
+    },
+    {
+      "name": "search_catalog",
+      "summary": "Search for products in the catalog",
+      "description": "Search for products using query text, filters, and pagination.",
+      "params": [
+        {
+          "name": "meta",
+          "required": true,
+          "schema": {"$ref": "#/components/schemas/meta"}
+        },
+        {
+          "name": "catalog",
+          "required": true,
+          "schema": {"$ref": "../../schemas/shopping/catalog_search.json#/$defs/search_request"}
+        }
+      ],
+      "result": {
+        "name": "response",
+        "schema": {"$ref": "../../schemas/shopping/catalog_search.json#/$defs/search_response"}
+      }
+    },
+    {
+      "name": "lookup_catalog",
+      "summary": "Batch lookup products or variants by identifier",
+      "description": "Batch lookup of products or variants by identifier. See Catalog Lookup capability for supported identifier types and resolution behavior.",
+      "params": [
+        {
+          "name": "meta",
+          "required": true,
+          "schema": {"$ref": "#/components/schemas/meta"}
+        },
+        {
+          "name": "catalog",
+          "required": true,
+          "schema": {"$ref": "../../schemas/shopping/catalog_lookup.json#/$defs/lookup_request"}
+        }
+      ],
+      "result": {
+        "name": "response",
+        "schema": {"$ref": "../../schemas/shopping/catalog_lookup.json#/$defs/lookup_response"}
+      }
+    },
+    {
+      "name": "get_order",
+      "summary": "Get order",
+      "description": "Get the current state of an order. Returns the full order entity as a current-state snapshot.",
+      "params": [
+        {
+          "name": "meta",
+          "required": true,
+          "schema": {"$ref": "#/components/schemas/meta"}
+        },
+        {
+          "name": "id",
+          "required": true,
+          "schema": {"type": "string", "description": "The unique identifier of the order."}
+        }
+      ],
+      "result": {
+        "name": "order",
+        "schema": {"$ref": "#/components/schemas/order_result"}
+      }
+    },
+    {
+      "name": "get_product",
+      "summary": "Get product details",
+      "description": "Retrieve complete product detail by identifier with optional interactive option selection.",
+      "params": [
+        {
+          "name": "meta",
+          "required": true,
+          "schema": {"$ref": "#/components/schemas/meta"}
+        },
+        {
+          "name": "catalog",
+          "required": true,
+          "schema": {"$ref": "../../schemas/shopping/catalog_lookup.json#/$defs/get_product_request"}
+        }
+      ],
+      "result": {
+        "name": "response",
+        "schema": {"$ref": "#/components/schemas/catalog_get_product_result"}
       }
     }
   ]

@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Tokenization API",
-    "version": "2026-01-11",
+    "version": "draft",
     "description": "Shared API for tokenization payment handlers. Tokenizer services implement these endpoints to enable secure credential exchange. See the Tokenization Guide for implementation details."
   },
   "paths": {
@@ -17,10 +17,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "credential",
-                  "binding"
-                ],
+                "required": ["credential", "binding"],
                 "properties": {
                   "credential": {
                     "$ref": "../../schemas/shopping/types/payment_credential.json",
@@ -102,9 +99,7 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "required": [
-                    "token"
-                  ],
+                  "required": ["token"],
                   "properties": {
                     "token": {
                       "type": "string",
@@ -137,10 +132,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "token",
-                  "binding"
-                ],
+                "required": ["token", "binding"],
                 "properties": {
                   "token": {
                     "type": "string",

@@ -14,10 +14,11 @@ namespace Magebit\UcpSpec\Data\Shopping\Types;
 
 use Magebit\UcpSpec\Api\Shopping\Types\AdjustmentInterface;
 use Magebit\UcpSpec\Api\Shopping\Types\AdjustmentLineItemsItemInterface;
+use Magebit\UcpSpec\Api\Shopping\Types\TotalResponseInterface;
 use Magebit\UcpSpec\Runtime\SpecObject;
 
 /**
- * Append-only event that exists independently of fulfillment. Typically represents money movements but can be any post-order change. Polymorphic type that can optionally reference line items.
+ * Post-order event that exists independently of fulfillment. Typically represents money movements but can be any post-order change. Polymorphic type that can optionally reference line items.
  */
 class Adjustment extends SpecObject implements AdjustmentInterface
 {
@@ -107,20 +108,20 @@ class Adjustment extends SpecObject implements AdjustmentInterface
     }
 
     /**
-     * @return int|null
+     * @return \Magebit\UcpSpec\Api\Shopping\Types\TotalResponseInterface[]|null
      */
-    public function getAmount(): int|null
+    public function getTotals(): array|null
     {
-        return $this->intOrNull(self::KEY_AMOUNT);
+        return $this->instanceListOrNull(self::KEY_TOTALS, \Magebit\UcpSpec\Api\Shopping\Types\TotalResponseInterface::class);
     }
 
     /**
-     * @param int|null $amount
+     * @param \Magebit\UcpSpec\Api\Shopping\Types\TotalResponseInterface[]|null $totals
      * @return self
      */
-    public function setAmount(int|null $amount): self
+    public function setTotals(array|null $totals): self
     {
-        return $this->set(self::KEY_AMOUNT, $amount);
+        return $this->set(self::KEY_TOTALS, $totals);
     }
 
     /**

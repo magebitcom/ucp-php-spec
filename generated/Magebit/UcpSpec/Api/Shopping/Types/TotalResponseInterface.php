@@ -13,6 +13,8 @@ declare(strict_types=1);
 namespace Magebit\UcpSpec\Api\Shopping\Types;
 
 /**
+ * A cost breakdown entry with a category, amount, and optional display text.
+ *
  * Schema: Total Response
  */
 interface TotalResponseInterface
@@ -20,23 +22,16 @@ interface TotalResponseInterface
     public const KEY_TYPE = 'type';
     public const KEY_DISPLAY_TEXT = 'display_text';
     public const KEY_AMOUNT = 'amount';
-    public const TYPE_ITEMS_DISCOUNT = 'items_discount';
-    public const TYPE_SUBTOTAL = 'subtotal';
-    public const TYPE_DISCOUNT = 'discount';
-    public const TYPE_FULFILLMENT = 'fulfillment';
-    public const TYPE_TAX = 'tax';
-    public const TYPE_FEE = 'fee';
-    public const TYPE_TOTAL = 'total';
 
     /**
-     * Type of total categorization.
+     * Cost category. Well-known values: subtotal, items_discount, discount, fulfillment, tax, fee, total. Businesses MAY use additional values.
      *
      * @return string
      */
     public function getType(): string;
 
     /**
-     * Type of total categorization.
+     * Cost category. Well-known values: subtotal, items_discount, discount, fulfillment, tax, fee, total. Businesses MAY use additional values.
      *
      * @param string $type
      * @return self
@@ -59,15 +54,11 @@ interface TotalResponseInterface
     public function setDisplayText(string|null $displayText): self;
 
     /**
-     * If type == total, sums subtotal - discount + fulfillment + tax + fee. Should be >= 0. Amount in minor (cents) currency units.
-     *
      * @return int
      */
     public function getAmount(): int;
 
     /**
-     * If type == total, sums subtotal - discount + fulfillment + tax + fee. Should be >= 0. Amount in minor (cents) currency units.
-     *
      * @param int $amount
      * @return self
      */

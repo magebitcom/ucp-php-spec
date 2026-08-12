@@ -22,6 +22,9 @@ interface MessageWarningInterface
     public const KEY_CODE = 'code';
     public const KEY_CONTENT = 'content';
     public const KEY_CONTENT_TYPE = 'content_type';
+    public const KEY_PRESENTATION = 'presentation';
+    public const KEY_IMAGE_URL = 'image_url';
+    public const KEY_URL = 'url';
     public const TYPE_WARNING = 'warning';
     public const CONTENT_TYPE_PLAIN = 'plain';
     public const CONTENT_TYPE_MARKDOWN = 'markdown';
@@ -57,15 +60,11 @@ interface MessageWarningInterface
     public function setPath(string|null $path): self;
 
     /**
-     * Warning code. Machine-readable identifier for the warning type (e.g., final_sale, prop65, fulfillment_changed, age_restricted, etc.).
-     *
      * @return string
      */
     public function getCode(): string;
 
     /**
-     * Warning code. Machine-readable identifier for the warning type (e.g., final_sale, prop65, fulfillment_changed, age_restricted, etc.).
-     *
      * @param string $code
      * @return self
      */
@@ -100,4 +99,49 @@ interface MessageWarningInterface
      * @return self
      */
     public function setContentType(string|null $contentType): self;
+
+    /**
+     * Rendering contract for this warning. 'notice' (default): platform MUST display, MAY dismiss. 'disclosure': platform MUST display in proximity to the path-referenced component, MUST NOT hide or auto-dismiss. See specification for full contract.
+     *
+     * @return string|null
+     */
+    public function getPresentation(): string|null;
+
+    /**
+     * Rendering contract for this warning. 'notice' (default): platform MUST display, MAY dismiss. 'disclosure': platform MUST display in proximity to the path-referenced component, MUST NOT hide or auto-dismiss. See specification for full contract.
+     *
+     * @param string|null $presentation
+     * @return self
+     */
+    public function setPresentation(string|null $presentation): self;
+
+    /**
+     * URL to a required visual element (e.g., warning symbol, energy class label).
+     *
+     * @return string|null
+     */
+    public function getImageUrl(): string|null;
+
+    /**
+     * URL to a required visual element (e.g., warning symbol, energy class label).
+     *
+     * @param string|null $imageUrl
+     * @return self
+     */
+    public function setImageUrl(string|null $imageUrl): self;
+
+    /**
+     * Reference URL for more information (e.g., regulatory site, registry entry, policy page).
+     *
+     * @return string|null
+     */
+    public function getUrl(): string|null;
+
+    /**
+     * Reference URL for more information (e.g., regulatory site, registry entry, policy page).
+     *
+     * @param string|null $url
+     * @return self
+     */
+    public function setUrl(string|null $url): self;
 }

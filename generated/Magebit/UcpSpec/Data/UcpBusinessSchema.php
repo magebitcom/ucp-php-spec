@@ -24,7 +24,7 @@ use Magebit\UcpSpec\Runtime\SpecObject;
 class UcpBusinessSchema extends SpecObject implements UcpBusinessSchemaInterface
 {
     /** @var string[] */
-    protected array $jsonObjectKeys = ['services', 'capabilities', 'payment_handlers'];
+    protected array $jsonObjectKeys = ['services', 'capabilities', 'payment_handlers', 'supported_versions'];
 
     /**
      * @return string
@@ -41,6 +41,23 @@ class UcpBusinessSchema extends SpecObject implements UcpBusinessSchemaInterface
     public function setVersion(string $version): self
     {
         return $this->set(self::KEY_VERSION, $version);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getStatus(): string|null
+    {
+        return $this->stringOrNull(self::KEY_STATUS);
+    }
+
+    /**
+     * @param string|null $status
+     * @return self
+     */
+    public function setStatus(string|null $status): self
+    {
+        return $this->set(self::KEY_STATUS, $status);
     }
 
     /**
@@ -92,5 +109,22 @@ class UcpBusinessSchema extends SpecObject implements UcpBusinessSchemaInterface
     public function setPaymentHandlers(array $paymentHandlers): self
     {
         return $this->set(self::KEY_PAYMENT_HANDLERS, $paymentHandlers);
+    }
+
+    /**
+     * @return array<string, string>|null
+     */
+    public function getSupportedVersions(): array|null
+    {
+        return $this->arrayOrNull(self::KEY_SUPPORTED_VERSIONS);
+    }
+
+    /**
+     * @param array<string, string>|null $supportedVersions
+     * @return self
+     */
+    public function setSupportedVersions(array|null $supportedVersions): self
+    {
+        return $this->set(self::KEY_SUPPORTED_VERSIONS, $supportedVersions);
     }
 }

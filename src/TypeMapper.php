@@ -50,6 +50,13 @@ class TypeMapper
             return $this->resolveRefType($property['$ref'], $currentFile);
         }
 
+        // Checked before allOf: an array stays an array whatever the composition says. `totals.json`
+        // composes only `contains`/`minContains` cardinality rules, and following those as if they
+        // described the type yields mixed.
+        if (($property['type'] ?? null) === 'array') {
+            return 'array';
+        }
+
         if (isset($property['allOf'])) {
             return $this->mapType($property['allOf'][0], $currentFile, $parentName, $propertyName);
         }
@@ -96,6 +103,20 @@ class TypeMapper
         ?string $parentName = null,
         ?string $propertyName = null
     ): ?string {
+        // A property may reach the array through a reference, in which case the item type is declared
+        // on the referenced schema rather than here.
+        if (!isset($property['items']) && isset($property['$ref'])) {
+            try {
+                $target = $this->parser->resolveRefTarget($property['$ref'], $currentFile);
+            } catch (\RuntimeException) {
+                return null;
+            }
+
+            return isset($target['schema']['items'])
+                ? $this->getArrayItemType($target['schema'], $target['file'], $parentName, $propertyName)
+                : null;
+        }
+
         if (!isset($property['items'])) {
             return null;
         }
@@ -276,6 +297,13 @@ class TypeMapper
      */
     private function isInterfaceWorthy(array $schema): bool
     {
+        // An array is a list of some other type, never an interface itself. `totals.json` reaches
+        // here with a root allOf that carries only `contains`/`minContains` cardinality rules, which
+        // would otherwise be mistaken for object composition.
+        if (($schema['type'] ?? null) === 'array') {
+            return false;
+        }
+
         if (isset($schema['properties']) && is_array($schema['properties']) && $schema['properties'] !== []) {
             return true;
         }

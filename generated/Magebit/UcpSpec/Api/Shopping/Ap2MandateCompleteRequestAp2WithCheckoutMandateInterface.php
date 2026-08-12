@@ -22,15 +22,15 @@ interface Ap2MandateCompleteRequestAp2WithCheckoutMandateInterface
     /**
      * SD-JWT+kb proving user authorized this checkout.
      *
-     * @return string|null
+     * @return string
      */
-    public function getCheckoutMandate(): string|null;
+    public function getCheckoutMandate(): string;
 
     /**
      * SD-JWT+kb proving user authorized this checkout.
      *
-     * @param string|null $checkoutMandate
+     * @param string $checkoutMandate
      * @return self
      */
-    public function setCheckoutMandate(string|null $checkoutMandate): self;
+    public function setCheckoutMandate(string $checkoutMandate): self;
 }

@@ -23,14 +23,14 @@ interface ItemResponseInterface
     public const KEY_IMAGE_URL = 'image_url';
 
     /**
-     * Should be recognized by both the Platform, and the Business. For Google it should match the id provided in the "id" field in the product feed.
+     * The product identifier, often the SKU, required to resolve the product details associated with this line item. Should be recognized by both the Platform, and the Business.
      *
      * @return string
      */
     public function getId(): string;
 
     /**
-     * Should be recognized by both the Platform, and the Business. For Google it should match the id provided in the "id" field in the product feed.
+     * The product identifier, often the SKU, required to resolve the product details associated with this line item. Should be recognized by both the Platform, and the Business.
      *
      * @param string $id
      * @return self
@@ -53,14 +53,14 @@ interface ItemResponseInterface
     public function setTitle(string $title): self;
 
     /**
-     * Unit price in minor (cents) currency units.
+     * Unit price in ISO 4217 minor units.
      *
      * @return int
      */
     public function getPrice(): int;
 
     /**
-     * Unit price in minor (cents) currency units.
+     * Unit price in ISO 4217 minor units.
      *
      * @param int $price
      * @return self

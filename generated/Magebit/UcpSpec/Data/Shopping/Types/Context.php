@@ -16,7 +16,7 @@ use Magebit\UcpSpec\Api\Shopping\Types\ContextInterface;
 use Magebit\UcpSpec\Runtime\SpecObject;
 
 /**
- * Provisional buyer signals for relevance and localization: product availability, pricing, currency, tax, shipping, payment methods, and eligibility (e.g., student or affiliation discounts). Businesses SHOULD use these values when authoritative data (e.g., address) is absent, and MAY ignore unsupported values without returning errors. Context can be disclosed progressively—coarse signals early, finer resolution as the session progresses. Higher-resolution data (shipping address, billing address) supersedes context. Platforms SHOULD progressively enhance context throughout the buyer journey.
+ * Provisional buyer signals for relevance and localization—not authoritative data. Businesses SHOULD use these values when verified inputs (e.g., shipping address) are absent, and MAY ignore or down-rank them if inconsistent with higher-confidence signals (authenticated account, risk detection) or regulatory constraints (export controls). Eligibility and policy enforcement MUST occur at checkout time using binding transaction data. Context SHOULD be non-identifying and can be disclosed progressively—coarse signals early, finer resolution as the session progresses. Higher-resolution data (shipping address, billing address) supersedes context.
  */
 class Context extends SpecObject implements ContextInterface
 {
@@ -69,5 +69,73 @@ class Context extends SpecObject implements ContextInterface
     public function setPostalCode(string|null $postalCode): self
     {
         return $this->set(self::KEY_POSTAL_CODE, $postalCode);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getIntent(): string|null
+    {
+        return $this->stringOrNull(self::KEY_INTENT);
+    }
+
+    /**
+     * @param string|null $intent
+     * @return self
+     */
+    public function setIntent(string|null $intent): self
+    {
+        return $this->set(self::KEY_INTENT, $intent);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getLanguage(): string|null
+    {
+        return $this->stringOrNull(self::KEY_LANGUAGE);
+    }
+
+    /**
+     * @param string|null $language
+     * @return self
+     */
+    public function setLanguage(string|null $language): self
+    {
+        return $this->set(self::KEY_LANGUAGE, $language);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCurrency(): string|null
+    {
+        return $this->stringOrNull(self::KEY_CURRENCY);
+    }
+
+    /**
+     * @param string|null $currency
+     * @return self
+     */
+    public function setCurrency(string|null $currency): self
+    {
+        return $this->set(self::KEY_CURRENCY, $currency);
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getEligibility(): array|null
+    {
+        return $this->arrayOrNull(self::KEY_ELIGIBILITY);
+    }
+
+    /**
+     * @param string[]|null $eligibility
+     * @return self
+     */
+    public function setEligibility(array|null $eligibility): self
+    {
+        return $this->set(self::KEY_ELIGIBILITY, $eligibility);
     }
 }

@@ -23,6 +23,8 @@ interface DiscountUpdateRequestAppliedDiscountInterface
     public const KEY_AUTOMATIC = 'automatic';
     public const KEY_METHOD = 'method';
     public const KEY_PRIORITY = 'priority';
+    public const KEY_PROVISIONAL = 'provisional';
+    public const KEY_ELIGIBILITY = 'eligibility';
     public const KEY_ALLOCATIONS = 'allocations';
     public const METHOD_EACH = 'each';
     public const METHOD_ACROSS = 'across';
@@ -58,14 +60,14 @@ interface DiscountUpdateRequestAppliedDiscountInterface
     public function setTitle(string $title): self;
 
     /**
-     * Total discount amount in minor (cents) currency units.
+     * Total discount amount in ISO 4217 minor units.
      *
      * @return int
      */
     public function getAmount(): int;
 
     /**
-     * Total discount amount in minor (cents) currency units.
+     * Total discount amount in ISO 4217 minor units.
      *
      * @param int $amount
      * @return self
@@ -116,6 +118,36 @@ interface DiscountUpdateRequestAppliedDiscountInterface
      * @return self
      */
     public function setPriority(int|null $priority): self;
+
+    /**
+     * True if this discount requires additional verification.
+     *
+     * @return bool|null
+     */
+    public function getProvisional(): bool|null;
+
+    /**
+     * True if this discount requires additional verification.
+     *
+     * @param bool|null $provisional
+     * @return self
+     */
+    public function setProvisional(bool|null $provisional): self;
+
+    /**
+     * The eligibility claim accepted by the Business for this discount. Corresponds to a value from context.eligibility. Omitted for code-based and non-eligibility automatic discounts.
+     *
+     * @return string|null
+     */
+    public function getEligibility(): string|null;
+
+    /**
+     * The eligibility claim accepted by the Business for this discount. Corresponds to a value from context.eligibility. Omitted for code-based and non-eligibility automatic discounts.
+     *
+     * @param string|null $eligibility
+     * @return self
+     */
+    public function setEligibility(string|null $eligibility): self;
 
     /**
      * Breakdown of where this discount was allocated. Sum of allocation amounts equals total amount.

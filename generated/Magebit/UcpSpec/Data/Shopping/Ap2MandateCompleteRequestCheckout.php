@@ -14,6 +14,7 @@ namespace Magebit\UcpSpec\Data\Shopping;
 
 use Magebit\UcpSpec\Api\Shopping\Ap2MandateCompleteRequestCheckoutInterface;
 use Magebit\UcpSpec\Api\Shopping\PaymentInterface;
+use Magebit\UcpSpec\Api\Shopping\Types\SignalsInterface;
 use Magebit\UcpSpec\Runtime\SpecObject;
 
 /**
@@ -21,6 +22,40 @@ use Magebit\UcpSpec\Runtime\SpecObject;
  */
 class Ap2MandateCompleteRequestCheckout extends SpecObject implements Ap2MandateCompleteRequestCheckoutInterface
 {
+    /**
+     * @return \Magebit\UcpSpec\Api\Shopping\Types\SignalsInterface|null
+     */
+    public function getSignals(): SignalsInterface|null
+    {
+        return $this->instanceOrNull(self::KEY_SIGNALS, \Magebit\UcpSpec\Api\Shopping\Types\SignalsInterface::class);
+    }
+
+    /**
+     * @param \Magebit\UcpSpec\Api\Shopping\Types\SignalsInterface|null $signals
+     * @return self
+     */
+    public function setSignals(SignalsInterface|null $signals): self
+    {
+        return $this->set(self::KEY_SIGNALS, $signals);
+    }
+
+    /**
+     * @return array<string, string>|null
+     */
+    public function getAttribution(): array|null
+    {
+        return $this->arrayOrNull(self::KEY_ATTRIBUTION);
+    }
+
+    /**
+     * @param array<string, string>|null $attribution
+     * @return self
+     */
+    public function setAttribution(array|null $attribution): self
+    {
+        return $this->set(self::KEY_ATTRIBUTION, $attribution);
+    }
+
     /**
      * @return \Magebit\UcpSpec\Api\Shopping\PaymentInterface
      */
@@ -39,18 +74,18 @@ class Ap2MandateCompleteRequestCheckout extends SpecObject implements Ap2Mandate
     }
 
     /**
-     * @return array<mixed>|null
+     * @return array<mixed>
      */
-    public function getAp2(): array|null
+    public function getAp2(): array
     {
-        return $this->arrayOrNull(self::KEY_AP2);
+        return $this->getArray(self::KEY_AP2);
     }
 
     /**
-     * @param array<mixed>|null $ap2
+     * @param array<mixed> $ap2
      * @return self
      */
-    public function setAp2(array|null $ap2): self
+    public function setAp2(array $ap2): self
     {
         return $this->set(self::KEY_AP2, $ap2);
     }

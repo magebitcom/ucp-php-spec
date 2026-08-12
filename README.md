@@ -269,12 +269,38 @@ rather than failures.
 Every run writes `spec.manifest.json` next to `generated/`, recording the generator version and a SHA-256 for
 each input schema file.
 
-**`upstream.repository`, `upstream.ref` and `upstream.commit` are currently `null` and this is deliberate.**
-Upstream deleted its pre-generated `spec/` directory in commit `a8b185d` (2026-01-28), so the `spec/` tree
-vendored here is a snapshot with no recorded provenance — the revision it was taken from cannot be
-reconstructed and must not be guessed. `upstream.intended_ref` records the target the snapshot is meant to
-track (`release/2026-04-08`). Fill in the three null fields the next time `spec/` is re-fetched from a known
-upstream revision.
+This package targets **`2026-04-08`**, resolved from `source/` at
+`a2d8bf0b8f5a6fc790f677899c2c7da0684fe33d` (tag `v2026-04-08`). `release/2026-04-08` kept receiving
+cherry-picks until at least 2026-05-22, so the commit is pinned and the dated name is not trusted.
+
+Upstream stopped committing a pre-generated `spec/` directory in `a8b185d` (2026-01-28), replacing it with
+on-demand resolution through the `ucp-schema` CLI. `bin/fetch-spec` reproduces the tree this generator
+consumes — see [Refetching the spec](#refetching-the-spec).
+
+An earlier snapshot in this repository declared `2026-04-08` while actually containing `2026-01-23`. It was
+identified by comparing the git blob hash of all 91 files against candidate revisions — `843db28` matched
+84/91, `8483a7f` 89/91, and tag `v2026-01-23` (`dcf7eac71fc370dcc8768fcdbc5aa737037cca05`) matched 91/91 with
+nothing extra on either side. Provenance is now recorded in `composer.json` and must be updated there
+whenever `spec/` is refetched; never guess it.
+
+### Refetching the spec
+
+```bash
+cargo install ucp-schema --locked          # the resolver upstream itself uses
+git clone https://github.com/Universal-Commerce-Protocol/ucp /tmp/ucp
+git -C /tmp/ucp checkout <pinned commit>
+php bin/fetch-spec --source=/tmp/ucp/source
+```
+
+`bin/fetch-spec` emits one file per operation variant — `X.create_req.json`, `X.update_req.json`,
+`X.complete_req.json` and `X_resp.json` for an annotated schema, or `X_req.json` and `X_resp.json` when the
+schema is a shared request — rewriting each `$ref` to the variant matching the file's own direction.
+OpenAPI and OpenRPC documents are copied through untouched: upstream now ships them already resolved.
+
+The tool was validated against `v2026-01-23`, whose `spec/` tree is committed upstream: resolving that
+release's `source/` reproduces all 91 committed paths, and the generated PHP is identical except for two AP2
+types where the current resolver correctly marks `ap2` and `checkout_mandate` required at the `complete`
+operation.
 
 ## Tests
 
@@ -315,9 +341,10 @@ JSON Schema types are mapped to PHP as follows:
 
 When updating the UCP specification:
 
-1. Update JSON Schema files in `spec/`
-2. Run `php generate.php --clean` to regenerate interfaces
-3. Fill `upstream.repository`, `upstream.ref` and `upstream.commit` in `spec.manifest.json` if `spec/` was re-fetched
+1. Re-resolve `spec/` from the upstream `source/` tree at a pinned commit
+2. Update `extra.ucp.spec-target` and `extra.ucp.upstream` in `composer.json` — the manifest reads its
+   provenance from there, so these are the only place the values are written
+3. Run `php generate.php --clean` to regenerate interfaces
 4. Run `composer dump-autoload` to update autoloader
 5. Run `vendor/bin/phpunit` and `php generate.php --check`
 6. Commit the spec files, the generated interfaces and `spec.manifest.json`

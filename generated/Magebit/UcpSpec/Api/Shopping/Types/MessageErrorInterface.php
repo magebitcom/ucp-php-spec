@@ -29,6 +29,7 @@ interface MessageErrorInterface
     public const SEVERITY_RECOVERABLE = 'recoverable';
     public const SEVERITY_REQUIRES_BUYER_INPUT = 'requires_buyer_input';
     public const SEVERITY_REQUIRES_BUYER_REVIEW = 'requires_buyer_review';
+    public const SEVERITY_UNRECOVERABLE = 'unrecoverable';
 
     /**
      * Message type discriminator.
@@ -46,15 +47,11 @@ interface MessageErrorInterface
     public function setType(string $type): self;
 
     /**
-     * Error code. Possible values include: missing, invalid, out_of_stock, payment_declined, requires_sign_in, requires_3ds, requires_identity_linking. Freeform codes also allowed.
-     *
      * @return string
      */
     public function getCode(): string;
 
     /**
-     * Error code. Possible values include: missing, invalid, out_of_stock, payment_declined, requires_sign_in, requires_3ds, requires_identity_linking. Freeform codes also allowed.
-     *
      * @param string $code
      * @return self
      */
@@ -106,14 +103,14 @@ interface MessageErrorInterface
     public function setContent(string $content): self;
 
     /**
-     * Declares who resolves this error. 'recoverable': agent can fix via API. 'requires_buyer_input': merchant requires information their API doesn't support collecting programmatically (checkout incomplete). 'requires_buyer_review': buyer must authorize before order placement due to policy, regulatory, or entitlement rules (checkout complete). Errors with 'requires_*' severity contribute to 'status: requires_escalation'.
+     * Reflects the resource state and recommended action. 'recoverable': platform can resolve by modifying inputs and retrying via API. 'requires_buyer_input': merchant requires information their API doesn't support collecting programmatically (checkout incomplete). 'requires_buyer_review': buyer must authorize before order placement due to policy, regulatory, or entitlement rules. 'unrecoverable': no valid resource exists to act on, retry with new resource or inputs. Errors with 'requires_*' severity contribute to 'status: requires_escalation'.
      *
      * @return string
      */
     public function getSeverity(): string;
 
     /**
-     * Declares who resolves this error. 'recoverable': agent can fix via API. 'requires_buyer_input': merchant requires information their API doesn't support collecting programmatically (checkout incomplete). 'requires_buyer_review': buyer must authorize before order placement due to policy, regulatory, or entitlement rules (checkout complete). Errors with 'requires_*' severity contribute to 'status: requires_escalation'.
+     * Reflects the resource state and recommended action. 'recoverable': platform can resolve by modifying inputs and retrying via API. 'requires_buyer_input': merchant requires information their API doesn't support collecting programmatically (checkout incomplete). 'requires_buyer_review': buyer must authorize before order placement due to policy, regulatory, or entitlement rules. 'unrecoverable': no valid resource exists to act on, retry with new resource or inputs. Errors with 'requires_*' severity contribute to 'status: requires_escalation'.
      *
      * @param string $severity
      * @return self

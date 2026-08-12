@@ -101,4 +101,55 @@ class MessageWarning extends SpecObject implements MessageWarningInterface
     {
         return $this->set(self::KEY_CONTENT_TYPE, $contentType);
     }
+
+    /**
+     * @return string|null
+     */
+    public function getPresentation(): string|null
+    {
+        return $this->stringOrNull(self::KEY_PRESENTATION);
+    }
+
+    /**
+     * @param string|null $presentation
+     * @return self
+     */
+    public function setPresentation(string|null $presentation): self
+    {
+        return $this->set(self::KEY_PRESENTATION, $presentation);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getImageUrl(): string|null
+    {
+        return $this->stringOrNull(self::KEY_IMAGE_URL);
+    }
+
+    /**
+     * @param string|null $imageUrl
+     * @return self
+     */
+    public function setImageUrl(string|null $imageUrl): self
+    {
+        return $this->set(self::KEY_IMAGE_URL, $imageUrl);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getUrl(): string|null
+    {
+        return $this->stringOrNull(self::KEY_URL);
+    }
+
+    /**
+     * @param string|null $url
+     * @return self
+     */
+    public function setUrl(string|null $url): self
+    {
+        return $this->set(self::KEY_URL, $url);
+    }
 }

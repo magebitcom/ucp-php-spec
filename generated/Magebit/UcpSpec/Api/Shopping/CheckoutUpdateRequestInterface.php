@@ -15,6 +15,7 @@ namespace Magebit\UcpSpec\Api\Shopping;
 use Magebit\UcpSpec\Api\Shopping\Types\BuyerInterface;
 use Magebit\UcpSpec\Api\Shopping\Types\ContextInterface;
 use Magebit\UcpSpec\Api\Shopping\Types\LineItemUpdateRequestInterface;
+use Magebit\UcpSpec\Api\Shopping\Types\SignalsInterface;
 
 /**
  * Base checkout schema. Extensions compose onto this using allOf.
@@ -23,26 +24,12 @@ use Magebit\UcpSpec\Api\Shopping\Types\LineItemUpdateRequestInterface;
  */
 interface CheckoutUpdateRequestInterface
 {
-    public const KEY_ID = 'id';
     public const KEY_LINE_ITEMS = 'line_items';
     public const KEY_BUYER = 'buyer';
     public const KEY_CONTEXT = 'context';
+    public const KEY_SIGNALS = 'signals';
+    public const KEY_ATTRIBUTION = 'attribution';
     public const KEY_PAYMENT = 'payment';
-
-    /**
-     * Unique identifier of the checkout session.
-     *
-     * @return string
-     */
-    public function getId(): string;
-
-    /**
-     * Unique identifier of the checkout session.
-     *
-     * @param string $id
-     * @return self
-     */
-    public function setId(string $id): self;
 
     /**
      * List of line items being checked out.
@@ -84,6 +71,28 @@ interface CheckoutUpdateRequestInterface
      * @return self
      */
     public function setContext(ContextInterface|null $context): self;
+
+    /**
+     * @return \Magebit\UcpSpec\Api\Shopping\Types\SignalsInterface|null
+     */
+    public function getSignals(): SignalsInterface|null;
+
+    /**
+     * @param \Magebit\UcpSpec\Api\Shopping\Types\SignalsInterface|null $signals
+     * @return self
+     */
+    public function setSignals(SignalsInterface|null $signals): self;
+
+    /**
+     * @return array<string, string>|null
+     */
+    public function getAttribution(): array|null;
+
+    /**
+     * @param array<string, string>|null $attribution
+     * @return self
+     */
+    public function setAttribution(array|null $attribution): self;
 
     /**
      * @return \Magebit\UcpSpec\Api\Shopping\PaymentInterface|null

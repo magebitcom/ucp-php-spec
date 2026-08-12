@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Magebit\UcpSpec\Data\Shopping;
 
-use Magebit\UcpSpec\Api\Shopping\DiscountCreateRequestAppliedDiscountInterface;
 use Magebit\UcpSpec\Api\Shopping\DiscountCreateRequestDiscountsObjectInterface;
 use Magebit\UcpSpec\Runtime\SpecObject;
 
@@ -36,22 +35,5 @@ class DiscountCreateRequestDiscountsObject extends SpecObject implements Discoun
     public function setCodes(array|null $codes): self
     {
         return $this->set(self::KEY_CODES, $codes);
-    }
-
-    /**
-     * @return \Magebit\UcpSpec\Api\Shopping\DiscountCreateRequestAppliedDiscountInterface[]|null
-     */
-    public function getApplied(): array|null
-    {
-        return $this->instanceListOrNull(self::KEY_APPLIED, \Magebit\UcpSpec\Api\Shopping\DiscountCreateRequestAppliedDiscountInterface::class);
-    }
-
-    /**
-     * @param \Magebit\UcpSpec\Api\Shopping\DiscountCreateRequestAppliedDiscountInterface[]|null $applied
-     * @return self
-     */
-    public function setApplied(array|null $applied): self
-    {
-        return $this->set(self::KEY_APPLIED, $applied);
     }
 }

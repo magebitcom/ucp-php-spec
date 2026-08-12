@@ -57,15 +57,11 @@ interface MessageInfoInterface
     public function setPath(string|null $path): self;
 
     /**
-     * Info code for programmatic handling.
-     *
      * @return string|null
      */
     public function getCode(): string|null;
 
     /**
-     * Info code for programmatic handling.
-     *
      * @param string|null $code
      * @return self
      */
