@@ -82,6 +82,30 @@ jobs:
           fi
           echo "SPEC_TARGET=$DECLARED" >> "$GITHUB_ENV"
 
+      # spec/ is a vendored snapshot. Shipping it without a resolvable commit leaves
+      # consumers unable to tell what they are conforming to, and makes the release
+      # notes below claim a provenance that is not there.
+      - name: Upstream provenance is recorded
+        run: |
+          for FIELD in repository ref commit; do
+            VALUE=$(jq -r ".extra.ucp.upstream.$FIELD // \"null\"" composer.json)
+            if [ "$VALUE" = "null" ] || [ -z "$VALUE" ]; then
+              echo "::error::composer.json extra.ucp.upstream.$FIELD is not set. Re-fetch spec/ and record it; never guess."
+              exit 1
+            fi
+            if [ "$(jq -r ".upstream.$FIELD // \"null\"" spec.manifest.json)" != "$VALUE" ]; then
+              echo "::error::spec.manifest.json upstream.$FIELD disagrees with composer.json. Regenerate."
+              exit 1
+            fi
+          done
+
+          COMMIT=$(jq -r '.extra.ucp.upstream.commit' composer.json)
+          if [[ ! "$COMMIT" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error::upstream.commit '$COMMIT' is not a full 40-character SHA."
+            exit 1
+          fi
+          echo "UPSTREAM_COMMIT=$COMMIT" >> "$GITHUB_ENV"
+
       # A major bump is mandatory when the spec target moves, and forbidden when
       # it has not. This is the rule that keeps `^N.0` meaningful as "targets spec X".
       - name: Major version matches spec target change
@@ -119,12 +143,12 @@ jobs:
             --title "v$VERSION" \
             --generate-notes \
             ${{ inputs.prerelease && '--prerelease' || '' }} \
-            --notes "**Targets UCP spec \`$SPEC_TARGET\`.**
+            --notes "**Targets UCP spec \`$SPEC_TARGET\`**, vendored from \`$UPSTREAM_COMMIT\`.
 
-          Provenance of the vendored \`spec/\` snapshot is recorded in \`spec.manifest.json\`."
+          Per-file hashes of the vendored \`spec/\` tree are in \`spec.manifest.json\`."
 
       - name: Dry run summary
         if: ${{ inputs.dry_run }}
         run: |
           echo "### Dry run passed" >> "$GITHUB_STEP_SUMMARY"
-          echo "Would tag \`v$VERSION\` targeting UCP spec \`$SPEC_TARGET\`." >> "$GITHUB_STEP_SUMMARY"
+          echo "Would tag \`v$VERSION\` targeting UCP spec \`$SPEC_TARGET\` at \`$UPSTREAM_COMMIT\`." >> "$GITHUB_STEP_SUMMARY"
