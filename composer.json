@@ -36,7 +36,12 @@
     },
     "extra": {
         "ucp": {
-            "spec-target": "2026-04-08"
+            "spec-target": "2026-01-23",
+            "upstream": {
+                "repository": "https://github.com/Universal-Commerce-Protocol/ucp",
+                "ref": "refs/tags/v2026-01-23",
+                "commit": "dcf7eac71fc370dcc8768fcdbc5aa737037cca05"
+            }
         }
     }
 }

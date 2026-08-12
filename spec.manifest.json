@@ -1,17 +1,15 @@
 {
-    "note": "Provenance of this vendored spec/ snapshot is unrecorded and must not be guessed. Fill upstream.repository, upstream.ref and upstream.commit when spec/ is next re-fetched.",
     "generator": {
         "name": "magebitcom/ucp-php-spec",
-        "version": "1.1.0"
+        "version": "1.2.0"
     },
     "upstream": {
-        "repository": null,
-        "ref": null,
-        "commit": null,
-        "intended_ref": "release/2026-04-08"
+        "repository": "https://github.com/Universal-Commerce-Protocol/ucp",
+        "ref": "refs/tags/v2026-01-23",
+        "commit": "dcf7eac71fc370dcc8768fcdbc5aa737037cca05"
     },
     "spec": {
-        "target": "2026-04-08",
+        "target": "2026-01-23",
         "directory": "spec",
         "file_count": 91,
         "files": {

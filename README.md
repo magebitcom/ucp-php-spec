@@ -269,12 +269,27 @@ rather than failures.
 Every run writes `spec.manifest.json` next to `generated/`, recording the generator version and a SHA-256 for
 each input schema file.
 
-**`upstream.repository`, `upstream.ref` and `upstream.commit` are currently `null` and this is deliberate.**
-Upstream deleted its pre-generated `spec/` directory in commit `a8b185d` (2026-01-28), so the `spec/` tree
-vendored here is a snapshot with no recorded provenance — the revision it was taken from cannot be
-reconstructed and must not be guessed. `upstream.intended_ref` records the target the snapshot is meant to
-track (`release/2026-04-08`). Fill in the three null fields the next time `spec/` is re-fetched from a known
-upstream revision.
+Provenance is recorded, and was **derived rather than guessed**. Upstream deleted its pre-generated `spec/`
+directory in commit `a8b185d` (2026-01-28), replacing it with on-demand resolution via the `ucp-schema` CLI,
+so the vendored tree corresponds to no revision of the default branch. It was identified by comparing the
+git blob hash of all 91 vendored files against candidate revisions:
+
+| Candidate | Result |
+| --- | --- |
+| `843db28` — last state of `spec/` on the default branch | 84/91, plus 3 files absent here |
+| `8483a7f` | 89/91 |
+| **`v2026-01-23` (`dcf7eac71fc370dcc8768fcdbc5aa737037cca05`)** | **91/91 byte-identical, nothing extra on either side** |
+
+Independently confirmed by re-running that release's own `generate_schemas.py` over its `source/` tree, which
+reproduces all 91 files byte-for-byte.
+
+**This package therefore targets `2026-01-23`, not `2026-04-08`.** The later release carries 83 schema
+concepts against this snapshot's 52; the 31 absent ones include `cart`, `catalog_search`, `catalog_lookup`,
+`identity_linking`, and the extracted `error_code`, `error_response`, `info_code`, `warning_code`, `totals`,
+`amount` and `signed_amount` types. Moving to `2026-04-08` means re-resolving `source/` at
+`a2d8bf0b8f5a6fc790f677899c2c7da0684fe33d` with `ucp-schema`; it is a MAJOR change and is tracked separately.
+Note that `release/2026-04-08` kept receiving cherry-picks until at least 2026-05-22, which is why the commit
+is pinned and the dated name is not trusted.
 
 ## Tests
 
@@ -315,9 +330,10 @@ JSON Schema types are mapped to PHP as follows:
 
 When updating the UCP specification:
 
-1. Update JSON Schema files in `spec/`
-2. Run `php generate.php --clean` to regenerate interfaces
-3. Fill `upstream.repository`, `upstream.ref` and `upstream.commit` in `spec.manifest.json` if `spec/` was re-fetched
+1. Re-resolve `spec/` from the upstream `source/` tree at a pinned commit
+2. Update `extra.ucp.spec-target` and `extra.ucp.upstream` in `composer.json` — the manifest reads its
+   provenance from there, so these are the only place the values are written
+3. Run `php generate.php --clean` to regenerate interfaces
 4. Run `composer dump-autoload` to update autoloader
 5. Run `vendor/bin/phpunit` and `php generate.php --check`
 6. Commit the spec files, the generated interfaces and `spec.manifest.json`

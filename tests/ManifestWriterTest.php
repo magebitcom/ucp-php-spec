@@ -21,7 +21,7 @@ class ManifestWriterTest extends TestCase
     /**
      * @return void
      */
-    public function testHashesEveryInputAndLeavesUnknownProvenanceNull(): void
+    public function testHashesEveryInputAndCarriesProvenanceFromComposer(): void
     {
         $specDir = $this->makeTempDir();
         mkdir($specDir . '/types');
@@ -36,10 +36,12 @@ class ManifestWriterTest extends TestCase
         $this->assertSame(['types/buyer.json', 'ucp.json'], array_keys($manifest['spec']['files']));
         $this->assertSame('sha256:' . hash('sha256', '{"a":1}'), $manifest['spec']['files']['ucp.json']);
         $this->assertSame(2, $manifest['spec']['file_count']);
-        $this->assertNull($manifest['upstream']['ref']);
-        $this->assertNull($manifest['upstream']['commit']);
-        $this->assertNull($manifest['upstream']['repository']);
-        $this->assertSame('release/2026-04-08', $manifest['upstream']['intended_ref']);
+        // Provenance is read from composer.json, the same file the release workflow validates
+        // against, so a manifest that disagrees with it cannot be produced.
+        $this->assertMatchesRegularExpression('/^[0-9a-f]{40}$/', $manifest['upstream']['commit']);
+        $this->assertNotNull($manifest['upstream']['repository']);
+        $this->assertNotNull($manifest['upstream']['ref']);
+        $this->assertSame($manifest['spec']['target'], '2026-01-23');
     }
 
     /**

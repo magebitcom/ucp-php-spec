@@ -13,35 +13,19 @@ namespace Magebit\UcpSpecGenerator;
  */
 class ManifestWriter
 {
-    public const GENERATOR_VERSION = '1.1.0';
+    public const GENERATOR_VERSION = '1.2.0';
     public const MANIFEST_FILENAME = 'spec.manifest.json';
-
-    /**
-     * Upstream ref and commit are unknown for the current snapshot and must never be guessed;
-     * they stay null until spec/ is re-fetched from a known upstream revision.
-     */
-    private const UNKNOWN_PROVENANCE_NOTE = 'Provenance of this vendored spec/ snapshot is unrecorded and '
-        . 'must not be guessed. Fill upstream.repository, upstream.ref and upstream.commit when spec/ is '
-        . 'next re-fetched.';
 
     /**
      * Build the manifest payload for a set of input schema files.
      *
      * @param string $specDir Directory the schema files live in
      * @param string[] $schemaFiles Absolute paths of every input schema file
-     * @param string|null $upstreamRef Upstream ref, or null when unknown
-     * @param string|null $upstreamCommit Upstream commit SHA, or null when unknown
-     * @param string|null $upstreamRepository Upstream repository URL, or null when unknown
      * @return array The manifest as a nested array
      * @throws \RuntimeException If a schema file cannot be hashed
      */
-    public function build(
-        string $specDir,
-        array $schemaFiles,
-        ?string $upstreamRef = null,
-        ?string $upstreamCommit = null,
-        ?string $upstreamRepository = null
-    ): array {
+    public function build(string $specDir, array $schemaFiles): array
+    {
         $specDir = rtrim($specDir, '/');
         $files = [];
 
@@ -58,20 +42,22 @@ class ManifestWriter
 
         ksort($files, SORT_STRING);
 
+        $extra = $this->readUcpExtra();
+        $upstream = is_array($extra['upstream'] ?? null) ? $extra['upstream'] : [];
+        $target = $extra['spec-target'] ?? null;
+
         return [
-            'note' => self::UNKNOWN_PROVENANCE_NOTE,
             'generator' => [
                 'name' => 'magebitcom/ucp-php-spec',
                 'version' => self::GENERATOR_VERSION,
             ],
             'upstream' => [
-                'repository' => $upstreamRepository,
-                'ref' => $upstreamRef,
-                'commit' => $upstreamCommit,
-                'intended_ref' => 'release/2026-04-08',
+                'repository' => $upstream['repository'] ?? null,
+                'ref' => $upstream['ref'] ?? null,
+                'commit' => $upstream['commit'] ?? null,
             ],
             'spec' => [
-                'target' => $this->readSpecTarget(),
+                'target' => is_string($target) ? $target : null,
                 'directory' => 'spec',
                 'file_count' => count($files),
                 'files' => $files,
@@ -80,12 +66,13 @@ class ManifestWriter
     }
 
     /**
-     * composer.json is the single source of truth for the targeted spec release.
+     * composer.json is the single source of truth for the spec target and its provenance, so the
+     * manifest cannot drift from what the release workflow validates.
      *
-     * @return string|null
+     * @return array
      * @throws \RuntimeException
      */
-    private function readSpecTarget(): ?string
+    private function readUcpExtra(): array
     {
         $path = dirname(__DIR__) . '/composer.json';
         $raw = file_get_contents($path);
@@ -100,9 +87,9 @@ class ManifestWriter
             throw new \RuntimeException("Cannot decode {$path}");
         }
 
-        $target = $composer['extra']['ucp']['spec-target'] ?? null;
+        $extra = $composer['extra']['ucp'] ?? null;
 
-        return is_string($target) ? $target : null;
+        return is_array($extra) ? $extra : [];
     }
 
     /**
