@@ -1,34 +1,72 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://ucp.dev/schemas/shopping/types/total.json",
-  "title": "Total Response",
-  "type": "object",
-  "required": [
-    "type",
-    "amount"
-  ],
-  "properties": {
-    "type": {
-      "type": "string",
-      "enum": [
-        "items_discount",
-        "subtotal",
-        "discount",
-        "fulfillment",
-        "tax",
-        "fee",
-        "total"
-      ],
-      "description": "Type of total categorization."
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://ucp.dev/schemas/shopping/types/total.json",
+    "title": "Total Response",
+    "description": "A cost breakdown entry with a category, amount, and optional display text.",
+    "type": "object",
+    "required": [
+        "type",
+        "amount"
+    ],
+    "properties": {
+        "type": {
+            "type": "string",
+            "description": "Cost category. Well-known values: subtotal, items_discount, discount, fulfillment, tax, fee, total. Businesses MAY use additional values."
+        },
+        "display_text": {
+            "type": "string",
+            "description": "Text to display against the amount. Should reflect appropriate method (e.g., 'Shipping', 'Delivery')."
+        },
+        "amount": {
+            "$ref": "signed_amount.json"
+        }
     },
-    "display_text": {
-      "type": "string",
-      "description": "Text to display against the amount. Should reflect appropriate method (e.g., 'Shipping', 'Delivery')."
-    },
-    "amount": {
-      "type": "integer",
-      "description": "If type == total, sums subtotal - discount + fulfillment + tax + fee. Should be >= 0. Amount in minor (cents) currency units.",
-      "minimum": 0
-    }
-  }
+    "allOf": [
+        {
+            "if": {
+                "properties": {
+                    "type": {
+                        "enum": [
+                            "discount",
+                            "items_discount"
+                        ]
+                    }
+                },
+                "required": [
+                    "type"
+                ]
+            },
+            "then": {
+                "properties": {
+                    "amount": {
+                        "exclusiveMaximum": 0
+                    }
+                }
+            }
+        },
+        {
+            "if": {
+                "properties": {
+                    "type": {
+                        "enum": [
+                            "subtotal",
+                            "fulfillment",
+                            "tax",
+                            "fee"
+                        ]
+                    }
+                },
+                "required": [
+                    "type"
+                ]
+            },
+            "then": {
+                "properties": {
+                    "amount": {
+                        "minimum": 0
+                    }
+                }
+            }
+        }
+    ]
 }

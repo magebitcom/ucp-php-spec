@@ -44,6 +44,23 @@ class UcpResponseCheckoutSchema extends SpecObject implements UcpResponseCheckou
     }
 
     /**
+     * @return string|null
+     */
+    public function getStatus(): string|null
+    {
+        return $this->stringOrNull(self::KEY_STATUS);
+    }
+
+    /**
+     * @param string|null $status
+     * @return self
+     */
+    public function setStatus(string|null $status): self
+    {
+        return $this->set(self::KEY_STATUS, $status);
+    }
+
+    /**
      * @return array<string, \Magebit\UcpSpec\Api\ServiceResponseSchemaInterface[]>|null
      */
     public function getServices(): array|null

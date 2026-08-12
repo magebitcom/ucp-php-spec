@@ -109,18 +109,18 @@ class CapabilityResponseSchema extends SpecObject implements CapabilityResponseS
     }
 
     /**
-     * @return string|null
+     * @return string|array|null
      */
-    public function getExtends(): string|null
+    public function getExtends(): string|array|null
     {
-        return $this->stringOrNull(self::KEY_EXTENDS);
+        return $this->get(self::KEY_EXTENDS);
     }
 
     /**
-     * @param string|null $extends
+     * @param string|array|null $extends
      * @return self
      */
-    public function setExtends(string|null $extends): self
+    public function setExtends(string|array|null $extends): self
     {
         return $this->set(self::KEY_EXTENDS, $extends);
     }

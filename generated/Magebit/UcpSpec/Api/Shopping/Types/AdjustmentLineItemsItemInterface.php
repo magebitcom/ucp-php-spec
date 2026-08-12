@@ -33,14 +33,14 @@ interface AdjustmentLineItemsItemInterface
     public function setId(string $id): self;
 
     /**
-     * Quantity affected by this adjustment.
+     * Signed quantity affected by this adjustment. Negative values represent reductions (e.g. returns); positive values represent additions (e.g. exchanges).
      *
      * @return int
      */
     public function getQuantity(): int;
 
     /**
-     * Quantity affected by this adjustment.
+     * Signed quantity affected by this adjustment. Negative values represent reductions (e.g. returns); positive values represent additions (e.g. exchanges).
      *
      * @param int $quantity
      * @return self

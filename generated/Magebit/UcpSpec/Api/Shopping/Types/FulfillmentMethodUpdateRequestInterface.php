@@ -20,25 +20,43 @@ namespace Magebit\UcpSpec\Api\Shopping\Types;
 interface FulfillmentMethodUpdateRequestInterface
 {
     public const KEY_ID = 'id';
+    public const KEY_TYPE = 'type';
     public const KEY_LINE_ITEM_IDS = 'line_item_ids';
     public const KEY_DESTINATIONS = 'destinations';
     public const KEY_SELECTED_DESTINATION_ID = 'selected_destination_id';
     public const KEY_GROUPS = 'groups';
+    public const TYPE_SHIPPING = 'shipping';
+    public const TYPE_PICKUP = 'pickup';
 
     /**
      * Unique fulfillment method identifier.
      *
-     * @return string
+     * @return string|null
      */
-    public function getId(): string;
+    public function getId(): string|null;
 
     /**
      * Unique fulfillment method identifier.
      *
-     * @param string $id
+     * @param string|null $id
      * @return self
      */
-    public function setId(string $id): self;
+    public function setId(string|null $id): self;
+
+    /**
+     * Fulfillment method type.
+     *
+     * @return string|null
+     */
+    public function getType(): string|null;
+
+    /**
+     * Fulfillment method type.
+     *
+     * @param string|null $type
+     * @return self
+     */
+    public function setType(string|null $type): self;
 
     /**
      * Line item IDs fulfilled via this method.

@@ -36,14 +36,14 @@ interface DiscountCompleteRequestAllocationInterface
     public function setPath(string $path): self;
 
     /**
-     * Amount allocated to this target in minor (cents) currency units.
+     * Amount allocated to this target in ISO 4217 minor units.
      *
      * @return int
      */
     public function getAmount(): int;
 
     /**
-     * Amount allocated to this target in minor (cents) currency units.
+     * Amount allocated to this target in ISO 4217 minor units.
      *
      * @param int $amount
      * @return self

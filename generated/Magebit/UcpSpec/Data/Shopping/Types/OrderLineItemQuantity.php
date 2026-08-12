@@ -16,10 +16,27 @@ use Magebit\UcpSpec\Api\Shopping\Types\OrderLineItemQuantityInterface;
 use Magebit\UcpSpec\Runtime\SpecObject;
 
 /**
- * Quantity tracking. Both total and fulfilled are derived from events.
+ * Quantity tracking for the line item.
  */
 class OrderLineItemQuantity extends SpecObject implements OrderLineItemQuantityInterface
 {
+    /**
+     * @return int|null
+     */
+    public function getOriginal(): int|null
+    {
+        return $this->intOrNull(self::KEY_ORIGINAL);
+    }
+
+    /**
+     * @param int|null $original
+     * @return self
+     */
+    public function setOriginal(int|null $original): self
+    {
+        return $this->set(self::KEY_ORIGINAL, $original);
+    }
+
     /**
      * @return int
      */

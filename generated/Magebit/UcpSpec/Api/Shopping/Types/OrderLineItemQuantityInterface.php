@@ -13,22 +13,38 @@ declare(strict_types=1);
 namespace Magebit\UcpSpec\Api\Shopping\Types;
 
 /**
- * Quantity tracking. Both total and fulfilled are derived from events.
+ * Quantity tracking for the line item.
  */
 interface OrderLineItemQuantityInterface
 {
+    public const KEY_ORIGINAL = 'original';
     public const KEY_TOTAL = 'total';
     public const KEY_FULFILLED = 'fulfilled';
 
     /**
-     * Current total quantity.
+     * Quantity from the original checkout.
+     *
+     * @return int|null
+     */
+    public function getOriginal(): int|null;
+
+    /**
+     * Quantity from the original checkout.
+     *
+     * @param int|null $original
+     * @return self
+     */
+    public function setOriginal(int|null $original): self;
+
+    /**
+     * Current total active quantity. May differ from original due to post-order modifications (e.g., returns or cancellations).
      *
      * @return int
      */
     public function getTotal(): int;
 
     /**
-     * Current total quantity.
+     * Current total active quantity. May differ from original due to post-order modifications (e.g., returns or cancellations).
      *
      * @param int $total
      * @return self
@@ -36,14 +52,14 @@ interface OrderLineItemQuantityInterface
     public function setTotal(int $total): self;
 
     /**
-     * Quantity fulfilled (sum from fulfillment events).
+     * Quantity fulfilled so far.
      *
      * @return int
      */
     public function getFulfilled(): int;
 
     /**
-     * Quantity fulfilled (sum from fulfillment events).
+     * Quantity fulfilled so far.
      *
      * @param int $fulfilled
      * @return self

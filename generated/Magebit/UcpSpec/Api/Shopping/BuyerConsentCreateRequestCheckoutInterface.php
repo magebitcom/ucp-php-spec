@@ -14,6 +14,7 @@ namespace Magebit\UcpSpec\Api\Shopping;
 
 use Magebit\UcpSpec\Api\Shopping\Types\ContextInterface;
 use Magebit\UcpSpec\Api\Shopping\Types\LineItemCreateRequestInterface;
+use Magebit\UcpSpec\Api\Shopping\Types\SignalsInterface;
 
 /**
  * Checkout extended with consent tracking via buyer object.
@@ -25,6 +26,8 @@ interface BuyerConsentCreateRequestCheckoutInterface
     public const KEY_LINE_ITEMS = 'line_items';
     public const KEY_BUYER = 'buyer';
     public const KEY_CONTEXT = 'context';
+    public const KEY_SIGNALS = 'signals';
+    public const KEY_ATTRIBUTION = 'attribution';
     public const KEY_PAYMENT = 'payment';
 
     /**
@@ -67,6 +70,28 @@ interface BuyerConsentCreateRequestCheckoutInterface
      * @return self
      */
     public function setContext(ContextInterface|null $context): self;
+
+    /**
+     * @return \Magebit\UcpSpec\Api\Shopping\Types\SignalsInterface|null
+     */
+    public function getSignals(): SignalsInterface|null;
+
+    /**
+     * @param \Magebit\UcpSpec\Api\Shopping\Types\SignalsInterface|null $signals
+     * @return self
+     */
+    public function setSignals(SignalsInterface|null $signals): self;
+
+    /**
+     * @return array<string, string>|null
+     */
+    public function getAttribution(): array|null;
+
+    /**
+     * @param array<string, string>|null $attribution
+     * @return self
+     */
+    public function setAttribution(array|null $attribution): self;
 
     /**
      * @return \Magebit\UcpSpec\Api\Shopping\PaymentInterface|null

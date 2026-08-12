@@ -13,6 +13,8 @@ declare(strict_types=1);
 namespace Magebit\UcpSpec\Api\Shopping\Types;
 
 /**
+ * A cost breakdown entry with a category, amount, and optional display text.
+ *
  * Schema: Total Complete Request
  */
 interface TotalCompleteRequestInterface

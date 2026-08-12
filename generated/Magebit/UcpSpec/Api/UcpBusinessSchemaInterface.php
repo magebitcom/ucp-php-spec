@@ -20,9 +20,13 @@ namespace Magebit\UcpSpec\Api;
 interface UcpBusinessSchemaInterface
 {
     public const KEY_VERSION = 'version';
+    public const KEY_STATUS = 'status';
     public const KEY_SERVICES = 'services';
     public const KEY_CAPABILITIES = 'capabilities';
     public const KEY_PAYMENT_HANDLERS = 'payment_handlers';
+    public const KEY_SUPPORTED_VERSIONS = 'supported_versions';
+    public const STATUS_SUCCESS = 'success';
+    public const STATUS_ERROR = 'error';
 
     /**
      * @return string
@@ -34,6 +38,21 @@ interface UcpBusinessSchemaInterface
      * @return self
      */
     public function setVersion(string $version): self;
+
+    /**
+     * Application-level status of the UCP operation.
+     *
+     * @return string|null
+     */
+    public function getStatus(): string|null;
+
+    /**
+     * Application-level status of the UCP operation.
+     *
+     * @param string|null $status
+     * @return self
+     */
+    public function setStatus(string|null $status): self;
 
     /**
      * Service registry keyed by reverse-domain name.
@@ -79,4 +98,19 @@ interface UcpBusinessSchemaInterface
      * @return self
      */
     public function setPaymentHandlers(array $paymentHandlers): self;
+
+    /**
+     * Previous protocol versions this business supports, mapped to profile URIs. Businesses that support older protocol versions SHOULD advertise each version and link to its profile. Each URI points to a complete, self-contained profile for that version. When omitted, only `version` is supported.
+     *
+     * @return array<string, string>|null
+     */
+    public function getSupportedVersions(): array|null;
+
+    /**
+     * Previous protocol versions this business supports, mapped to profile URIs. Businesses that support older protocol versions SHOULD advertise each version and link to its profile. Each URI points to a complete, self-contained profile for that version. When omitted, only `version` is supported.
+     *
+     * @param array<string, string>|null $supportedVersions
+     * @return self
+     */
+    public function setSupportedVersions(array|null $supportedVersions): self;
 }

@@ -41,7 +41,8 @@ class ManifestWriterTest extends TestCase
         $this->assertMatchesRegularExpression('/^[0-9a-f]{40}$/', $manifest['upstream']['commit']);
         $this->assertNotNull($manifest['upstream']['repository']);
         $this->assertNotNull($manifest['upstream']['ref']);
-        $this->assertSame($manifest['spec']['target'], '2026-01-23');
+        $composer = json_decode((string) file_get_contents(dirname(__DIR__) . '/composer.json'), true);
+        $this->assertSame($composer['extra']['ucp']['spec-target'], $manifest['spec']['target']);
     }
 
     /**

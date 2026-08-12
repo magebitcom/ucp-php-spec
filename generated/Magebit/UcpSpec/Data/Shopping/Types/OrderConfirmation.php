@@ -38,6 +38,23 @@ class OrderConfirmation extends SpecObject implements OrderConfirmationInterface
     }
 
     /**
+     * @return string|null
+     */
+    public function getLabel(): string|null
+    {
+        return $this->stringOrNull(self::KEY_LABEL);
+    }
+
+    /**
+     * @param string|null $label
+     * @return self
+     */
+    public function setLabel(string|null $label): self
+    {
+        return $this->set(self::KEY_LABEL, $label);
+    }
+
+    /**
      * @return string
      */
     public function getPermalinkUrl(): string

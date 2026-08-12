@@ -20,9 +20,12 @@ namespace Magebit\UcpSpec\Api;
 interface UcpResponseCheckoutSchemaInterface
 {
     public const KEY_VERSION = 'version';
+    public const KEY_STATUS = 'status';
     public const KEY_SERVICES = 'services';
     public const KEY_CAPABILITIES = 'capabilities';
     public const KEY_PAYMENT_HANDLERS = 'payment_handlers';
+    public const STATUS_SUCCESS = 'success';
+    public const STATUS_ERROR = 'error';
 
     /**
      * @return string
@@ -34,6 +37,21 @@ interface UcpResponseCheckoutSchemaInterface
      * @return self
      */
     public function setVersion(string $version): self;
+
+    /**
+     * Application-level status of the UCP operation.
+     *
+     * @return string|null
+     */
+    public function getStatus(): string|null;
+
+    /**
+     * Application-level status of the UCP operation.
+     *
+     * @param string|null $status
+     * @return self
+     */
+    public function setStatus(string|null $status): self;
 
     /**
      * Service registry keyed by reverse-domain name.

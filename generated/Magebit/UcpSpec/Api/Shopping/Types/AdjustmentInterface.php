@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Magebit\UcpSpec\Api\Shopping\Types;
 
 /**
- * Append-only event that exists independently of fulfillment. Typically represents money movements but can be any post-order change. Polymorphic type that can optionally reference line items.
+ * Post-order event that exists independently of fulfillment. Typically represents money movements but can be any post-order change. Polymorphic type that can optionally reference line items.
  *
  * Schema: Adjustment
  */
@@ -24,7 +24,7 @@ interface AdjustmentInterface
     public const KEY_OCCURRED_AT = 'occurred_at';
     public const KEY_STATUS = 'status';
     public const KEY_LINE_ITEMS = 'line_items';
-    public const KEY_AMOUNT = 'amount';
+    public const KEY_TOTALS = 'totals';
     public const KEY_DESCRIPTION = 'description';
     public const STATUS_PENDING = 'pending';
     public const STATUS_COMPLETED = 'completed';
@@ -106,19 +106,19 @@ interface AdjustmentInterface
     public function setLineItems(array|null $lineItems): self;
 
     /**
-     * Amount in minor units (cents) for refunds, credits, price adjustments (optional).
+     * Adjustment totals breakdown. Signed values - negative for money returned to buyer (refunds, credits), positive for additional charges (exchanges).
      *
-     * @return int|null
+     * @return \Magebit\UcpSpec\Api\Shopping\Types\TotalResponseInterface[]|null
      */
-    public function getAmount(): int|null;
+    public function getTotals(): array|null;
 
     /**
-     * Amount in minor units (cents) for refunds, credits, price adjustments (optional).
+     * Adjustment totals breakdown. Signed values - negative for money returned to buyer (refunds, credits), positive for additional charges (exchanges).
      *
-     * @param int|null $amount
+     * @param \Magebit\UcpSpec\Api\Shopping\Types\TotalResponseInterface[]|null $totals
      * @return self
      */
-    public function setAmount(int|null $amount): self;
+    public function setTotals(array|null $totals): self;
 
     /**
      * Human-readable reason or description (e.g., 'Defective item', 'Customer requested').
