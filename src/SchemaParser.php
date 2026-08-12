@@ -257,11 +257,26 @@ class SchemaParser
     public function definitionTypeName(string $defName, string $filePath): string
     {
         $prefix = $this->getTypePrefix($filePath);
-        $name = $this->toPascalCase($defName);
+        $name = $this->toPascalCase($this->stripReverseDomain($defName));
 
         // A definition named after its own file adds nothing: `fulfillment_resp.json#/$defs/fulfillment`
         // is the fulfillment response, not a `FulfillmentResponseFulfillment`.
         return $name === $this->getConceptName($filePath) ? $prefix : $prefix . $name;
+    }
+
+    /**
+     * An extension binds onto a base concept under that concept's reverse-domain name, so
+     * `dev.ucp.shopping.checkout` is the checkout it composes onto. Only the concept carries meaning;
+     * the domain is the same for every definition in the spec and would bloat every composed name.
+     *
+     * @param string $defName Definition name as written in $defs
+     * @return string
+     */
+    private function stripReverseDomain(string $defName): string
+    {
+        return preg_match('/^dev\.ucp\.[a-z0-9_]+\.([a-z0-9_]+)$/', $defName, $matches) === 1
+            ? $matches[1]
+            : $defName;
     }
 
     /**

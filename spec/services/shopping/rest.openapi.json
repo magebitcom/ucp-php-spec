@@ -2,7 +2,6 @@
   "openapi": "3.1.0",
   "info": {
     "title": "UCP Shopping Service",
-    "version": "2026-01-11",
     "description": "Canonical REST interface for UCP Shopping service. Schema references are logical pointers - actual payload shape is determined by negotiated capabilities.\n\n**Endpoint Resolution:** This spec defines operations only. The base URL MUST be obtained from the merchant's discovery profile at `/.well-known/ucp` under `services[\"dev.ucp.shopping\"][transport=rest].endpoint`. The `{endpoint}` server variable below is a placeholder for tooling compatibility."
   },
   "servers": [
@@ -22,7 +21,7 @@
       "post": {
         "operationId": "create_checkout",
         "summary": "Create Checkout",
-        "description": "Create a checkout session. Called as soon as a user adds an item to a cart.",
+        "description": "Create a new checkout session.",
         "parameters": [
           {
             "$ref": "#/components/parameters/authorization"
@@ -31,7 +30,13 @@
             "$ref": "#/components/parameters/x_api_key"
           },
           {
-            "$ref": "#/components/parameters/request_signature"
+            "$ref": "#/components/parameters/signature"
+          },
+          {
+            "$ref": "#/components/parameters/signature_input"
+          },
+          {
+            "$ref": "#/components/parameters/content_digest"
           },
           {
             "$ref": "#/components/parameters/idempotency_key"
@@ -41,6 +46,9 @@
           },
           {
             "$ref": "#/components/parameters/user_agent"
+          },
+          {
+            "$ref": "#/components/parameters/ucp_agent"
           },
           {
             "$ref": "#/components/parameters/content_type"
@@ -59,9 +67,7 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/checkout_create_request"
-              }
+              "schema": { "$ref": "#/components/schemas/checkout" }
             }
           }
         },
@@ -69,8 +75,14 @@
           "201": {
             "description": "Checkout session created",
             "headers": {
-              "X-Detached-JWT": {
-                "$ref": "#/components/headers/x_detached_jwt"
+              "Signature": {
+                "$ref": "#/components/headers/signature"
+              },
+              "Signature-Input": {
+                "$ref": "#/components/headers/signature_input"
+              },
+              "Content-Digest": {
+                "$ref": "#/components/headers/content_digest"
               }
             },
             "content": {
@@ -86,9 +98,7 @@
     },
     "/checkout-sessions/{id}": {
       "parameters": [
-        {
-          "$ref": "#/components/parameters/checkout_session_id_path"
-        }
+        { "$ref": "#/components/parameters/checkout_session_id_path" }
       ],
       "get": {
         "operationId": "get_checkout",
@@ -102,13 +112,19 @@
             "$ref": "#/components/parameters/x_api_key"
           },
           {
-            "$ref": "#/components/parameters/request_signature"
+            "$ref": "#/components/parameters/signature"
+          },
+          {
+            "$ref": "#/components/parameters/signature_input"
           },
           {
             "$ref": "#/components/parameters/request_id"
           },
           {
             "$ref": "#/components/parameters/user_agent"
+          },
+          {
+            "$ref": "#/components/parameters/ucp_agent"
           },
           {
             "$ref": "#/components/parameters/content_type"
@@ -127,8 +143,14 @@
           "200": {
             "description": "Checkout session retrieved",
             "headers": {
-              "X-Detached-JWT": {
-                "$ref": "#/components/headers/x_detached_jwt"
+              "Signature": {
+                "$ref": "#/components/headers/signature"
+              },
+              "Signature-Input": {
+                "$ref": "#/components/headers/signature_input"
+              },
+              "Content-Digest": {
+                "$ref": "#/components/headers/content_digest"
               }
             },
             "content": {
@@ -153,7 +175,13 @@
             "$ref": "#/components/parameters/x_api_key"
           },
           {
-            "$ref": "#/components/parameters/request_signature"
+            "$ref": "#/components/parameters/signature"
+          },
+          {
+            "$ref": "#/components/parameters/signature_input"
+          },
+          {
+            "$ref": "#/components/parameters/content_digest"
           },
           {
             "$ref": "#/components/parameters/idempotency_key"
@@ -163,6 +191,9 @@
           },
           {
             "$ref": "#/components/parameters/user_agent"
+          },
+          {
+            "$ref": "#/components/parameters/ucp_agent"
           },
           {
             "$ref": "#/components/parameters/content_type"
@@ -181,9 +212,7 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/checkout_update_request"
-              }
+              "schema": { "$ref": "#/components/schemas/checkout" }
             }
           }
         },
@@ -191,8 +220,14 @@
           "200": {
             "description": "Checkout session updated",
             "headers": {
-              "X-Detached-JWT": {
-                "$ref": "#/components/headers/x_detached_jwt"
+              "Signature": {
+                "$ref": "#/components/headers/signature"
+              },
+              "Signature-Input": {
+                "$ref": "#/components/headers/signature_input"
+              },
+              "Content-Digest": {
+                "$ref": "#/components/headers/content_digest"
               }
             },
             "content": {
@@ -208,9 +243,7 @@
     },
     "/checkout-sessions/{id}/complete": {
       "parameters": [
-        {
-          "$ref": "#/components/parameters/checkout_session_id_path"
-        }
+        { "$ref": "#/components/parameters/checkout_session_id_path" }
       ],
       "post": {
         "operationId": "complete_checkout",
@@ -224,7 +257,13 @@
             "$ref": "#/components/parameters/x_api_key"
           },
           {
-            "$ref": "#/components/parameters/request_signature"
+            "$ref": "#/components/parameters/signature"
+          },
+          {
+            "$ref": "#/components/parameters/signature_input"
+          },
+          {
+            "$ref": "#/components/parameters/content_digest"
           },
           {
             "$ref": "#/components/parameters/idempotency_key"
@@ -234,6 +273,9 @@
           },
           {
             "$ref": "#/components/parameters/user_agent"
+          },
+          {
+            "$ref": "#/components/parameters/ucp_agent"
           },
           {
             "$ref": "#/components/parameters/content_type"
@@ -252,24 +294,7 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/checkout_complete_request"
-                  },
-                  {
-                    "title": "Risk Signals",
-                    "description": "Optional risk signals for fraud detection.",
-                    "type": "object",
-                    "properties": {
-                      "risk_signals": {
-                        "type": "object",
-                        "description": "Key-value pairs of risk signals."
-                      }
-                    }
-                  }
-                ]
-              }
+              "schema": { "$ref": "#/components/schemas/checkout" }
             }
           }
         },
@@ -277,15 +302,19 @@
           "200": {
             "description": "Checkout session completed",
             "headers": {
-              "X-Detached-JWT": {
-                "$ref": "#/components/headers/x_detached_jwt"
+              "Signature": {
+                "$ref": "#/components/headers/signature"
+              },
+              "Signature-Input": {
+                "$ref": "#/components/headers/signature_input"
+              },
+              "Content-Digest": {
+                "$ref": "#/components/headers/content_digest"
               }
             },
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/checkout_response"
-                }
+                "schema": { "$ref": "#/components/schemas/checkout_response" }
               }
             }
           }
@@ -294,9 +323,7 @@
     },
     "/checkout-sessions/{id}/cancel": {
       "parameters": [
-        {
-          "$ref": "#/components/parameters/checkout_session_id_path"
-        }
+        { "$ref": "#/components/parameters/checkout_session_id_path" }
       ],
       "post": {
         "operationId": "cancel_checkout",
@@ -310,7 +337,13 @@
             "$ref": "#/components/parameters/x_api_key"
           },
           {
-            "$ref": "#/components/parameters/request_signature"
+            "$ref": "#/components/parameters/signature"
+          },
+          {
+            "$ref": "#/components/parameters/signature_input"
+          },
+          {
+            "$ref": "#/components/parameters/content_digest"
           },
           {
             "$ref": "#/components/parameters/idempotency_key"
@@ -320,6 +353,9 @@
           },
           {
             "$ref": "#/components/parameters/user_agent"
+          },
+          {
+            "$ref": "#/components/parameters/ucp_agent"
           },
           {
             "$ref": "#/components/parameters/content_type"
@@ -338,8 +374,14 @@
           "200": {
             "description": "Checkout session canceled",
             "headers": {
-              "X-Detached-JWT": {
-                "$ref": "#/components/headers/x_detached_jwt"
+              "Signature": {
+                "$ref": "#/components/headers/signature"
+              },
+              "Signature-Input": {
+                "$ref": "#/components/headers/signature_input"
+              },
+              "Content-Digest": {
+                "$ref": "#/components/headers/content_digest"
               }
             },
             "content": {
@@ -347,6 +389,337 @@
                 "schema": {
                   "$ref": "#/components/schemas/checkout_response"
                 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/carts": {
+      "post": {
+        "operationId": "create_cart",
+        "summary": "Create Cart",
+        "description": "Create a new cart session.",
+        "parameters": [
+          { "$ref": "#/components/parameters/authorization" },
+          { "$ref": "#/components/parameters/x_api_key" },
+          { "$ref": "#/components/parameters/signature" },
+          { "$ref": "#/components/parameters/signature_input" },
+          { "$ref": "#/components/parameters/content_digest" },
+          { "$ref": "#/components/parameters/idempotency_key" },
+          { "$ref": "#/components/parameters/request_id" },
+          { "$ref": "#/components/parameters/user_agent" },
+          { "$ref": "#/components/parameters/ucp_agent" },
+          { "$ref": "#/components/parameters/content_type" },
+          { "$ref": "#/components/parameters/accept" },
+          { "$ref": "#/components/parameters/accept_language" },
+          { "$ref": "#/components/parameters/accept_encoding" }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/cart" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Cart created",
+            "headers": {
+              "Signature": { "$ref": "#/components/headers/signature" },
+              "Signature-Input": { "$ref": "#/components/headers/signature_input" },
+              "Content-Digest": { "$ref": "#/components/headers/content_digest" }
+            },
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/cart_response" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/carts/{id}": {
+      "parameters": [
+        { "$ref": "#/components/parameters/cart_id_path" }
+      ],
+      "get": {
+        "operationId": "get_cart",
+        "summary": "Get Cart",
+        "description": "Get the latest state of a cart session.",
+        "parameters": [
+          { "$ref": "#/components/parameters/authorization" },
+          { "$ref": "#/components/parameters/x_api_key" },
+          { "$ref": "#/components/parameters/signature" },
+          { "$ref": "#/components/parameters/signature_input" },
+          { "$ref": "#/components/parameters/request_id" },
+          { "$ref": "#/components/parameters/user_agent" },
+          { "$ref": "#/components/parameters/ucp_agent" },
+          { "$ref": "#/components/parameters/content_type" },
+          { "$ref": "#/components/parameters/accept" },
+          { "$ref": "#/components/parameters/accept_language" },
+          { "$ref": "#/components/parameters/accept_encoding" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cart retrieved",
+            "headers": {
+              "Signature": { "$ref": "#/components/headers/signature" },
+              "Signature-Input": { "$ref": "#/components/headers/signature_input" },
+              "Content-Digest": { "$ref": "#/components/headers/content_digest" }
+            },
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/cart_response" }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "update_cart",
+        "summary": "Update Cart",
+        "description": "Update a cart session.",
+        "parameters": [
+          { "$ref": "#/components/parameters/authorization" },
+          { "$ref": "#/components/parameters/x_api_key" },
+          { "$ref": "#/components/parameters/signature" },
+          { "$ref": "#/components/parameters/signature_input" },
+          { "$ref": "#/components/parameters/content_digest" },
+          { "$ref": "#/components/parameters/idempotency_key" },
+          { "$ref": "#/components/parameters/request_id" },
+          { "$ref": "#/components/parameters/user_agent" },
+          { "$ref": "#/components/parameters/ucp_agent" },
+          { "$ref": "#/components/parameters/content_type" },
+          { "$ref": "#/components/parameters/accept" },
+          { "$ref": "#/components/parameters/accept_language" },
+          { "$ref": "#/components/parameters/accept_encoding" }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/cart" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Cart updated",
+            "headers": {
+              "Signature": { "$ref": "#/components/headers/signature" },
+              "Signature-Input": { "$ref": "#/components/headers/signature_input" },
+              "Content-Digest": { "$ref": "#/components/headers/content_digest" }
+            },
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/cart_response" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/carts/{id}/cancel": {
+      "parameters": [
+        { "$ref": "#/components/parameters/cart_id_path" }
+      ],
+      "post": {
+        "operationId": "cancel_cart",
+        "summary": "Cancel Cart",
+        "description": "Cancel a cart session. Returns the cart state at time of cancellation.",
+        "parameters": [
+          { "$ref": "#/components/parameters/authorization" },
+          { "$ref": "#/components/parameters/x_api_key" },
+          { "$ref": "#/components/parameters/signature" },
+          { "$ref": "#/components/parameters/signature_input" },
+          { "$ref": "#/components/parameters/content_digest" },
+          { "$ref": "#/components/parameters/idempotency_key" },
+          { "$ref": "#/components/parameters/request_id" },
+          { "$ref": "#/components/parameters/user_agent" },
+          { "$ref": "#/components/parameters/ucp_agent" },
+          { "$ref": "#/components/parameters/content_type" },
+          { "$ref": "#/components/parameters/accept" },
+          { "$ref": "#/components/parameters/accept_language" },
+          { "$ref": "#/components/parameters/accept_encoding" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cart cancelled",
+            "headers": {
+              "Signature": { "$ref": "#/components/headers/signature" },
+              "Signature-Input": { "$ref": "#/components/headers/signature_input" },
+              "Content-Digest": { "$ref": "#/components/headers/content_digest" }
+            },
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/cart_response" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/catalog/search": {
+      "post": {
+        "operationId": "search_catalog",
+        "summary": "Search Catalog",
+        "description": "Search for products in the business's catalog.",
+        "parameters": [
+          { "$ref": "#/components/parameters/authorization" },
+          { "$ref": "#/components/parameters/x_api_key" },
+          { "$ref": "#/components/parameters/signature" },
+          { "$ref": "#/components/parameters/signature_input" },
+          { "$ref": "#/components/parameters/content_digest" },
+          { "$ref": "#/components/parameters/request_id" },
+          { "$ref": "#/components/parameters/user_agent" },
+          { "$ref": "#/components/parameters/ucp_agent" },
+          { "$ref": "#/components/parameters/content_type" },
+          { "$ref": "#/components/parameters/accept" },
+          { "$ref": "#/components/parameters/accept_language" },
+          { "$ref": "#/components/parameters/accept_encoding" }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/catalog_search_request" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Search results",
+            "headers": {
+              "Signature": { "$ref": "#/components/headers/signature" },
+              "Signature-Input": { "$ref": "#/components/headers/signature_input" },
+              "Content-Digest": { "$ref": "#/components/headers/content_digest" }
+            },
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/catalog_search_response" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/catalog/lookup": {
+      "post": {
+        "operationId": "lookup_catalog",
+        "summary": "Batch Lookup Catalog Items",
+        "description": "Lookup one or more products by ID with explicit market context. Supports batch lookups of multiple items in a single request.",
+        "parameters": [
+          { "$ref": "#/components/parameters/authorization" },
+          { "$ref": "#/components/parameters/x_api_key" },
+          { "$ref": "#/components/parameters/signature" },
+          { "$ref": "#/components/parameters/signature_input" },
+          { "$ref": "#/components/parameters/content_digest" },
+          { "$ref": "#/components/parameters/request_id" },
+          { "$ref": "#/components/parameters/user_agent" },
+          { "$ref": "#/components/parameters/ucp_agent" },
+          { "$ref": "#/components/parameters/content_type" },
+          { "$ref": "#/components/parameters/accept" },
+          { "$ref": "#/components/parameters/accept_language" },
+          { "$ref": "#/components/parameters/accept_encoding" }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/catalog_lookup_request" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Lookup result",
+            "headers": {
+              "Signature": { "$ref": "#/components/headers/signature" },
+              "Signature-Input": { "$ref": "#/components/headers/signature_input" },
+              "Content-Digest": { "$ref": "#/components/headers/content_digest" }
+            },
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/catalog_lookup_response" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/{id}": {
+      "parameters": [
+        { "$ref": "#/components/parameters/order_id_path" }
+      ],
+      "get": {
+        "operationId": "get_order",
+        "summary": "Get Order",
+        "description": "Get the current state of an order. Returns the full order entity as a current-state snapshot. The business verifies the requesting platform created the checkout that produced this order.",
+        "parameters": [
+          { "$ref": "#/components/parameters/authorization" },
+          { "$ref": "#/components/parameters/x_api_key" },
+          { "$ref": "#/components/parameters/signature" },
+          { "$ref": "#/components/parameters/signature_input" },
+          { "$ref": "#/components/parameters/request_id" },
+          { "$ref": "#/components/parameters/user_agent" },
+          { "$ref": "#/components/parameters/ucp_agent" },
+          { "$ref": "#/components/parameters/content_type" },
+          { "$ref": "#/components/parameters/accept" },
+          { "$ref": "#/components/parameters/accept_language" },
+          { "$ref": "#/components/parameters/accept_encoding" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Order retrieved or business outcome message",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/order_response" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/catalog/product": {
+      "post": {
+        "operationId": "get_product",
+        "summary": "Get Product Details",
+        "description": "Retrieve complete product detail by identifier. Returns a singular product with a relevant set of variants, exact pricing, and real-time availability. Supports interactive option selection via `selected` and `preferences` parameters for variant narrowing and availability signals.",
+        "parameters": [
+          { "$ref": "#/components/parameters/authorization" },
+          { "$ref": "#/components/parameters/x_api_key" },
+          { "$ref": "#/components/parameters/signature" },
+          { "$ref": "#/components/parameters/signature_input" },
+          { "$ref": "#/components/parameters/content_digest" },
+          { "$ref": "#/components/parameters/request_id" },
+          { "$ref": "#/components/parameters/user_agent" },
+          { "$ref": "#/components/parameters/ucp_agent" },
+          { "$ref": "#/components/parameters/content_type" },
+          { "$ref": "#/components/parameters/accept" },
+          { "$ref": "#/components/parameters/accept_language" },
+          { "$ref": "#/components/parameters/accept_encoding" }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/catalog_get_product_request" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Product detail",
+            "headers": {
+              "Signature": { "$ref": "#/components/headers/signature" },
+              "Signature-Input": { "$ref": "#/components/headers/signature_input" },
+              "Content-Digest": { "$ref": "#/components/headers/content_digest" }
+            },
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/catalog_get_product_response" }
               }
             }
           }
@@ -361,42 +734,19 @@
         "summary": "Order Event Webhook",
         "description": "Merchant sends order lifecycle events to the platform's registered webhook URL. The platform provides the webhook URL during partner onboarding.",
         "parameters": [
-          {
-            "$ref": "#/components/parameters/request_signature"
-          },
-          {
-            "$ref": "#/components/parameters/x_api_key"
-          }
+          { "$ref": "#/components/parameters/signature" },
+          { "$ref": "#/components/parameters/signature_input" },
+          { "$ref": "#/components/parameters/content_digest" },
+          { "$ref": "#/components/parameters/ucp_agent" },
+          { "$ref": "#/components/parameters/x_api_key" },
+          { "$ref": "#/components/parameters/webhook_timestamp" },
+          { "$ref": "#/components/parameters/webhook_id" }
         ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/order"
-                  },
-                  {
-                    "type": "object",
-                    "required": [
-                      "event_id",
-                      "created_time"
-                    ],
-                    "properties": {
-                      "event_id": {
-                        "type": "string",
-                        "description": "Unique event identifier."
-                      },
-                      "created_time": {
-                        "type": "string",
-                        "format": "date-time",
-                        "description": "Event creation timestamp in RFC 3339 format."
-                      }
-                    }
-                  }
-                ]
-              }
+              "schema": { "$ref": "#/components/schemas/order" }
             }
           }
         },
@@ -407,9 +757,7 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "required": [
-                    "ucp"
-                  ],
+                  "required": ["ucp"],
                   "properties": {
                     "ucp": {
                       "$ref": "#/components/schemas/ucp"
@@ -434,6 +782,24 @@
           "type": "string"
         }
       },
+      "cart_id_path": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "The unique identifier of the cart.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "order_id_path": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "The unique identifier of the order.",
+        "schema": {
+          "type": "string"
+        }
+      },
       "authorization": {
         "name": "Authorization",
         "in": "header",
@@ -452,14 +818,32 @@
         },
         "description": "Authenticates the platform with a reusable api key allocated to the platform by the business."
       },
-      "request_signature": {
-        "name": "Request-Signature",
+      "signature": {
+        "name": "Signature",
         "in": "header",
-        "required": true,
+        "required": false,
         "schema": {
           "type": "string"
         },
-        "description": "Ensure the authenticity and integrity of an HTTP message."
+        "description": "RFC 9421 HTTP Message Signature. Required when using HTTP Message Signatures for authentication. Format: `sig1=:<base64-signature>:`."
+      },
+      "signature_input": {
+        "name": "Signature-Input",
+        "in": "header",
+        "required": false,
+        "schema": {
+          "type": "string"
+        },
+        "description": "RFC 9421 Signature-Input header. Required when using HTTP Message Signatures for authentication. Format: `sig1=(\"@method\" \"@path\" ...);created=<timestamp>;keyid=\"<key-id>\"`."
+      },
+      "content_digest": {
+        "name": "Content-Digest",
+        "in": "header",
+        "required": false,
+        "schema": {
+          "type": "string"
+        },
+        "description": "Body digest per RFC 9530. Required for requests/responses with a body. Format: `sha-256=:<base64-digest>:`."
       },
       "idempotency_key": {
         "name": "Idempotency-Key",
@@ -489,6 +873,15 @@
           "type": "string"
         },
         "description": "Identifies the user agent string making the call."
+      },
+      "ucp_agent": {
+        "name": "UCP-Agent",
+        "in": "header",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "Identifies the UCP agent making the call. All requests MUST include the UCP-Agent header containing the signer's profile URI using RFC 8941 Dictionary syntax. The URL MUST point to /.well-known/ucp. Format: profile=\"https://example.com/.well-known/ucp\"."
       },
       "content_type": {
         "name": "Content-Type",
@@ -524,21 +917,78 @@
         "schema": {
           "type": "string"
         },
-        "description": "Compression. The client tells the server which content-codings it supports, usually for compression"
+        "description": "Compression. The client tells the server which content-codings it supports, usually for compression."
+      },
+      "webhook_timestamp": {
+        "name": "Webhook-Timestamp",
+        "in": "header",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        },
+        "description": "Webhook event occurrence unix timestamp (seconds since epoch)."
+      },
+      "webhook_id": {
+        "name": "Webhook-Id",
+        "in": "header",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "description": "The unique identifier of a webhook event."
       }
     },
     "headers": {
-      "x_detached_jwt": {
+      "signature": {
         "required": false,
         "schema": {
           "type": "string"
         },
-        "description": "Optional detached JWT signature for the response body. Verifies the response came from the server."
+        "description": "RFC 9421 HTTP Message Signature for response. Contains the signature value in the format `sig1=:<base64-signature>:`."
+      },
+      "signature_input": {
+        "required": false,
+        "schema": {
+          "type": "string"
+        },
+        "description": "RFC 9421 Signature-Input header for response. Describes signed components, timestamp, and key ID."
+      },
+      "content_digest": {
+        "required": false,
+        "schema": {
+          "type": "string"
+        },
+        "description": "JCS-canonicalized body digest per RFC 8785. Format: `sha-256=:<base64-digest>:`."
       }
     },
     "schemas": {
+      "checkout": {
+        "$ref": "../../schemas/shopping/checkout.json"
+      },
+      "checkout_response": {
+        "oneOf": [
+          { "$ref": "../../schemas/shopping/checkout.json" },
+          { "$ref": "../../schemas/shopping/types/error_response.json" }
+        ]
+      },
+      "cart": {
+        "$ref": "../../schemas/shopping/cart.json"
+      },
+      "cart_response": {
+        "oneOf": [
+          { "$ref": "../../schemas/shopping/cart.json" },
+          { "$ref": "../../schemas/shopping/types/error_response.json" }
+        ]
+      },
       "order": {
         "$ref": "../../schemas/shopping/order.json"
+      },
+      "order_response": {
+        "oneOf": [
+          { "$ref": "../../schemas/shopping/order.json" },
+          { "$ref": "../../schemas/shopping/types/error_response.json" }
+        ]
       },
       "payment": {
         "$ref": "../../schemas/shopping/payment.json"
@@ -546,17 +996,26 @@
       "ucp": {
         "$ref": "../../schemas/ucp.json"
       },
-      "checkout_response": {
-        "$ref": "../../schemas/shopping/checkout_resp.json"
+      "catalog_search_request": {
+        "$ref": "../../schemas/shopping/catalog_search.json#/$defs/search_request"
       },
-      "checkout_create_request": {
-        "$ref": "../../schemas/shopping/checkout.create_req.json"
+      "catalog_search_response": {
+        "$ref": "../../schemas/shopping/catalog_search.json#/$defs/search_response"
       },
-      "checkout_update_request": {
-        "$ref": "../../schemas/shopping/checkout.update_req.json"
+      "catalog_lookup_request": {
+        "$ref": "../../schemas/shopping/catalog_lookup.json#/$defs/lookup_request"
       },
-      "checkout_complete_request": {
-        "$ref": "../../schemas/shopping/checkout.complete_req.json"
+      "catalog_lookup_response": {
+        "$ref": "../../schemas/shopping/catalog_lookup.json#/$defs/lookup_response"
+      },
+      "catalog_get_product_request": {
+        "$ref": "../../schemas/shopping/catalog_lookup.json#/$defs/get_product_request"
+      },
+      "catalog_get_product_response": {
+        "oneOf": [
+          { "$ref": "../../schemas/shopping/catalog_lookup.json#/$defs/get_product_response" },
+          { "$ref": "../../schemas/shopping/types/error_response.json" }
+        ]
       }
     }
   }

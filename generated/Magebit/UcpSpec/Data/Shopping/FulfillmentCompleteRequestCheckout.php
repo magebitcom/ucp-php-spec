@@ -14,6 +14,7 @@ namespace Magebit\UcpSpec\Data\Shopping;
 
 use Magebit\UcpSpec\Api\Shopping\FulfillmentCompleteRequestCheckoutInterface;
 use Magebit\UcpSpec\Api\Shopping\PaymentInterface;
+use Magebit\UcpSpec\Api\Shopping\Types\SignalsInterface;
 use Magebit\UcpSpec\Runtime\SpecObject;
 
 /**
@@ -21,6 +22,40 @@ use Magebit\UcpSpec\Runtime\SpecObject;
  */
 class FulfillmentCompleteRequestCheckout extends SpecObject implements FulfillmentCompleteRequestCheckoutInterface
 {
+    /**
+     * @return \Magebit\UcpSpec\Api\Shopping\Types\SignalsInterface|null
+     */
+    public function getSignals(): SignalsInterface|null
+    {
+        return $this->instanceOrNull(self::KEY_SIGNALS, \Magebit\UcpSpec\Api\Shopping\Types\SignalsInterface::class);
+    }
+
+    /**
+     * @param \Magebit\UcpSpec\Api\Shopping\Types\SignalsInterface|null $signals
+     * @return self
+     */
+    public function setSignals(SignalsInterface|null $signals): self
+    {
+        return $this->set(self::KEY_SIGNALS, $signals);
+    }
+
+    /**
+     * @return array<string, string>|null
+     */
+    public function getAttribution(): array|null
+    {
+        return $this->arrayOrNull(self::KEY_ATTRIBUTION);
+    }
+
+    /**
+     * @param array<string, string>|null $attribution
+     * @return self
+     */
+    public function setAttribution(array|null $attribution): self
+    {
+        return $this->set(self::KEY_ATTRIBUTION, $attribution);
+    }
+
     /**
      * @return \Magebit\UcpSpec\Api\Shopping\PaymentInterface
      */

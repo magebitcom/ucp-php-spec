@@ -21,18 +21,18 @@ use Magebit\UcpSpec\Runtime\SpecObject;
 class Ap2MandateCompleteRequestAp2WithCheckoutMandate extends SpecObject implements Ap2MandateCompleteRequestAp2WithCheckoutMandateInterface
 {
     /**
-     * @return string|null
+     * @return string
      */
-    public function getCheckoutMandate(): string|null
+    public function getCheckoutMandate(): string
     {
-        return $this->stringOrNull(self::KEY_CHECKOUT_MANDATE);
+        return $this->requireString(self::KEY_CHECKOUT_MANDATE);
     }
 
     /**
-     * @param string|null $checkoutMandate
+     * @param string $checkoutMandate
      * @return self
      */
-    public function setCheckoutMandate(string|null $checkoutMandate): self
+    public function setCheckoutMandate(string $checkoutMandate): self
     {
         return $this->set(self::KEY_CHECKOUT_MANDATE, $checkoutMandate);
     }

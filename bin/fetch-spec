@@ -1,0 +1,61 @@
+#!/usr/bin/env php
+<?php
+/**
+ * @author    Magebit <info@magebit.com>
+ * @copyright Copyright (c) Magebit, Ltd. (https://magebit.com)
+ * @license   MIT
+ */
+declare(strict_types=1);
+
+use Magebit\UcpSpecGenerator\SpecBuilder;
+
+require __DIR__ . '/../vendor/autoload.php';
+
+$options = getopt('', ['source:', 'output:', 'help']);
+
+if ($options === false || isset($options['help']) || !isset($options['source'])) {
+    echo <<<TEXT
+    Resolve an upstream UCP source/ tree into the spec/ layout the generator consumes.
+
+    Usage:
+      bin/fetch-spec --source=<path to upstream source/> [--output=<dir>]
+
+    Options:
+      --source  Upstream `source/` directory, from a checkout pinned to a known commit
+      --output  Where to write the tree. Defaults to spec/ next to this package
+
+    Requires the ucp-schema CLI: cargo install ucp-schema --locked
+
+    Record the upstream repository, ref and commit in composer.json's extra.ucp.upstream
+    afterwards — spec.manifest.json reads its provenance from there, and the release
+    workflow refuses to tag without it.
+
+    TEXT;
+    exit(isset($options['help']) ? 0 : 1);
+}
+
+$source = rtrim((string) $options['source'], '/');
+$output = rtrim((string) ($options['output'] ?? dirname(__DIR__) . '/spec'), '/');
+
+if (!is_dir($source)) {
+    fwrite(STDERR, "Source directory does not exist: {$source}\n");
+    exit(1);
+}
+
+try {
+    $builder = new SpecBuilder($source, $output);
+    $version = $builder->resolverVersion();
+
+    echo "Resolver: " . SpecBuilder::RESOLVER . " {$version}\n";
+    echo "Source:   {$source}\n";
+    echo "Output:   {$output}\n\n";
+
+    $written = $builder->build();
+} catch (\RuntimeException $e) {
+    fwrite(STDERR, 'Failed: ' . $e->getMessage() . "\n");
+    exit(1);
+}
+
+echo 'Wrote ' . count($written) . " files.\n";
+echo "\nNext: update extra.ucp.spec-target and extra.ucp.upstream in composer.json, then run\n";
+echo "  php generate.php --clean\n";

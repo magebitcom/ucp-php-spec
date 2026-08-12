@@ -23,20 +23,37 @@ use Magebit\UcpSpec\Runtime\SpecObject;
 class FulfillmentMethodUpdateRequest extends SpecObject implements FulfillmentMethodUpdateRequestInterface
 {
     /**
-     * @return string
+     * @return string|null
      */
-    public function getId(): string
+    public function getId(): string|null
     {
-        return $this->requireString(self::KEY_ID);
+        return $this->stringOrNull(self::KEY_ID);
     }
 
     /**
-     * @param string $id
+     * @param string|null $id
      * @return self
      */
-    public function setId(string $id): self
+    public function setId(string|null $id): self
     {
         return $this->set(self::KEY_ID, $id);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getType(): string|null
+    {
+        return $this->stringOrNull(self::KEY_TYPE);
+    }
+
+    /**
+     * @param string|null $type
+     * @return self
+     */
+    public function setType(string|null $type): self
+    {
+        return $this->set(self::KEY_TYPE, $type);
     }
 
     /**

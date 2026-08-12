@@ -15,6 +15,9 @@ namespace Magebit\UcpSpec\Data\Shopping\Types;
 use Magebit\UcpSpec\Api\Shopping\Types\TotalResponseInterface;
 use Magebit\UcpSpec\Runtime\SpecObject;
 
+/**
+ * A cost breakdown entry with a category, amount, and optional display text.
+ */
 class TotalResponse extends SpecObject implements TotalResponseInterface
 {
     /**

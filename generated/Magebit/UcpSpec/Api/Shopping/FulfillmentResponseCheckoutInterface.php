@@ -13,12 +13,15 @@ declare(strict_types=1);
 namespace Magebit\UcpSpec\Api\Shopping;
 
 use Magebit\UcpSpec\Api\Shopping\Types\BuyerInterface;
+use Magebit\UcpSpec\Api\Shopping\Types\ContextInterface;
 use Magebit\UcpSpec\Api\Shopping\Types\FulfillmentResponseInterface;
 use Magebit\UcpSpec\Api\Shopping\Types\LineItemResponseInterface;
 use Magebit\UcpSpec\Api\Shopping\Types\LinkInterface;
 use Magebit\UcpSpec\Api\Shopping\Types\MessageInterface;
 use Magebit\UcpSpec\Api\Shopping\Types\OrderConfirmationInterface;
+use Magebit\UcpSpec\Api\Shopping\Types\SignalsInterface;
 use Magebit\UcpSpec\Api\Shopping\Types\TotalResponseInterface;
+use Magebit\UcpSpec\Api\Shopping\Types\TotalsResponseInterface;
 use Magebit\UcpSpec\Api\UcpResponseCheckoutSchemaInterface;
 
 /**
@@ -32,6 +35,9 @@ interface FulfillmentResponseCheckoutInterface
     public const KEY_ID = 'id';
     public const KEY_LINE_ITEMS = 'line_items';
     public const KEY_BUYER = 'buyer';
+    public const KEY_CONTEXT = 'context';
+    public const KEY_SIGNALS = 'signals';
+    public const KEY_ATTRIBUTION = 'attribution';
     public const KEY_STATUS = 'status';
     public const KEY_CURRENCY = 'currency';
     public const KEY_TOTALS = 'totals';
@@ -106,6 +112,39 @@ interface FulfillmentResponseCheckoutInterface
     public function setBuyer(BuyerInterface|null $buyer): self;
 
     /**
+     * @return \Magebit\UcpSpec\Api\Shopping\Types\ContextInterface|null
+     */
+    public function getContext(): ContextInterface|null;
+
+    /**
+     * @param \Magebit\UcpSpec\Api\Shopping\Types\ContextInterface|null $context
+     * @return self
+     */
+    public function setContext(ContextInterface|null $context): self;
+
+    /**
+     * @return \Magebit\UcpSpec\Api\Shopping\Types\SignalsInterface|null
+     */
+    public function getSignals(): SignalsInterface|null;
+
+    /**
+     * @param \Magebit\UcpSpec\Api\Shopping\Types\SignalsInterface|null $signals
+     * @return self
+     */
+    public function setSignals(SignalsInterface|null $signals): self;
+
+    /**
+     * @return array<string, string>|null
+     */
+    public function getAttribution(): array|null;
+
+    /**
+     * @param array<string, string>|null $attribution
+     * @return self
+     */
+    public function setAttribution(array|null $attribution): self;
+
+    /**
      * Checkout state indicating the current phase and required action. See Checkout Status lifecycle documentation for state transition details.
      *
      * @return string
@@ -140,7 +179,7 @@ interface FulfillmentResponseCheckoutInterface
      *
      * @return \Magebit\UcpSpec\Api\Shopping\Types\TotalResponseInterface[]
      */
-    public function getTotals(): array;
+    public function getTotals(): TotalsResponseInterface;
 
     /**
      * Different cart totals.
@@ -148,7 +187,7 @@ interface FulfillmentResponseCheckoutInterface
      * @param \Magebit\UcpSpec\Api\Shopping\Types\TotalResponseInterface[] $totals
      * @return self
      */
-    public function setTotals(array $totals): self;
+    public function setTotals(TotalsResponseInterface $totals): self;
 
     /**
      * List of messages with error and info about the checkout session state.

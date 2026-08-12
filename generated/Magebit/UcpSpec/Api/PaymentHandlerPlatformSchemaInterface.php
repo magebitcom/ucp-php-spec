@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Magebit\UcpSpec\Api;
 
+use Magebit\UcpSpec\Api\Shopping\Types\AvailablePaymentInstrumentInterface;
+
 /**
  * Platform declaration for discovery profiles. May include partial config state required for discovery.
  *
@@ -24,6 +26,7 @@ interface PaymentHandlerPlatformSchemaInterface
     public const KEY_SCHEMA = 'schema';
     public const KEY_ID = 'id';
     public const KEY_CONFIG = 'config';
+    public const KEY_AVAILABLE_INSTRUMENTS = 'available_instruments';
 
     /**
      * Entity version in YYYY-MM-DD format.
@@ -99,4 +102,19 @@ interface PaymentHandlerPlatformSchemaInterface
      * @return self
      */
     public function setConfig(array|null $config): self;
+
+    /**
+     * Instrument types this handler supports, with optional constraints. When absent, every instrument should be considered available.
+     *
+     * @return \Magebit\UcpSpec\Api\Shopping\Types\AvailablePaymentInstrumentInterface[]|null
+     */
+    public function getAvailableInstruments(): array|null;
+
+    /**
+     * Instrument types this handler supports, with optional constraints. When absent, every instrument should be considered available.
+     *
+     * @param \Magebit\UcpSpec\Api\Shopping\Types\AvailablePaymentInstrumentInterface[]|null $availableInstruments
+     * @return self
+     */
+    public function setAvailableInstruments(array|null $availableInstruments): self;
 }

@@ -26,6 +26,7 @@ interface OrderLineItemInterface
     public const STATUS_PROCESSING = 'processing';
     public const STATUS_PARTIAL = 'partial';
     public const STATUS_FULFILLED = 'fulfilled';
+    public const STATUS_REMOVED = 'removed';
 
     /**
      * Line item identifier.
@@ -58,14 +59,14 @@ interface OrderLineItemInterface
     public function setItem(ItemResponseInterface $item): self;
 
     /**
-     * Quantity tracking. Both total and fulfilled are derived from events.
+     * Quantity tracking for the line item.
      *
      * @return \Magebit\UcpSpec\Api\Shopping\Types\OrderLineItemQuantityInterface
      */
     public function getQuantity(): OrderLineItemQuantityInterface;
 
     /**
-     * Quantity tracking. Both total and fulfilled are derived from events.
+     * Quantity tracking for the line item.
      *
      * @param \Magebit\UcpSpec\Api\Shopping\Types\OrderLineItemQuantityInterface $quantity
      * @return self
@@ -88,14 +89,14 @@ interface OrderLineItemInterface
     public function setTotals(array $totals): self;
 
     /**
-     * Derived status: fulfilled if quantity.fulfilled == quantity.total, partial if quantity.fulfilled > 0, otherwise processing.
+     * Derived status: removed if quantity.total == 0, fulfilled if quantity.total > 0 and quantity.fulfilled == quantity.total, partial if quantity.total > 0 and quantity.fulfilled > 0, otherwise processing.
      *
      * @return string
      */
     public function getStatus(): string;
 
     /**
-     * Derived status: fulfilled if quantity.fulfilled == quantity.total, partial if quantity.fulfilled > 0, otherwise processing.
+     * Derived status: removed if quantity.total == 0, fulfilled if quantity.total > 0 and quantity.fulfilled == quantity.total, partial if quantity.total > 0 and quantity.fulfilled > 0, otherwise processing.
      *
      * @param string $status
      * @return self

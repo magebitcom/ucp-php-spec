@@ -269,27 +269,38 @@ rather than failures.
 Every run writes `spec.manifest.json` next to `generated/`, recording the generator version and a SHA-256 for
 each input schema file.
 
-Provenance is recorded, and was **derived rather than guessed**. Upstream deleted its pre-generated `spec/`
-directory in commit `a8b185d` (2026-01-28), replacing it with on-demand resolution via the `ucp-schema` CLI,
-so the vendored tree corresponds to no revision of the default branch. It was identified by comparing the
-git blob hash of all 91 vendored files against candidate revisions:
+This package targets **`2026-04-08`**, resolved from `source/` at
+`a2d8bf0b8f5a6fc790f677899c2c7da0684fe33d` (tag `v2026-04-08`). `release/2026-04-08` kept receiving
+cherry-picks until at least 2026-05-22, so the commit is pinned and the dated name is not trusted.
 
-| Candidate | Result |
-| --- | --- |
-| `843db28` — last state of `spec/` on the default branch | 84/91, plus 3 files absent here |
-| `8483a7f` | 89/91 |
-| **`v2026-01-23` (`dcf7eac71fc370dcc8768fcdbc5aa737037cca05`)** | **91/91 byte-identical, nothing extra on either side** |
+Upstream stopped committing a pre-generated `spec/` directory in `a8b185d` (2026-01-28), replacing it with
+on-demand resolution through the `ucp-schema` CLI. `bin/fetch-spec` reproduces the tree this generator
+consumes — see [Refetching the spec](#refetching-the-spec).
 
-Independently confirmed by re-running that release's own `generate_schemas.py` over its `source/` tree, which
-reproduces all 91 files byte-for-byte.
+An earlier snapshot in this repository declared `2026-04-08` while actually containing `2026-01-23`. It was
+identified by comparing the git blob hash of all 91 files against candidate revisions — `843db28` matched
+84/91, `8483a7f` 89/91, and tag `v2026-01-23` (`dcf7eac71fc370dcc8768fcdbc5aa737037cca05`) matched 91/91 with
+nothing extra on either side. Provenance is now recorded in `composer.json` and must be updated there
+whenever `spec/` is refetched; never guess it.
 
-**This package therefore targets `2026-01-23`, not `2026-04-08`.** The later release carries 83 schema
-concepts against this snapshot's 52; the 31 absent ones include `cart`, `catalog_search`, `catalog_lookup`,
-`identity_linking`, and the extracted `error_code`, `error_response`, `info_code`, `warning_code`, `totals`,
-`amount` and `signed_amount` types. Moving to `2026-04-08` means re-resolving `source/` at
-`a2d8bf0b8f5a6fc790f677899c2c7da0684fe33d` with `ucp-schema`; it is a MAJOR change and is tracked separately.
-Note that `release/2026-04-08` kept receiving cherry-picks until at least 2026-05-22, which is why the commit
-is pinned and the dated name is not trusted.
+### Refetching the spec
+
+```bash
+cargo install ucp-schema --locked          # the resolver upstream itself uses
+git clone https://github.com/Universal-Commerce-Protocol/ucp /tmp/ucp
+git -C /tmp/ucp checkout <pinned commit>
+php bin/fetch-spec --source=/tmp/ucp/source
+```
+
+`bin/fetch-spec` emits one file per operation variant — `X.create_req.json`, `X.update_req.json`,
+`X.complete_req.json` and `X_resp.json` for an annotated schema, or `X_req.json` and `X_resp.json` when the
+schema is a shared request — rewriting each `$ref` to the variant matching the file's own direction.
+OpenAPI and OpenRPC documents are copied through untouched: upstream now ships them already resolved.
+
+The tool was validated against `v2026-01-23`, whose `spec/` tree is committed upstream: resolving that
+release's `source/` reproduces all 91 committed paths, and the generated PHP is identical except for two AP2
+types where the current resolver correctly marks `ap2` and `checkout_mandate` required at the `complete`
+operation.
 
 ## Tests
 

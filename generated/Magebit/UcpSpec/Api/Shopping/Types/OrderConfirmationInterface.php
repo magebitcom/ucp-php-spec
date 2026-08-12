@@ -20,6 +20,7 @@ namespace Magebit\UcpSpec\Api\Shopping\Types;
 interface OrderConfirmationInterface
 {
     public const KEY_ID = 'id';
+    public const KEY_LABEL = 'label';
     public const KEY_PERMALINK_URL = 'permalink_url';
 
     /**
@@ -36,6 +37,21 @@ interface OrderConfirmationInterface
      * @return self
      */
     public function setId(string $id): self;
+
+    /**
+     * Human-readable label for identifying the order. MUST only be provided by the business.
+     *
+     * @return string|null
+     */
+    public function getLabel(): string|null;
+
+    /**
+     * Human-readable label for identifying the order. MUST only be provided by the business.
+     *
+     * @param string|null $label
+     * @return self
+     */
+    public function setLabel(string|null $label): self;
 
     /**
      * Permalink to access the order on merchant site.

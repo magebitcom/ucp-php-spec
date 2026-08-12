@@ -102,17 +102,17 @@ interface CapabilityPlatformSchemaInterface
     public function setConfig(array|null $config): self;
 
     /**
-     * Parent capability this extends. Present for extensions, absent for root capabilities.
+     * Parent capability(s) this extends. Present for extensions, absent for root capabilities. Use array for multi-parent extensions.
      *
-     * @return string|null
+     * @return string|array|null
      */
-    public function getExtends(): string|null;
+    public function getExtends(): string|array|null;
 
     /**
-     * Parent capability this extends. Present for extensions, absent for root capabilities.
+     * Parent capability(s) this extends. Present for extensions, absent for root capabilities. Use array for multi-parent extensions.
      *
-     * @param string|null $extends
+     * @param string|array|null $extends
      * @return self
      */
-    public function setExtends(string|null $extends): self;
+    public function setExtends(string|array|null $extends): self;
 }

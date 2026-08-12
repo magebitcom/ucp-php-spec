@@ -124,6 +124,40 @@ class DiscountCreateRequestAppliedDiscount extends SpecObject implements Discoun
     }
 
     /**
+     * @return bool|null
+     */
+    public function getProvisional(): bool|null
+    {
+        return $this->boolOrNull(self::KEY_PROVISIONAL);
+    }
+
+    /**
+     * @param bool|null $provisional
+     * @return self
+     */
+    public function setProvisional(bool|null $provisional): self
+    {
+        return $this->set(self::KEY_PROVISIONAL, $provisional);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getEligibility(): string|null
+    {
+        return $this->stringOrNull(self::KEY_ELIGIBILITY);
+    }
+
+    /**
+     * @param string|null $eligibility
+     * @return self
+     */
+    public function setEligibility(string|null $eligibility): self
+    {
+        return $this->set(self::KEY_ELIGIBILITY, $eligibility);
+    }
+
+    /**
      * @return \Magebit\UcpSpec\Api\Shopping\DiscountCreateRequestAllocationInterface[]|null
      */
     public function getAllocations(): array|null

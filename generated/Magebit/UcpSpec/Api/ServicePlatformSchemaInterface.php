@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Magebit\UcpSpec\Api;
 
 /**
- * Full service declaration for platform-level discovery. Different transports require different fields.
+ * Full service declaration for platform-level discovery. All transports require `version`, `spec`, and `transport`. REST, MCP, and embedded additionally require `schema`.
  *
  * Schema: Service (Platform Schema)
  */

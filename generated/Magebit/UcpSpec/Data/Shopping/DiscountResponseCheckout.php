@@ -16,11 +16,14 @@ use Magebit\UcpSpec\Api\Shopping\DiscountResponseCheckoutInterface;
 use Magebit\UcpSpec\Api\Shopping\DiscountResponseDiscountsObjectInterface;
 use Magebit\UcpSpec\Api\Shopping\PaymentInterface;
 use Magebit\UcpSpec\Api\Shopping\Types\BuyerInterface;
+use Magebit\UcpSpec\Api\Shopping\Types\ContextInterface;
 use Magebit\UcpSpec\Api\Shopping\Types\LineItemResponseInterface;
 use Magebit\UcpSpec\Api\Shopping\Types\LinkInterface;
 use Magebit\UcpSpec\Api\Shopping\Types\MessageInterface;
 use Magebit\UcpSpec\Api\Shopping\Types\OrderConfirmationInterface;
+use Magebit\UcpSpec\Api\Shopping\Types\SignalsInterface;
 use Magebit\UcpSpec\Api\Shopping\Types\TotalResponseInterface;
+use Magebit\UcpSpec\Api\Shopping\Types\TotalsResponseInterface;
 use Magebit\UcpSpec\Api\UcpResponseCheckoutSchemaInterface;
 use Magebit\UcpSpec\Runtime\SpecObject;
 
@@ -98,6 +101,57 @@ class DiscountResponseCheckout extends SpecObject implements DiscountResponseChe
     }
 
     /**
+     * @return \Magebit\UcpSpec\Api\Shopping\Types\ContextInterface|null
+     */
+    public function getContext(): ContextInterface|null
+    {
+        return $this->instanceOrNull(self::KEY_CONTEXT, \Magebit\UcpSpec\Api\Shopping\Types\ContextInterface::class);
+    }
+
+    /**
+     * @param \Magebit\UcpSpec\Api\Shopping\Types\ContextInterface|null $context
+     * @return self
+     */
+    public function setContext(ContextInterface|null $context): self
+    {
+        return $this->set(self::KEY_CONTEXT, $context);
+    }
+
+    /**
+     * @return \Magebit\UcpSpec\Api\Shopping\Types\SignalsInterface|null
+     */
+    public function getSignals(): SignalsInterface|null
+    {
+        return $this->instanceOrNull(self::KEY_SIGNALS, \Magebit\UcpSpec\Api\Shopping\Types\SignalsInterface::class);
+    }
+
+    /**
+     * @param \Magebit\UcpSpec\Api\Shopping\Types\SignalsInterface|null $signals
+     * @return self
+     */
+    public function setSignals(SignalsInterface|null $signals): self
+    {
+        return $this->set(self::KEY_SIGNALS, $signals);
+    }
+
+    /**
+     * @return array<string, string>|null
+     */
+    public function getAttribution(): array|null
+    {
+        return $this->arrayOrNull(self::KEY_ATTRIBUTION);
+    }
+
+    /**
+     * @param array<string, string>|null $attribution
+     * @return self
+     */
+    public function setAttribution(array|null $attribution): self
+    {
+        return $this->set(self::KEY_ATTRIBUTION, $attribution);
+    }
+
+    /**
      * @return string
      */
     public function getStatus(): string
@@ -134,16 +188,16 @@ class DiscountResponseCheckout extends SpecObject implements DiscountResponseChe
     /**
      * @return \Magebit\UcpSpec\Api\Shopping\Types\TotalResponseInterface[]
      */
-    public function getTotals(): array
+    public function getTotals(): TotalsResponseInterface
     {
-        return $this->instanceList(self::KEY_TOTALS, \Magebit\UcpSpec\Api\Shopping\Types\TotalResponseInterface::class);
+        return $this->requireInstance(self::KEY_TOTALS, \Magebit\UcpSpec\Api\Shopping\Types\TotalsResponseInterface::class);
     }
 
     /**
      * @param \Magebit\UcpSpec\Api\Shopping\Types\TotalResponseInterface[] $totals
      * @return self
      */
-    public function setTotals(array $totals): self
+    public function setTotals(TotalsResponseInterface $totals): self
     {
         return $this->set(self::KEY_TOTALS, $totals);
     }

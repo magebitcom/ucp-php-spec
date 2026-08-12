@@ -16,7 +16,7 @@ use Magebit\UcpSpec\Api\Transports\EmbeddedConfigInterface;
 use Magebit\UcpSpec\Runtime\SpecObject;
 
 /**
- * Per-checkout configuration for embedded transport binding. Allows businesses to vary ECP availability and delegations based on cart contents, agent authorization, or policy.
+ * Per-session configuration for embedded transport binding. Allows businesses to vary EP availability and delegations based on cart contents, agent authorization, or policy.
  */
 class EmbeddedConfig extends SpecObject implements EmbeddedConfigInterface
 {
@@ -35,5 +35,22 @@ class EmbeddedConfig extends SpecObject implements EmbeddedConfigInterface
     public function setDelegate(array|null $delegate): self
     {
         return $this->set(self::KEY_DELEGATE, $delegate);
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getColorScheme(): array|null
+    {
+        return $this->arrayOrNull(self::KEY_COLOR_SCHEME);
+    }
+
+    /**
+     * @param string[]|null $colorScheme
+     * @return self
+     */
+    public function setColorScheme(array|null $colorScheme): self
+    {
+        return $this->set(self::KEY_COLOR_SCHEME, $colorScheme);
     }
 }

@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Magebit\UcpSpec\Data;
 
 use Magebit\UcpSpec\Api\PaymentHandlerResponseSchemaInterface;
+use Magebit\UcpSpec\Api\Shopping\Types\AvailablePaymentInstrumentInterface;
 use Magebit\UcpSpec\Runtime\SpecObject;
 
 /**
@@ -106,5 +107,22 @@ class PaymentHandlerResponseSchema extends SpecObject implements PaymentHandlerR
     public function setConfig(array|null $config): self
     {
         return $this->set(self::KEY_CONFIG, $config);
+    }
+
+    /**
+     * @return \Magebit\UcpSpec\Api\Shopping\Types\AvailablePaymentInstrumentInterface[]|null
+     */
+    public function getAvailableInstruments(): array|null
+    {
+        return $this->instanceListOrNull(self::KEY_AVAILABLE_INSTRUMENTS, \Magebit\UcpSpec\Api\Shopping\Types\AvailablePaymentInstrumentInterface::class);
+    }
+
+    /**
+     * @param \Magebit\UcpSpec\Api\Shopping\Types\AvailablePaymentInstrumentInterface[]|null $availableInstruments
+     * @return self
+     */
+    public function setAvailableInstruments(array|null $availableInstruments): self
+    {
+        return $this->set(self::KEY_AVAILABLE_INSTRUMENTS, $availableInstruments);
     }
 }
