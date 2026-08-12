@@ -1,0 +1,182 @@
+<?php
+
+/**
+ * This file is auto-generated. Do not edit manually.
+ *
+ * @author    Magebit <info@magebit.com>
+ * @copyright Copyright (c) Magebit, Ltd. (https://magebit.com)
+ * @license   MIT
+ */
+
+declare(strict_types=1);
+
+namespace Magebit\UcpSpec\Api\Shopping\Types;
+
+/**
+ * A destination for fulfillment.
+ *
+ * Schema: Fulfillment Destination Request
+ */
+interface FulfillmentDestinationRequestInterface
+{
+    public const KEY_EXTENDED_ADDRESS = 'extended_address';
+    public const KEY_STREET_ADDRESS = 'street_address';
+    public const KEY_ADDRESS_LOCALITY = 'address_locality';
+    public const KEY_ADDRESS_REGION = 'address_region';
+    public const KEY_ADDRESS_COUNTRY = 'address_country';
+    public const KEY_POSTAL_CODE = 'postal_code';
+    public const KEY_FIRST_NAME = 'first_name';
+    public const KEY_LAST_NAME = 'last_name';
+    public const KEY_PHONE_NUMBER = 'phone_number';
+    public const KEY_ID = 'id';
+
+    /**
+     * An address extension such as an apartment number, C/O or alternative name.
+     *
+     * @return string|null
+     */
+    public function getExtendedAddress(): string|null;
+
+    /**
+     * An address extension such as an apartment number, C/O or alternative name.
+     *
+     * @param string|null $extendedAddress
+     * @return self
+     */
+    public function setExtendedAddress(string|null $extendedAddress): self;
+
+    /**
+     * The street address.
+     *
+     * @return string|null
+     */
+    public function getStreetAddress(): string|null;
+
+    /**
+     * The street address.
+     *
+     * @param string|null $streetAddress
+     * @return self
+     */
+    public function setStreetAddress(string|null $streetAddress): self;
+
+    /**
+     * The locality in which the street address is, and which is in the region. For example, Mountain View.
+     *
+     * @return string|null
+     */
+    public function getAddressLocality(): string|null;
+
+    /**
+     * The locality in which the street address is, and which is in the region. For example, Mountain View.
+     *
+     * @param string|null $addressLocality
+     * @return self
+     */
+    public function setAddressLocality(string|null $addressLocality): self;
+
+    /**
+     * The region in which the locality is, and which is in the country. Required for applicable countries (i.e. state in US, province in CA). For example, California or another appropriate first-level Administrative division.
+     *
+     * @return string|null
+     */
+    public function getAddressRegion(): string|null;
+
+    /**
+     * The region in which the locality is, and which is in the country. Required for applicable countries (i.e. state in US, province in CA). For example, California or another appropriate first-level Administrative division.
+     *
+     * @param string|null $addressRegion
+     * @return self
+     */
+    public function setAddressRegion(string|null $addressRegion): self;
+
+    /**
+     * The country. Recommended to be in 2-letter ISO 3166-1 alpha-2 format, for example "US". For backward compatibility, a 3-letter ISO 3166-1 alpha-3 country code such as "SGP" or a full country name such as "Singapore" can also be used.
+     *
+     * @return string|null
+     */
+    public function getAddressCountry(): string|null;
+
+    /**
+     * The country. Recommended to be in 2-letter ISO 3166-1 alpha-2 format, for example "US". For backward compatibility, a 3-letter ISO 3166-1 alpha-3 country code such as "SGP" or a full country name such as "Singapore" can also be used.
+     *
+     * @param string|null $addressCountry
+     * @return self
+     */
+    public function setAddressCountry(string|null $addressCountry): self;
+
+    /**
+     * The postal code. For example, 94043.
+     *
+     * @return string|null
+     */
+    public function getPostalCode(): string|null;
+
+    /**
+     * The postal code. For example, 94043.
+     *
+     * @param string|null $postalCode
+     * @return self
+     */
+    public function setPostalCode(string|null $postalCode): self;
+
+    /**
+     * Optional. First name of the contact associated with the address.
+     *
+     * @return string|null
+     */
+    public function getFirstName(): string|null;
+
+    /**
+     * Optional. First name of the contact associated with the address.
+     *
+     * @param string|null $firstName
+     * @return self
+     */
+    public function setFirstName(string|null $firstName): self;
+
+    /**
+     * Optional. Last name of the contact associated with the address.
+     *
+     * @return string|null
+     */
+    public function getLastName(): string|null;
+
+    /**
+     * Optional. Last name of the contact associated with the address.
+     *
+     * @param string|null $lastName
+     * @return self
+     */
+    public function setLastName(string|null $lastName): self;
+
+    /**
+     * Optional. Phone number of the contact associated with the address.
+     *
+     * @return string|null
+     */
+    public function getPhoneNumber(): string|null;
+
+    /**
+     * Optional. Phone number of the contact associated with the address.
+     *
+     * @param string|null $phoneNumber
+     * @return self
+     */
+    public function setPhoneNumber(string|null $phoneNumber): self;
+
+    /**
+     * ID specific to this shipping destination.
+     *
+     * @return string|null
+     */
+    public function getId(): string|null;
+
+    /**
+     * ID specific to this shipping destination.
+     *
+     * @param string|null $id
+     * @return self
+     */
+    public function setId(string|null $id): self;
+}

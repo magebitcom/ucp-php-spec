@@ -13,12 +13,19 @@ namespace Magebit\UcpSpecGenerator;
  */
 class TypeMapper
 {
+    private const SCALARS = [
+        'string' => 'string',
+        'integer' => 'int',
+        'number' => 'float',
+        'boolean' => 'bool',
+        'null' => 'null',
+        'array' => 'array',
+        'object' => 'object',
+    ];
+
     private SchemaParser $parser;
-    private string $namespaceBase = 'Api';
 
     /**
-     * Constructor
-     *
      * @param SchemaParser $parser Schema parser instance
      */
     public function __construct(SchemaParser $parser)
@@ -27,445 +34,166 @@ class TypeMapper
     }
 
     /**
-     * Set namespace base
-     *
-     * @param string $namespaceBase Namespace base ('Api' or 'MutableApi')
-     * @return void
-     */
-    public function setNamespaceBase(string $namespaceBase): void
-    {
-        $this->namespaceBase = $namespaceBase;
-    }
-
-    /**
-     * Map JSON Schema type to PHP type
-     *
      * @param array $property Property schema definition
-     * @param string $currentFile Current file path for resolving references
-     * @param string|null $parentName Parent interface name for inline objects
-     * @param string|null $propertyName Property name for inline objects
-     * @return string PHP type (e.g., "string", "int", "array", or FQN for objects)
+     * @param string $currentFile File the property is declared in
+     * @param string|null $parentName Parent interface name, for inline objects
+     * @param string|null $propertyName Property name, for inline objects
+     * @return string PHP type: a scalar, "array", or an interface FQN
      */
     public function mapType(
-        array $property, 
-        string $currentFile, 
-        ?string $parentName = null, 
+        array $property,
+        string $currentFile,
+        ?string $parentName = null,
         ?string $propertyName = null
     ): string {
-        // Handle $ref
         if (isset($property['$ref'])) {
             return $this->resolveRefType($property['$ref'], $currentFile);
         }
 
-        // Handle allOf (treat as the first type for simplicity)
         if (isset($property['allOf'])) {
             return $this->mapType($property['allOf'][0], $currentFile, $parentName, $propertyName);
         }
 
-        // Handle oneOf/anyOf as union types
         if (isset($property['oneOf']) || isset($property['anyOf'])) {
             return $this->mapUnionType($property['oneOf'] ?? $property['anyOf'], $currentFile);
         }
 
-        // Handle enum
-        if (isset($property['enum'])) {
-            return $this->mapEnumType($property);
+        // A const with no declared type still pins the PHP type: the spec uses it as a discriminator.
+        if (!isset($property['type']) && array_key_exists('const', $property)) {
+            return $this->mapLiteralType($property['const']);
         }
 
-        // Handle type array (multiple types)
-        if (isset($property['type']) && is_array($property['type'])) {
+        if (isset($property['enum']) && !isset($property['type'])) {
+            return $this->mapEnumType($property['enum']);
+        }
+
+        if (is_array($property['type'] ?? null)) {
             return $this->mapMultipleTypes($property['type']);
         }
 
-        // Handle single type
-        $type = $property['type'] ?? 'mixed';
-
-        return match ($type) {
+        return match ($property['type'] ?? 'mixed') {
             'string' => 'string',
             'integer' => 'int',
             'number' => 'float',
             'boolean' => 'bool',
             'null' => 'null',
-            'array' => $this->mapArrayType($property, $currentFile),
+            'array' => 'array',
             'object' => $this->mapObjectType($property, $currentFile, $parentName, $propertyName),
             default => 'mixed',
         };
     }
 
     /**
-     * Map array type with items
-     *
-     * @param array $property Property schema definition
-     * @param string $currentFile Current file path for resolving references
-     * @return string Always returns 'array' (PHP doesn't support typed arrays in type hints)
-     */
-    private function mapArrayType(array $property, string $currentFile): string
-    {
-        // PHP doesn't support typed arrays in type hints, always return 'array'
-        return 'array';
-    }
-
-    /**
-     * Get array item type for PHPDoc
-     *
-     * @param array $property Property schema definition with 'items' key
-     * @param string $currentFile Current file path for resolving references
-     * @param string|null $parentName Parent interface name for inline objects
-     * @param string|null $propertyName Property name for inline objects
-     * @return string|null Item type or null if no items defined
+     * @param array $property Property schema definition with an "items" key
+     * @param string $currentFile File the property is declared in
+     * @param string|null $parentName Parent interface name, for inline objects
+     * @param string|null $propertyName Property name, for inline objects
+     * @return string|null Item type, or null when the array has no declared items
      */
     public function getArrayItemType(
-        array $property, 
-        string $currentFile, 
-        ?string $parentName = null, 
+        array $property,
+        string $currentFile,
+        ?string $parentName = null,
         ?string $propertyName = null
     ): ?string {
         if (!isset($property['items'])) {
             return null;
         }
 
-        // For array items, append 'Item' to property name for inline objects
-        $itemPropertyName = $propertyName !== null ? $propertyName . '_item' : null;
-        return $this->mapType($property['items'], $currentFile, $parentName, $itemPropertyName);
+        return $this->mapType(
+            $property['items'],
+            $currentFile,
+            $parentName,
+            $propertyName !== null ? $propertyName . '_item' : null
+        );
     }
 
     /**
-     * Map object type (inline object or reference)
-     *
-     * @param array $property Property schema definition
-     * @param string $currentFile Current file path for resolving references
-     * @param string|null $parentName Parent interface name for inline objects
-     * @param string|null $propertyName Property name for inline objects
-     * @return string Returns interface FQN or 'object'
-     */
-    private function mapObjectType(
-        array $property, 
-        string $currentFile, 
-        ?string $parentName = null, 
-        ?string $propertyName = null
-    ): string {
-        // Check if object has non-empty properties
-        $hasProperties = isset($property['properties']) && is_array($property['properties']) && count($property['properties']) > 0;
-        
-        // If object has properties, it's an inline object that needs a separate interface
-        if ($hasProperties && $parentName !== null && $propertyName !== null) {
-            // Generate the interface name for this inline object
-            $interfaceName = $this->generateInlineInterfaceName($parentName, $propertyName);
-            $namespace = $this->parser->getNamespaceFromPath($currentFile, $this->namespaceBase);
-            return '\\' . $namespace . '\\' . $interfaceName;
-        }
-
-        // If object has no properties (or empty properties), it's a dictionary/map - use array
-        // In JSON Schema, when additionalProperties is not specified, it defaults to true
-        // So objects without properties are dictionaries
-        if (!$hasProperties) {
-            return 'array';
-        }
-
-        return 'object';
-    }
-
-    /**
-     * Resolve $ref to fully qualified interface name or primitive type
-     *
-     * @param string $ref Reference string (e.g., "#/$defs/version" or "../file.json#/$defs/version")
-     * @param string $currentFile Current file path for resolving relative references
-     * @return string Fully qualified interface name with leading backslash or primitive type
-     */
-    private function resolveRefType(string $ref, string $currentFile): string
-    {
-        // Resolve the actual schema to check its type
-        try {
-            $resolvedSchema = $this->parser->resolveRef($ref, $currentFile);
-            
-            // Check if it's a map/dictionary type (object with no properties or empty properties)
-            // In JSON Schema, when additionalProperties is not specified, it defaults to true
-            // So objects without properties are dictionaries
-            $hasProperties = isset($resolvedSchema['properties']) && 
-                            is_array($resolvedSchema['properties']) && 
-                            count($resolvedSchema['properties']) > 0;
-            
-            if (isset($resolvedSchema['type']) && 
-                $resolvedSchema['type'] === 'object' && 
-                !$hasProperties &&
-                !isset($resolvedSchema['allOf']) &&
-                !isset($resolvedSchema['oneOf']) &&
-                !isset($resolvedSchema['anyOf'])) {
-                return 'array';
-            }
-            
-            // Check if it's a simple type (not an object)
-            // Skip if it has allOf, oneOf, anyOf (these are complex types)
-            $hasComplexType = isset($resolvedSchema['allOf']) || 
-                             isset($resolvedSchema['oneOf']) || 
-                             isset($resolvedSchema['anyOf']) ||
-                             isset($resolvedSchema['properties']);
-            
-            if (!$hasComplexType && isset($resolvedSchema['type']) && $resolvedSchema['type'] !== 'object') {
-                return $this->mapType($resolvedSchema, $currentFile);
-            }
-        } catch (\Exception $e) {
-            // If resolution fails for a relative ref, try resolving from common source files
-            // This handles cases where a schema references a definition from another file
-            // (e.g., entity definition in ucp.json with relative refs)
-            if (strpos($ref, '#') === 0) {
-                // Try resolving from ucp.json if current file is not ucp.json
-                $currentDir = dirname($currentFile);
-                $ucpFile = realpath($currentDir . '/ucp.json');
-                
-                if ($ucpFile && $ucpFile !== $currentFile) {
-                    try {
-                        $resolvedSchema = $this->parser->resolveRef($ref, $ucpFile);
-                        
-                        // Check if it's a simple type
-                        $hasComplexType = isset($resolvedSchema['allOf']) || 
-                                         isset($resolvedSchema['oneOf']) || 
-                                         isset($resolvedSchema['anyOf']) ||
-                                         isset($resolvedSchema['properties']);
-                        
-                        if (!$hasComplexType && isset($resolvedSchema['type']) && $resolvedSchema['type'] !== 'object') {
-                            return $this->mapType($resolvedSchema, $ucpFile);
-                        }
-                    } catch (\Exception $e2) {
-                        // If that also fails, fall through to interface name generation
-                    }
-                }
-            }
-            // If resolution fails, fall back to interface name generation
-        }
-        
-        // Parse the reference
-        if (strpos($ref, '#') === 0) {
-            // Internal reference - same namespace as current file
-            $pointer = ltrim($ref, '#/');
-            $parts = explode('/', $pointer);
-            
-            // Get the definition name (last part)
-            $defName = end($parts);
-            
-            // Determine if we should prefix with filename
-            // Only prefix if the file has no root schema (is a "definition library")
-            $hasRootSchema = $this->parser->hasRootObject($currentFile);
-            
-            if ($hasRootSchema) {
-                // File has a root schema, so $defs are supplementary - don't prefix
-                $interfaceName = $this->sanitizeInterfaceName($defName);
-            } else {
-                // File is a definition library - prefix to avoid conflicts
-                $fileBaseName = basename($currentFile, '.json');
-                $fileBaseName = $this->sanitizeInterfaceName($fileBaseName);
-                $defInterfaceName = $this->sanitizeInterfaceName($defName);
-                $interfaceName = $fileBaseName . $defInterfaceName;
-            }
-            
-            // Get namespace for current file
-            $namespace = $this->parser->getNamespaceFromPath($currentFile, $this->namespaceBase);
-            
-            // Append "Interface" suffix
-            if (!str_ends_with($interfaceName, 'Interface')) {
-                $interfaceName .= 'Interface';
-            }
-            
-            return '\\' . $namespace . '\\' . $interfaceName;
-        }
-
-        // External reference
-        $refParts = explode('#', $ref, 2);
-        $filePath = $refParts[0];
-        $pointer = $refParts[1] ?? '';
-        
-        // Resolve file path
-        $currentDir = dirname($currentFile);
-        $targetFile = realpath($currentDir . '/' . $filePath);
-
-        if (!$targetFile) {
-            return 'mixed';
-        }
-
-        // Get namespace for target file
-        $targetNamespace = $this->parser->getNamespaceFromPath($targetFile, $this->namespaceBase);
-
-        // If pointer is empty or just #, use the root schema
-        if (empty($pointer) || $pointer === '') {
-            $schema = $this->parser->getRootSchema($targetFile);
-            $interfaceName = $this->parser->getInterfaceName($schema, $targetFile);
-            
-            // Append "Interface" suffix
-            if (!str_ends_with($interfaceName, 'Interface')) {
-                $interfaceName .= 'Interface';
-            }
-            
-            return '\\' . $targetNamespace . '\\' . $interfaceName;
-        }
-
-        // Get the definition name from pointer
-        $pointer = ltrim($pointer, '/');
-        $parts = explode('/', $pointer);
-        $defName = end($parts);
-        
-        // Determine if we should prefix with filename
-        // Only prefix if the target file has no root schema (is a "definition library")
-        $hasRootSchema = $this->parser->hasRootObject($targetFile);
-        
-        if ($hasRootSchema) {
-            // File has a root schema, so $defs are supplementary - don't prefix
-            $interfaceName = $this->sanitizeInterfaceName($defName);
-        } else {
-            // File is a definition library - prefix to avoid conflicts
-            // e.g., capability.json#/$defs/response -> CapabilityResponse
-            $fileBaseName = basename($targetFile, '.json');
-            $fileBaseName = $this->sanitizeInterfaceName($fileBaseName);
-            $defInterfaceName = $this->sanitizeInterfaceName($defName);
-            $interfaceName = $fileBaseName . $defInterfaceName;
-        }
-
-        // Append "Interface" suffix
-        if (!str_ends_with($interfaceName, 'Interface')) {
-            $interfaceName .= 'Interface';
-        }
-
-        return '\\' . $targetNamespace . '\\' . $interfaceName;
-    }
-
-    /**
-     * Map union type (oneOf/anyOf)
-     *
-     * @param array $types Array of type schemas
-     * @param string $currentFile Current file path for resolving references
-     * @return string Union type string (e.g., "string|int")
-     */
-    private function mapUnionType(array $types, string $currentFile): string
-    {
-        $mappedTypes = [];
-        
-        foreach ($types as $type) {
-            $mappedTypes[] = $this->mapType($type, $currentFile);
-        }
-
-        // Remove duplicates
-        $mappedTypes = array_unique($mappedTypes);
-
-        // If only one type, return it
-        if (count($mappedTypes) === 1) {
-            return $mappedTypes[0];
-        }
-
-        // Return union type (PHP 8.0+)
-        return implode('|', $mappedTypes);
-    }
-
-    /**
-     * Map enum type
-     *
-     * @param array $property Property schema definition with enum values
-     * @return string Returns 'string' (could be enhanced to generate PHP enums)
-     */
-    private function mapEnumType(array $property): string
-    {
-        // For now, return string (could be enhanced to generate PHP enums)
-        return 'string';
-    }
-
-    /**
-     * Map multiple types
-     *
-     * @param array $types Array of type strings
-     * @return string Union type string (e.g., "string|int|null")
-     */
-    private function mapMultipleTypes(array $types): string
-    {
-        $mappedTypes = [];
-
-        foreach ($types as $type) {
-            $mapped = match ($type) {
-                'string' => 'string',
-                'integer' => 'int',
-                'number' => 'float',
-                'boolean' => 'bool',
-                'null' => 'null',
-                'array' => 'array',
-                'object' => 'object',
-                default => 'mixed',
-            };
-            $mappedTypes[] = $mapped;
-        }
-
-        // Remove duplicates
-        $mappedTypes = array_unique($mappedTypes);
-
-        // If only one type, return it
-        if (count($mappedTypes) === 1) {
-            return $mappedTypes[0];
-        }
-
-        // Return union type
-        return implode('|', $mappedTypes);
-    }
-
-    /**
-     * Check if property is required
-     *
      * @param string $propertyName Name of the property
-     * @param array $schema Schema containing 'required' array
-     * @return bool True if property is in required array
+     * @param array $schema Schema containing a "required" array
+     * @return bool
      */
     public function isRequired(string $propertyName, array $schema): bool
     {
-        return isset($schema['required']) && in_array($propertyName, $schema['required']);
+        return in_array($propertyName, $schema['required'] ?? [], true);
     }
 
     /**
-     * Convert snake_case to camelCase
+     * Shared by the interface and the DTO so a getter and its implementation cannot disagree
+     * about whether a field may be absent.
      *
-     * @param string $name Name in snake_case
-     * @return string Name in camelCase
+     * @param string $propertyName Name of the property
+     * @param string $baseType Mapped PHP type
+     * @param string[] $required Required property names
+     * @return bool
+     */
+    public function isNullable(string $propertyName, string $baseType, array $required): bool
+    {
+        if (in_array($propertyName, $required, true)) {
+            return false;
+        }
+
+        // "mixed", and any union that already lists null, admit absence on their own; widening them
+        // again produces the redundant "string|null|null" PHP rejects outright.
+        return $baseType !== 'mixed' && !in_array('null', explode('|', $baseType), true);
+    }
+
+    /**
+     * @param array $property Property schema definition
+     * @return bool True when the property is an inline object needing its own interface
+     */
+    public function isInlineObject(array $property): bool
+    {
+        return ($property['type'] ?? null) === 'object'
+            && isset($property['properties'])
+            && is_array($property['properties'])
+            && $property['properties'] !== [];
+    }
+
+    /**
+     * @param string $parentName Parent interface name
+     * @param string $propertyName Property name
+     * @return string
+     */
+    public function generateInlineInterfaceName(string $parentName, string $propertyName): string
+    {
+        $parent = str_ends_with($parentName, 'Interface') ? substr($parentName, 0, -9) : $parentName;
+
+        return $parent . $this->parser->toPascalCase($propertyName) . 'Interface';
+    }
+
+    /**
+     * @param string $namespace Namespace for the interface
+     * @param string $parentName Parent interface name
+     * @param string $propertyName Property name
+     * @return string
+     */
+    public function generateInlineInterfaceFQN(string $namespace, string $parentName, string $propertyName): string
+    {
+        return '\\' . $namespace . '\\' . $this->generateInlineInterfaceName($parentName, $propertyName);
+    }
+
+    /**
+     * @param string $name Name in any case
+     * @return string
      */
     public function toCamelCase(string $name): string
     {
-        // Convert snake_case to camelCase
-        $name = str_replace(['-', '_', '.'], ' ', $name);
-        $name = ucwords($name);
-        $name = str_replace(' ', '', $name);
-        
-        // Make first character lowercase for camelCase
-        return lcfirst($name);
+        return lcfirst($this->parser->toPascalCase($name));
     }
-    
+
     /**
-     * Convert snake_case to PascalCase
-     *
-     * @param string $name Name in snake_case
-     * @return string Name in PascalCase
+     * @param string $name Name in any case
+     * @return string
      */
     public function toPascalCase(string $name): string
     {
-        // Convert snake_case to PascalCase
-        $name = str_replace(['-', '_', '.'], ' ', $name);
-        $name = ucwords($name);
-        return str_replace(' ', '', $name);
+        return $this->parser->toPascalCase($name);
     }
 
     /**
-     * Sanitize interface name
-     *
-     * @param string $name Raw name to sanitize
-     * @return string Valid PHP interface name in PascalCase
-     */
-    private function sanitizeInterfaceName(string $name): string
-    {
-        // Remove common suffixes
-        $name = preg_replace('/\.(create_req|update_req|resp)$/', '', $name);
-        $name = preg_replace('/_(create_req|update_req|resp)$/', '', $name);
-        
-        // Use toPascalCase for consistent conversion
-        return $this->toPascalCase($name);
-    }
-
-    /**
-     * Get property description from schema
-     *
      * @param array $property Property schema definition
-     * @return string|null Description or null if not set
+     * @return string|null
      */
     public function getDescription(array $property): ?string
     {
@@ -473,51 +201,181 @@ class TypeMapper
     }
 
     /**
-     * Check if property is an inline object that needs a separate interface
-     *
+     * @param string $defName Definition name as written in $defs
+     * @param string $filePath File the definition lives in
+     * @return string
+     */
+    public function definitionInterfaceName(string $defName, string $filePath): string
+    {
+        $name = $this->parser->definitionTypeName($defName, $filePath);
+
+        return str_ends_with($name, 'Interface') ? $name : $name . 'Interface';
+    }
+
+    /**
      * @param array $property Property schema definition
-     * @return bool True if property is an inline object with properties
+     * @param string $currentFile File the property is declared in
+     * @param string|null $parentName Parent interface name
+     * @param string|null $propertyName Property name
+     * @return string
      */
-    public function isInlineObject(array $property): bool
-    {
-        return isset($property['type']) 
-            && $property['type'] === 'object' 
-            && isset($property['properties']);
-    }
+    private function mapObjectType(
+        array $property,
+        string $currentFile,
+        ?string $parentName = null,
+        ?string $propertyName = null
+    ): string {
+        $hasProperties = isset($property['properties'])
+            && is_array($property['properties'])
+            && $property['properties'] !== [];
 
-    /**
-     * Generate interface name for inline object
-     *
-     * @param string $parentName Parent interface name
-     * @param string $propertyName Property name
-     * @return string Generated interface name (e.g., "ParentPropertyName")
-     */
-    public function generateInlineInterfaceName(string $parentName, string $propertyName): string
-    {
-        // Remove "Interface" suffix from parent name if present
-        $parentNameWithoutSuffix = $parentName;
-        if (str_ends_with($parentName, 'Interface')) {
-            $parentNameWithoutSuffix = substr($parentName, 0, -9); // Remove "Interface"
+        if ($hasProperties && $parentName !== null && $propertyName !== null) {
+            return $this->generateInlineInterfaceFQN(
+                $this->parser->getNamespaceFromPath($currentFile),
+                $parentName,
+                $propertyName
+            );
         }
-        
-        // Clean up property name and convert to PascalCase
-        $cleanPropertyName = $this->toPascalCase($propertyName);
-        
-        // Combine and add "Interface" suffix
-        return $parentNameWithoutSuffix . $cleanPropertyName . 'Interface';
+
+        // An object with no declared properties is a free-form map, which PHP models as an array.
+        return $hasProperties ? 'object' : 'array';
     }
 
     /**
-     * Generate fully qualified interface name for inline object
-     *
-     * @param string $namespace Namespace for the interface
-     * @param string $parentName Parent interface name
-     * @param string $propertyName Property name
-     * @return string Fully qualified interface name with leading backslash
+     * @param string $ref Reference string
+     * @param string $currentFile File the reference appears in
+     * @return string Interface FQN with a leading backslash, or a scalar type
      */
-    public function generateInlineInterfaceFQN(string $namespace, string $parentName, string $propertyName): string
+    private function resolveRefType(string $ref, string $currentFile): string
     {
-        $interfaceName = $this->generateInlineInterfaceName($parentName, $propertyName);
-        return '\\' . $namespace . '\\' . $interfaceName;
+        try {
+            $target = $this->parser->resolveRefTarget($ref, $currentFile);
+        } catch (\RuntimeException $e) {
+            return 'mixed';
+        }
+
+        $schema = $target['schema'];
+
+        if (!$this->isInterfaceWorthy($schema)) {
+            return $this->mapType($schema, $target['file']);
+        }
+
+        $defName = $this->refDefinitionName($ref);
+        $name = $defName === null
+            ? $this->parser->getInterfaceName($schema, $target['file']) . 'Interface'
+            : $this->definitionInterfaceName($defName, $target['file']);
+
+        return '\\' . $this->parser->getNamespaceFromPath($target['file']) . '\\' . $name;
+    }
+
+    /**
+     * Only shapes with named members become interfaces; enums, scalars and free-form maps stay values.
+     *
+     * @param array $schema Resolved schema fragment
+     * @return bool
+     */
+    private function isInterfaceWorthy(array $schema): bool
+    {
+        if (isset($schema['properties']) && is_array($schema['properties']) && $schema['properties'] !== []) {
+            return true;
+        }
+
+        return isset($schema['allOf']) || isset($schema['oneOf']) || isset($schema['anyOf']);
+    }
+
+    /**
+     * @param string $ref Reference string
+     * @return string|null Trailing definition name, or null when the ref points at a whole document
+     */
+    private function refDefinitionName(string $ref): ?string
+    {
+        $pointer = explode('#', $ref, 2)[1] ?? '';
+        $pointer = trim($pointer, '/');
+
+        if ($pointer === '') {
+            return null;
+        }
+
+        $parts = explode('/', $pointer);
+
+        return (string)end($parts);
+    }
+
+    /**
+     * @param array $types Array of type schemas
+     * @param string $currentFile File the union is declared in
+     * @return string
+     */
+    private function mapUnionType(array $types, string $currentFile): string
+    {
+        $mapped = [];
+
+        foreach ($types as $type) {
+            $mapped[] = $this->mapType($type, $currentFile);
+        }
+
+        $mapped = array_values(array_unique($mapped));
+
+        // A union that collapses to unrelated interfaces is not expressible as a useful hint.
+        if (in_array('mixed', $mapped, true)) {
+            return 'mixed';
+        }
+
+        return implode('|', $mapped);
+    }
+
+    /**
+     * @param array $values Enum values
+     * @return string
+     */
+    private function mapEnumType(array $values): string
+    {
+        $mapped = [];
+
+        foreach ($values as $value) {
+            $mapped[] = $this->mapLiteralType($value);
+        }
+
+        $mapped = array_values(array_unique($mapped));
+
+        return $mapped === [] ? 'mixed' : implode('|', $mapped);
+    }
+
+    /**
+     * @param mixed $value Literal value from const or enum
+     * @return string
+     */
+    private function mapLiteralType(mixed $value): string
+    {
+        return match (true) {
+            is_string($value) => 'string',
+            is_bool($value) => 'bool',
+            is_int($value) => 'int',
+            is_float($value) => 'float',
+            is_array($value) => 'array',
+            $value === null => 'null',
+            default => 'mixed',
+        };
+    }
+
+    /**
+     * @param array $types Array of JSON Schema type names
+     * @return string
+     */
+    private function mapMultipleTypes(array $types): string
+    {
+        $mapped = [];
+
+        foreach ($types as $type) {
+            $mapped[] = self::SCALARS[$type] ?? 'mixed';
+        }
+
+        $mapped = array_values(array_unique($mapped));
+
+        if (in_array('mixed', $mapped, true)) {
+            return 'mixed';
+        }
+
+        return implode('|', $mapped);
     }
 }

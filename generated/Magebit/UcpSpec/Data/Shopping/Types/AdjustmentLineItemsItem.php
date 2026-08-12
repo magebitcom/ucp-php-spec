@@ -1,0 +1,53 @@
+<?php
+
+/**
+ * This file is auto-generated. Do not edit manually.
+ *
+ * @author    Magebit <info@magebit.com>
+ * @copyright Copyright (c) Magebit, Ltd. (https://magebit.com)
+ * @license   MIT
+ */
+
+declare(strict_types=1);
+
+namespace Magebit\UcpSpec\Data\Shopping\Types;
+
+use Magebit\UcpSpec\Api\Shopping\Types\AdjustmentLineItemsItemInterface;
+use Magebit\UcpSpec\Runtime\SpecObject;
+
+class AdjustmentLineItemsItem extends SpecObject implements AdjustmentLineItemsItemInterface
+{
+    /**
+     * @return string
+     */
+    public function getId(): string
+    {
+        return $this->requireString(self::KEY_ID);
+    }
+
+    /**
+     * @param string $id
+     * @return self
+     */
+    public function setId(string $id): self
+    {
+        return $this->set(self::KEY_ID, $id);
+    }
+
+    /**
+     * @return int
+     */
+    public function getQuantity(): int
+    {
+        return $this->requireInt(self::KEY_QUANTITY);
+    }
+
+    /**
+     * @param int $quantity
+     * @return self
+     */
+    public function setQuantity(int $quantity): self
+    {
+        return $this->set(self::KEY_QUANTITY, $quantity);
+    }
+}
