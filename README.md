@@ -155,7 +155,7 @@ class MyMutableOrder implements OrderInterface
 ### Type Safety
 
 All interfaces include:
-- ✅ Full PHP 8.1+ type hints
+- ✅ Full PHP 8.2+ type hints
 - ✅ Nullable types for optional properties
 - ✅ Union types where applicable
 - ✅ PHPDoc with array item types
@@ -227,7 +227,7 @@ If you need to regenerate the interfaces from the JSON Schema files (e.g., after
 
 ### Prerequisites
 
-- PHP 8.1 or higher
+- PHP 8.2 or higher
 - Composer dependencies installed
 
 ### Generate Command
