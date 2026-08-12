@@ -16,7 +16,6 @@ use Magebit\UcpSpec\Api\Shopping\Types\AdjustmentInterface;
 use Magebit\UcpSpec\Api\Shopping\Types\MessageInterface;
 use Magebit\UcpSpec\Api\Shopping\Types\OrderLineItemInterface;
 use Magebit\UcpSpec\Api\Shopping\Types\TotalCreateRequestInterface;
-use Magebit\UcpSpec\Api\Shopping\Types\TotalsCreateRequestInterface;
 use Magebit\UcpSpec\Api\UcpResponseOrderSchemaInterface;
 
 /**
@@ -158,7 +157,7 @@ interface OrderCreateRequestInterface
      *
      * @return \Magebit\UcpSpec\Api\Shopping\Types\TotalCreateRequestInterface[]
      */
-    public function getTotals(): TotalsCreateRequestInterface;
+    public function getTotals(): array;
 
     /**
      * Different totals for the order.
@@ -166,7 +165,7 @@ interface OrderCreateRequestInterface
      * @param \Magebit\UcpSpec\Api\Shopping\Types\TotalCreateRequestInterface[] $totals
      * @return self
      */
-    public function setTotals(TotalsCreateRequestInterface $totals): self;
+    public function setTotals(array $totals): self;
 
     /**
      * Business outcome messages (errors, warnings, informational). Present when the business needs to communicate status or issues to the platform.

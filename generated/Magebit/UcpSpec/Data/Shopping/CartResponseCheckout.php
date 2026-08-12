@@ -22,7 +22,6 @@ use Magebit\UcpSpec\Api\Shopping\Types\MessageInterface;
 use Magebit\UcpSpec\Api\Shopping\Types\OrderConfirmationInterface;
 use Magebit\UcpSpec\Api\Shopping\Types\SignalsInterface;
 use Magebit\UcpSpec\Api\Shopping\Types\TotalResponseInterface;
-use Magebit\UcpSpec\Api\Shopping\Types\TotalsResponseInterface;
 use Magebit\UcpSpec\Api\UcpResponseCheckoutSchemaInterface;
 use Magebit\UcpSpec\Runtime\SpecObject;
 
@@ -187,16 +186,16 @@ class CartResponseCheckout extends SpecObject implements CartResponseCheckoutInt
     /**
      * @return \Magebit\UcpSpec\Api\Shopping\Types\TotalResponseInterface[]
      */
-    public function getTotals(): TotalsResponseInterface
+    public function getTotals(): array
     {
-        return $this->requireInstance(self::KEY_TOTALS, \Magebit\UcpSpec\Api\Shopping\Types\TotalsResponseInterface::class);
+        return $this->instanceList(self::KEY_TOTALS, \Magebit\UcpSpec\Api\Shopping\Types\TotalResponseInterface::class);
     }
 
     /**
      * @param \Magebit\UcpSpec\Api\Shopping\Types\TotalResponseInterface[] $totals
      * @return self
      */
-    public function setTotals(TotalsResponseInterface $totals): self
+    public function setTotals(array $totals): self
     {
         return $this->set(self::KEY_TOTALS, $totals);
     }

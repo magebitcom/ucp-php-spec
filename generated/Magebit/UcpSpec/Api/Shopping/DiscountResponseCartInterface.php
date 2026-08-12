@@ -19,7 +19,6 @@ use Magebit\UcpSpec\Api\Shopping\Types\LinkInterface;
 use Magebit\UcpSpec\Api\Shopping\Types\MessageInterface;
 use Magebit\UcpSpec\Api\Shopping\Types\SignalsInterface;
 use Magebit\UcpSpec\Api\Shopping\Types\TotalResponseInterface;
-use Magebit\UcpSpec\Api\Shopping\Types\TotalsResponseInterface;
 use Magebit\UcpSpec\Api\UcpResponseCartSchemaInterface;
 
 /**
@@ -157,7 +156,7 @@ interface DiscountResponseCartInterface
      *
      * @return \Magebit\UcpSpec\Api\Shopping\Types\TotalResponseInterface[]
      */
-    public function getTotals(): TotalsResponseInterface;
+    public function getTotals(): array;
 
     /**
      * Estimated cost breakdown. May be partial if shipping/tax not yet calculable.
@@ -165,7 +164,7 @@ interface DiscountResponseCartInterface
      * @param \Magebit\UcpSpec\Api\Shopping\Types\TotalResponseInterface[] $totals
      * @return self
      */
-    public function setTotals(TotalsResponseInterface $totals): self;
+    public function setTotals(array $totals): self;
 
     /**
      * Validation messages, warnings, or informational notices.

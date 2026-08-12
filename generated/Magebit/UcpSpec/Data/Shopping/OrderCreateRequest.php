@@ -18,7 +18,6 @@ use Magebit\UcpSpec\Api\Shopping\Types\AdjustmentInterface;
 use Magebit\UcpSpec\Api\Shopping\Types\MessageInterface;
 use Magebit\UcpSpec\Api\Shopping\Types\OrderLineItemInterface;
 use Magebit\UcpSpec\Api\Shopping\Types\TotalCreateRequestInterface;
-use Magebit\UcpSpec\Api\Shopping\Types\TotalsCreateRequestInterface;
 use Magebit\UcpSpec\Api\UcpResponseOrderSchemaInterface;
 use Magebit\UcpSpec\Runtime\SpecObject;
 
@@ -166,16 +165,16 @@ class OrderCreateRequest extends SpecObject implements OrderCreateRequestInterfa
     /**
      * @return \Magebit\UcpSpec\Api\Shopping\Types\TotalCreateRequestInterface[]
      */
-    public function getTotals(): TotalsCreateRequestInterface
+    public function getTotals(): array
     {
-        return $this->requireInstance(self::KEY_TOTALS, \Magebit\UcpSpec\Api\Shopping\Types\TotalsCreateRequestInterface::class);
+        return $this->instanceList(self::KEY_TOTALS, \Magebit\UcpSpec\Api\Shopping\Types\TotalCreateRequestInterface::class);
     }
 
     /**
      * @param \Magebit\UcpSpec\Api\Shopping\Types\TotalCreateRequestInterface[] $totals
      * @return self
      */
-    public function setTotals(TotalsCreateRequestInterface $totals): self
+    public function setTotals(array $totals): self
     {
         return $this->set(self::KEY_TOTALS, $totals);
     }
