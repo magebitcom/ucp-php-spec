@@ -27,6 +27,7 @@ interface FulfillmentEventInterface
     public const KEY_TRACKING_URL = 'tracking_url';
     public const KEY_CARRIER = 'carrier';
     public const KEY_DESCRIPTION = 'description';
+    public const CONSTRAINTS = ['occurred_at' => ['format' => 'date-time'], 'tracking_url' => ['format' => 'uri']];
 
     /**
      * Fulfillment event identifier.

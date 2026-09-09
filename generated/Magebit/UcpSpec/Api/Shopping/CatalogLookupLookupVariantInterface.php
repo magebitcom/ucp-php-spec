@@ -38,6 +38,7 @@ interface CatalogLookupLookupVariantInterface
     public const KEY_METADATA = 'metadata';
     public const KEY_SELLER = 'seller';
     public const KEY_INPUTS = 'inputs';
+    public const CONSTRAINTS = ['url' => ['format' => 'uri'], 'inputs' => ['minItems' => 1]];
 
     /**
      * Global ID (GID) uniquely identifying this variant. Used as item.id in checkout.

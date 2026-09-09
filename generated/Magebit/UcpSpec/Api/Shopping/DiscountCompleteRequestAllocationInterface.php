@@ -19,6 +19,7 @@ interface DiscountCompleteRequestAllocationInterface
 {
     public const KEY_PATH = 'path';
     public const KEY_AMOUNT = 'amount';
+    public const CONSTRAINTS = ['amount' => ['minimum' => 0]];
 
     /**
      * JSONPath to the allocation target (e.g., '$.line_items[0]', '$.totals.shipping').

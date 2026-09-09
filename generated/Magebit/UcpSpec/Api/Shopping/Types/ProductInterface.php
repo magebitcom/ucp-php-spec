@@ -33,6 +33,7 @@ interface ProductInterface
     public const KEY_RATING = 'rating';
     public const KEY_TAGS = 'tags';
     public const KEY_METADATA = 'metadata';
+    public const CONSTRAINTS = ['url' => ['format' => 'uri'], 'variants' => ['minItems' => 1]];
 
     /**
      * Global ID (GID) uniquely identifying this product.

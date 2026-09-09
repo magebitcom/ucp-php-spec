@@ -21,6 +21,7 @@ interface VariantUnitPriceInterface
     public const KEY_CURRENCY = 'currency';
     public const KEY_MEASURE = 'measure';
     public const KEY_REFERENCE = 'reference';
+    public const CONSTRAINTS = ['amount' => ['minimum' => 0], 'currency' => ['pattern' => '^[A-Z]{3}$']];
 
     /**
      * Unit price in ISO 4217 minor units. Business MUST return precomputed unit price value: (variant.price / measure.value) * reference.value.

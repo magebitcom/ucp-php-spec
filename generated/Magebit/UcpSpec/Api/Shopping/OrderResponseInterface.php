@@ -37,6 +37,7 @@ interface OrderResponseInterface
     public const KEY_TOTALS = 'totals';
     public const KEY_MESSAGES = 'messages';
     public const KEY_ATTRIBUTION = 'attribution';
+    public const CONSTRAINTS = ['permalink_url' => ['format' => 'uri']];
 
     /**
      * @return \Magebit\UcpSpec\Api\UcpResponseOrderSchemaInterface

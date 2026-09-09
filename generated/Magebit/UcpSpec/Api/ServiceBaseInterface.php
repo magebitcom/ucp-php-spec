@@ -26,6 +26,13 @@ interface ServiceBaseInterface
     public const TRANSPORT_A2A = 'a2a';
     public const TRANSPORT_EMBEDDED = 'embedded';
 
+    public const CONSTRAINTS = [
+        'version' => ['pattern' => '^\d{4}-\d{2}-\d{2}$'],
+        'spec' => ['format' => 'uri'],
+        'schema' => ['format' => 'uri'],
+        'endpoint' => ['format' => 'uri'],
+    ];
+
     /**
      * Entity version in YYYY-MM-DD format.
      *

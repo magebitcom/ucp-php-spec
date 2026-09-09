@@ -20,6 +20,7 @@ namespace Magebit\UcpSpec\Api\Shopping;
 interface OrderCompleteRequestPlatformSchemaInterface
 {
     public const KEY_WEBHOOK_URL = 'webhook_url';
+    public const CONSTRAINTS = ['webhook_url' => ['format' => 'uri']];
 
     /**
      * URL where merchant sends order lifecycle events (webhooks).

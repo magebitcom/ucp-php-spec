@@ -18,6 +18,7 @@ namespace Magebit\UcpSpec\Api\Shopping\Types;
 interface CardPaymentInstrumentAvailableCardPaymentInstrumentConstraintsInterface
 {
     public const KEY_BRANDS = 'brands';
+    public const CONSTRAINTS = ['brands' => ['minItems' => 1]];
 
     /**
      * Limit to specific card brands (e.g., ['visa', 'mastercard', 'amex']).

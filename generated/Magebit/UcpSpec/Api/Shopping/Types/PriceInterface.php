@@ -21,6 +21,7 @@ interface PriceInterface
 {
     public const KEY_AMOUNT = 'amount';
     public const KEY_CURRENCY = 'currency';
+    public const CONSTRAINTS = ['amount' => ['minimum' => 0], 'currency' => ['pattern' => '^[A-Z]{3}$']];
 
     /**
      * Amount in ISO 4217 minor units. Use 0 for free items.

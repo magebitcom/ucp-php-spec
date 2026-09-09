@@ -24,6 +24,7 @@ interface UcpErrorInterface
     public const KEY_PAYMENT_HANDLERS = 'payment_handlers';
     public const STATUS_SUCCESS = 'success';
     public const STATUS_ERROR = 'error';
+    public const CONSTRAINTS = ['version' => ['pattern' => '^\d{4}-\d{2}-\d{2}$']];
 
     /**
      * @return string

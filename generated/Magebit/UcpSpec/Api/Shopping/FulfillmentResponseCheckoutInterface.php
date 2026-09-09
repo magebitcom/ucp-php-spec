@@ -53,6 +53,7 @@ interface FulfillmentResponseCheckoutInterface
     public const STATUS_COMPLETE_IN_PROGRESS = 'complete_in_progress';
     public const STATUS_COMPLETED = 'completed';
     public const STATUS_CANCELED = 'canceled';
+    public const CONSTRAINTS = ['expires_at' => ['format' => 'date-time'], 'continue_url' => ['format' => 'uri']];
 
     /**
      * @return \Magebit\UcpSpec\Api\UcpResponseCheckoutSchemaInterface

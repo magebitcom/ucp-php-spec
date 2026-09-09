@@ -21,6 +21,7 @@ interface ProductOptionInterface
 {
     public const KEY_NAME = 'name';
     public const KEY_VALUES = 'values';
+    public const CONSTRAINTS = ['values' => ['minItems' => 1]];
 
     /**
      * Option name (e.g., 'Size', 'Color').

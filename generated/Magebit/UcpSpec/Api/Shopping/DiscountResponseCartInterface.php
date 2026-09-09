@@ -42,6 +42,7 @@ interface DiscountResponseCartInterface
     public const KEY_CONTINUE_URL = 'continue_url';
     public const KEY_EXPIRES_AT = 'expires_at';
     public const KEY_DISCOUNTS = 'discounts';
+    public const CONSTRAINTS = ['continue_url' => ['format' => 'uri'], 'expires_at' => ['format' => 'date-time']];
 
     /**
      * @return \Magebit\UcpSpec\Api\UcpResponseCartSchemaInterface

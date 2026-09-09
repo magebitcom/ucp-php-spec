@@ -28,6 +28,7 @@ interface MessageWarningInterface
     public const TYPE_WARNING = 'warning';
     public const CONTENT_TYPE_PLAIN = 'plain';
     public const CONTENT_TYPE_MARKDOWN = 'markdown';
+    public const CONSTRAINTS = ['image_url' => ['format' => 'uri'], 'url' => ['format' => 'uri']];
 
     /**
      * Message type discriminator.

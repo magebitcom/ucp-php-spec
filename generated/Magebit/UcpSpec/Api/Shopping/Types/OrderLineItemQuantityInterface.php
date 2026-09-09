@@ -21,6 +21,12 @@ interface OrderLineItemQuantityInterface
     public const KEY_TOTAL = 'total';
     public const KEY_FULFILLED = 'fulfilled';
 
+    public const CONSTRAINTS = [
+        'original' => ['minimum' => 0],
+        'total' => ['minimum' => 0],
+        'fulfilled' => ['minimum' => 0],
+    ];
+
     /**
      * Quantity from the original checkout.
      *

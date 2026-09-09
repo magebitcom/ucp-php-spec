@@ -18,6 +18,29 @@ use Nette\PhpGenerator\PsrPrinter;
  */
 class InterfaceBuilder
 {
+    /**
+     * Schema keywords a consumer can check on its own, carried onto the interface so validation does
+     * not have to read the schema files at runtime. Keyword names are kept exactly as the schema
+     * spells them, so a rule can be traced back to its source without a translation table.
+     */
+    private const CARRIED_KEYWORDS = [
+        'minLength',
+        'maxLength',
+        'pattern',
+        'format',
+        'minimum',
+        'maximum',
+        'exclusiveMinimum',
+        'exclusiveMaximum',
+        'minItems',
+        'maxItems',
+    ];
+
+    /**
+     * Name of the constant the carried keywords are emitted under.
+     */
+    private const CONSTRAINTS_CONSTANT = 'CONSTRAINTS';
+
     private SchemaParser $parser;
     private TypeMapper $typeMapper;
     private PhpDocGenerator $phpDocGenerator;
@@ -342,6 +365,8 @@ class InterfaceBuilder
             $this->addValueConstants($interface, (string)$propertyName, $property, $currentFile);
         }
 
+        $this->addConstraintsConstant($interface, $properties, $currentFile);
+
         foreach ($properties as $propertyName => $property) {
             $this->addAccessors($interface, (string)$propertyName, $property, $required, $currentFile, $namespace);
         }
@@ -395,6 +420,67 @@ class InterfaceBuilder
 
             $this->addConstant($interface, $prefix . '_' . strtoupper($suffix), $value);
         }
+    }
+
+    /**
+     * Emit every property's carried keywords as one constant, keyed by field name. One constant
+     * rather than one per rule, because a per-rule name could collide with an enum value constant.
+     *
+     * @param InterfaceType $interface Interface to populate
+     * @param array $properties Property schema definitions, keyed by property name
+     * @param string $currentFile File the properties are declared in
+     * @return void
+     */
+    private function addConstraintsConstant(InterfaceType $interface, array $properties, string $currentFile): void
+    {
+        $constraints = [];
+
+        foreach ($properties as $propertyName => $property) {
+            $rules = $this->carriedKeywords($property, $currentFile);
+
+            if ($rules !== []) {
+                $constraints[$this->toSnakeCase((string)$propertyName)] = $rules;
+            }
+        }
+
+        if ($constraints === []) {
+            return;
+        }
+
+        $interface->addConstant(self::CONSTRAINTS_CONSTANT, $constraints)->setPublic();
+    }
+
+    /**
+     * The rules one property declares, following a reference to wherever it is really defined. A
+     * list carries its own cardinality here and its items' rules on the item type's own interface.
+     *
+     * @param array $property Property schema definition
+     * @param string $currentFile File the property is declared in
+     * @return array<string, scalar> Keyword to value
+     */
+    private function carriedKeywords(array $property, string $currentFile): array
+    {
+        if (isset($property['$ref'])) {
+            try {
+                $property = $this->parser->resolveRefTarget($property['$ref'], $currentFile)['schema'];
+            } catch (\RuntimeException $e) {
+                return [];
+            }
+        }
+
+        $rules = [];
+
+        foreach (self::CARRIED_KEYWORDS as $keyword) {
+            $value = $property[$keyword] ?? null;
+
+            // Booleans are draft-04's spelling of the exclusive bounds, where the limit lives in a
+            // separate keyword. Nothing here declares them that way, and half a rule is worse than none.
+            if (is_string($value) || is_int($value) || is_float($value)) {
+                $rules[$keyword] = $value;
+            }
+        }
+
+        return $rules;
     }
 
     /**

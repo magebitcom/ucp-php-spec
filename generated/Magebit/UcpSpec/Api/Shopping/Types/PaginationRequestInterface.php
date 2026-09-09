@@ -19,6 +19,7 @@ interface PaginationRequestInterface
 {
     public const KEY_CURSOR = 'cursor';
     public const KEY_LIMIT = 'limit';
+    public const CONSTRAINTS = ['limit' => ['minimum' => 1]];
 
     /**
      * Opaque cursor from previous response.
