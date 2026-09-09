@@ -27,6 +27,11 @@ interface FulfillmentOptionResponseInterface
     public const KEY_LATEST_FULFILLMENT_TIME = 'latest_fulfillment_time';
     public const KEY_TOTALS = 'totals';
 
+    public const CONSTRAINTS = [
+        'earliest_fulfillment_time' => ['format' => 'date-time'],
+        'latest_fulfillment_time' => ['format' => 'date-time'],
+    ];
+
     /**
      * Unique fulfillment option identifier.
      *

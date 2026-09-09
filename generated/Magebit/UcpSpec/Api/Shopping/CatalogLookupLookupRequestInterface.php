@@ -26,6 +26,7 @@ interface CatalogLookupLookupRequestInterface
     public const KEY_CONTEXT = 'context';
     public const KEY_SIGNALS = 'signals';
     public const KEY_ATTRIBUTION = 'attribution';
+    public const CONSTRAINTS = ['ids' => ['minItems' => 1]];
 
     /**
      * Identifiers to lookup. Implementations MUST support product ID and variant ID; MAY support secondary identifiers (SKU, handle, etc.).

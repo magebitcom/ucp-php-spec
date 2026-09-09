@@ -20,6 +20,11 @@ interface UcpVersionConstraintInterface
     public const KEY_MIN = 'min';
     public const KEY_MAX = 'max';
 
+    public const CONSTRAINTS = [
+        'min' => ['pattern' => '^\d{4}-\d{2}-\d{2}$'],
+        'max' => ['pattern' => '^\d{4}-\d{2}-\d{2}$'],
+    ];
+
     /**
      * Minimum required version (inclusive).
      *

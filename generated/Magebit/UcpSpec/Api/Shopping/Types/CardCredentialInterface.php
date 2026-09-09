@@ -32,6 +32,7 @@ interface CardCredentialInterface
     public const CARD_NUMBER_TYPE_FPAN = 'fpan';
     public const CARD_NUMBER_TYPE_NETWORK_TOKEN = 'network_token';
     public const CARD_NUMBER_TYPE_DPAN = 'dpan';
+    public const CONSTRAINTS = ['cvc' => ['maxLength' => 4]];
 
     /**
      * The credential type identifier for card credentials.

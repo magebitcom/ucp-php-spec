@@ -21,6 +21,7 @@ interface PriceFilterInterface
 {
     public const KEY_MIN = 'min';
     public const KEY_MAX = 'max';
+    public const CONSTRAINTS = ['min' => ['minimum' => 0], 'max' => ['minimum' => 0]];
 
     /**
      * Minimum price in ISO 4217 minor units.

@@ -29,6 +29,12 @@ interface DiscountResponseAppliedDiscountInterface
     public const METHOD_EACH = 'each';
     public const METHOD_ACROSS = 'across';
 
+    public const CONSTRAINTS = [
+        'amount' => ['minimum' => 0],
+        'priority' => ['minimum' => 1],
+        'eligibility' => ['pattern' => '^[a-z][a-z0-9]*(?:\.[a-z][a-z0-9_]*)+$'],
+    ];
+
     /**
      * The discount code. Omitted for automatic discounts.
      *

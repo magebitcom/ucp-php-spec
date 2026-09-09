@@ -21,6 +21,7 @@ interface ItemResponseInterface
     public const KEY_TITLE = 'title';
     public const KEY_PRICE = 'price';
     public const KEY_IMAGE_URL = 'image_url';
+    public const CONSTRAINTS = ['price' => ['minimum' => 0], 'image_url' => ['format' => 'uri']];
 
     /**
      * The product identifier, often the SKU, required to resolve the product details associated with this line item. Should be recognized by both the Platform, and the Business.

@@ -24,6 +24,13 @@ interface RatingInterface
     public const KEY_SCALE_MAX = 'scale_max';
     public const KEY_COUNT = 'count';
 
+    public const CONSTRAINTS = [
+        'value' => ['minimum' => 0],
+        'scale_min' => ['minimum' => 0],
+        'scale_max' => ['minimum' => 1],
+        'count' => ['minimum' => 0],
+    ];
+
     /**
      * Average rating value.
      *

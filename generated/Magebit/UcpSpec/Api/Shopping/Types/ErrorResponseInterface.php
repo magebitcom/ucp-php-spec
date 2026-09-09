@@ -24,6 +24,7 @@ interface ErrorResponseInterface
     public const KEY_UCP = 'ucp';
     public const KEY_MESSAGES = 'messages';
     public const KEY_CONTINUE_URL = 'continue_url';
+    public const CONSTRAINTS = ['messages' => ['minItems' => 1], 'continue_url' => ['format' => 'uri']];
 
     /**
      * UCP protocol metadata. Status MUST be 'error' for error response.

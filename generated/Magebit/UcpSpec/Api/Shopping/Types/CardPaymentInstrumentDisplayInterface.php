@@ -23,6 +23,7 @@ interface CardPaymentInstrumentDisplayInterface
     public const KEY_EXPIRY_YEAR = 'expiry_year';
     public const KEY_DESCRIPTION = 'description';
     public const KEY_CARD_ART = 'card_art';
+    public const CONSTRAINTS = ['card_art' => ['format' => 'uri']];
 
     /**
      * The card brand/network (e.g., visa, mastercard, amex).

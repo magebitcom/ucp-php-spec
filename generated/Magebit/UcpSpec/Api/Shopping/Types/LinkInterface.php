@@ -20,6 +20,7 @@ interface LinkInterface
     public const KEY_TYPE = 'type';
     public const KEY_URL = 'url';
     public const KEY_TITLE = 'title';
+    public const CONSTRAINTS = ['url' => ['format' => 'uri']];
 
     /**
      * Type of link. Well-known values: `privacy_policy`, `terms_of_service`, `refund_policy`, `shipping_policy`, `faq`. Consumers SHOULD handle unknown values gracefully by displaying them using the `title` field or omitting the link.

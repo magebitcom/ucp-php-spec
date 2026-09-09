@@ -22,6 +22,7 @@ interface OrderConfirmationInterface
     public const KEY_ID = 'id';
     public const KEY_LABEL = 'label';
     public const KEY_PERMALINK_URL = 'permalink_url';
+    public const CONSTRAINTS = ['permalink_url' => ['format' => 'uri']];
 
     /**
      * Unique order identifier.

@@ -24,6 +24,7 @@ interface MediaInterface
     public const KEY_ALT_TEXT = 'alt_text';
     public const KEY_WIDTH = 'width';
     public const KEY_HEIGHT = 'height';
+    public const CONSTRAINTS = ['url' => ['format' => 'uri'], 'width' => ['minimum' => 1], 'height' => ['minimum' => 1]];
 
     /**
      * Media type. Well-known values: `image`, `video`, `model_3d`.

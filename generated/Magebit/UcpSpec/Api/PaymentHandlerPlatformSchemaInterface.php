@@ -28,6 +28,13 @@ interface PaymentHandlerPlatformSchemaInterface
     public const KEY_CONFIG = 'config';
     public const KEY_AVAILABLE_INSTRUMENTS = 'available_instruments';
 
+    public const CONSTRAINTS = [
+        'version' => ['pattern' => '^\d{4}-\d{2}-\d{2}$'],
+        'spec' => ['format' => 'uri'],
+        'schema' => ['format' => 'uri'],
+        'available_instruments' => ['minItems' => 1],
+    ];
+
     /**
      * Entity version in YYYY-MM-DD format.
      *

@@ -41,6 +41,7 @@ interface CartResponseInterface
     public const KEY_LINKS = 'links';
     public const KEY_CONTINUE_URL = 'continue_url';
     public const KEY_EXPIRES_AT = 'expires_at';
+    public const CONSTRAINTS = ['continue_url' => ['format' => 'uri'], 'expires_at' => ['format' => 'date-time']];
 
     /**
      * @return \Magebit\UcpSpec\Api\UcpResponseCartSchemaInterface

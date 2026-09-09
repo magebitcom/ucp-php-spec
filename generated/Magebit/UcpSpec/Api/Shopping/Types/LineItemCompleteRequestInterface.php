@@ -23,6 +23,7 @@ interface LineItemCompleteRequestInterface
     public const KEY_ITEM = 'item';
     public const KEY_QUANTITY = 'quantity';
     public const KEY_PARENT_ID = 'parent_id';
+    public const CONSTRAINTS = ['quantity' => ['minimum' => 1]];
 
     /**
      * @return string

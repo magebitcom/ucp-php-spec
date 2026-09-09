@@ -37,6 +37,7 @@ interface VariantInterface
     public const KEY_TAGS = 'tags';
     public const KEY_METADATA = 'metadata';
     public const KEY_SELLER = 'seller';
+    public const CONSTRAINTS = ['url' => ['format' => 'uri']];
 
     /**
      * Global ID (GID) uniquely identifying this variant. Used as item.id in checkout.

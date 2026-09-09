@@ -34,6 +34,7 @@ interface CatalogLookupDetailProductInterface
     public const KEY_RATING = 'rating';
     public const KEY_TAGS = 'tags';
     public const KEY_METADATA = 'metadata';
+    public const CONSTRAINTS = ['url' => ['format' => 'uri'], 'variants' => ['minItems' => 1]];
 
     /**
      * Effective option selections that anchor the featured variant and availability signals. Required when the product has configurable options; may be empty or omitted for products with no option axes.

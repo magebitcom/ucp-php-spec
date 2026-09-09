@@ -19,6 +19,10 @@ interface Ap2MandateResponseAp2WithCheckoutMandateInterface
 {
     public const KEY_CHECKOUT_MANDATE = 'checkout_mandate';
 
+    public const CONSTRAINTS = [
+        'checkout_mandate' => ['pattern' => '^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]*\.[A-Za-z0-9_-]+(~[A-Za-z0-9_-]+)*$'],
+    ];
+
     /**
      * SD-JWT+kb proving user authorized this checkout.
      *

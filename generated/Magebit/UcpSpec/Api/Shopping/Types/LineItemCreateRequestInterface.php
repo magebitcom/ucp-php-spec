@@ -21,6 +21,7 @@ interface LineItemCreateRequestInterface
 {
     public const KEY_ITEM = 'item';
     public const KEY_QUANTITY = 'quantity';
+    public const CONSTRAINTS = ['quantity' => ['minimum' => 1]];
 
     /**
      * @return \Magebit\UcpSpec\Api\Shopping\Types\ItemCreateRequestInterface

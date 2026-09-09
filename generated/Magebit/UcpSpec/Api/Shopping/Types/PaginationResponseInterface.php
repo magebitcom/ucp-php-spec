@@ -20,6 +20,7 @@ interface PaginationResponseInterface
     public const KEY_CURSOR = 'cursor';
     public const KEY_HAS_NEXT_PAGE = 'has_next_page';
     public const KEY_TOTAL_COUNT = 'total_count';
+    public const CONSTRAINTS = ['total_count' => ['minimum' => 0]];
 
     /**
      * Cursor to fetch the next page of results. MUST be present when has_next_page is true.

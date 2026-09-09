@@ -29,6 +29,7 @@ interface AdjustmentInterface
     public const STATUS_PENDING = 'pending';
     public const STATUS_COMPLETED = 'completed';
     public const STATUS_FAILED = 'failed';
+    public const CONSTRAINTS = ['occurred_at' => ['format' => 'date-time']];
 
     /**
      * Adjustment event identifier.
