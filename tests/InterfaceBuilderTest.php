@@ -155,6 +155,64 @@ class InterfaceBuilderTest extends TestCase
     }
 
     /**
+     * A list of plain strings gets no interface of its own, so rules on its entries have nowhere to
+     * live but the list's own entry. Dropped, a consumer validating from CONSTRAINTS alone accepts
+     * entries the schema rejects.
+     *
+     * @return void
+     */
+    public function testRulesOnAListsEntriesAreNestedUnderItems(): void
+    {
+        $dir = $this->makeTempDir();
+        $builder = $this->makeBuilder($dir);
+
+        $file = $builder->buildInterface('Profile', [
+            'type' => 'object',
+            'properties' => [
+                'images' => [
+                    'type' => 'array',
+                    'minItems' => 1,
+                    'items' => ['type' => 'string', 'format' => 'uri'],
+                ],
+            ],
+        ], 'Magebit\\UcpSpec\\Api', $dir . '/profile.json');
+
+        $this->assertSame(
+            ['images' => ['minItems' => 1, 'items' => ['format' => 'uri']]],
+            $this->constraintsOf($file)
+        );
+    }
+
+    /**
+     * An object entry declares no rules at its own level, so nothing is nested for it: its
+     * properties' rules are on the interface generated for it.
+     *
+     * @return void
+     */
+    public function testAListOfObjectsNestsNothing(): void
+    {
+        $dir = $this->makeTempDir();
+        file_put_contents($dir . '/item.json', json_encode([
+            'type' => 'object',
+            'properties' => ['sku' => ['type' => 'string', 'maxLength' => 4]],
+        ]));
+
+        $builder = $this->makeBuilder($dir);
+        $file = $builder->buildInterface('Order', [
+            'type' => 'object',
+            'properties' => [
+                'line_items' => [
+                    'type' => 'array',
+                    'minItems' => 1,
+                    'items' => ['$ref' => 'item.json'],
+                ],
+            ],
+        ], 'Magebit\\UcpSpec\\Api', $dir . '/order.json');
+
+        $this->assertSame(['line_items' => ['minItems' => 1]], $this->constraintsOf($file));
+    }
+
+    /**
      * @param PhpFile $file Generated file
      * @return array<string, array<string, scalar>>|null The emitted rules, or null when none were
      */
