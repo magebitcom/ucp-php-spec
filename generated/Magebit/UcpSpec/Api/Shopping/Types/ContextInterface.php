@@ -26,6 +26,7 @@ interface ContextInterface
     public const KEY_LANGUAGE = 'language';
     public const KEY_CURRENCY = 'currency';
     public const KEY_ELIGIBILITY = 'eligibility';
+    public const CONSTRAINTS = ['eligibility' => ['items' => ['pattern' => '^[a-z][a-z0-9]*(?:\.[a-z][a-z0-9_]*)+$']]];
 
     /**
      * The country. Recommended to be in 2-letter ISO 3166-1 alpha-2 format, for example "US". For backward compatibility, a 3-letter ISO 3166-1 alpha-3 country code such as "SGP" or a full country name such as "Singapore" can also be used. Optional hint for market context (currency, availability, pricing)—higher-resolution data (e.g., shipping address) supersedes this value.

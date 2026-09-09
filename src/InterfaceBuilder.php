@@ -41,6 +41,12 @@ class InterfaceBuilder
      */
     private const CONSTRAINTS_CONSTANT = 'CONSTRAINTS';
 
+    /**
+     * How far to follow nested lists. A list of lists is already unusual; anything deeper is a
+     * schema that reaches itself, and following it forever is worse than stopping short.
+     */
+    private const MAX_ITEM_DEPTH = 3;
+
     private SchemaParser $parser;
     private TypeMapper $typeMapper;
     private PhpDocGenerator $phpDocGenerator;
@@ -451,21 +457,29 @@ class InterfaceBuilder
     }
 
     /**
-     * The rules one property declares, following a reference to wherever it is really defined. A
-     * list carries its own cardinality here and its items' rules on the item type's own interface.
+     * The rules one property declares, following a reference to wherever it is really defined.
+     *
+     * A list carries its own cardinality here. Rules on its entries are nested under `items`, which
+     * is the only place they can be reported for a list of plain strings or numbers: those get no
+     * interface of their own to carry them. A list of objects nests nothing, because an object
+     * declares no rules at its own level — its properties' rules are on its own interface.
      *
      * @param array $property Property schema definition
      * @param string $currentFile File the property is declared in
-     * @return array<string, scalar> Keyword to value
+     * @param int $depth Guards against a schema that reaches itself through its own items
+     * @return array<string, scalar|array<string, scalar>> Keyword to value
      */
-    private function carriedKeywords(array $property, string $currentFile): array
+    private function carriedKeywords(array $property, string $currentFile, int $depth = 0): array
     {
         if (isset($property['$ref'])) {
             try {
-                $property = $this->parser->resolveRefTarget($property['$ref'], $currentFile)['schema'];
+                $resolved = $this->parser->resolveRefTarget($property['$ref'], $currentFile);
             } catch (\RuntimeException $e) {
                 return [];
             }
+
+            $property = $resolved['schema'];
+            $currentFile = $resolved['file'];
         }
 
         $rules = [];
@@ -480,7 +494,15 @@ class InterfaceBuilder
             }
         }
 
-        return $rules;
+        $items = $property['items'] ?? null;
+
+        if (!is_array($items) || $depth >= self::MAX_ITEM_DEPTH) {
+            return $rules;
+        }
+
+        $itemRules = $this->carriedKeywords($items, $currentFile, $depth + 1);
+
+        return $itemRules === [] ? $rules : $rules + ['items' => $itemRules];
     }
 
     /**
